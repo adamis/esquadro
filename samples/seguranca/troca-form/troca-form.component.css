@@ -1,0 +1,46 @@
+.aviso {
+	display:block !important;
+	font-size:14px;
+}
+
+.margin {
+	margin-top:-7px;
+}
+
+.image-note {
+	position:absolute;
+	margin-top:3px;
+	margin-left:5px;
+}
+
+.text-aviso {
+	margin-left:40px;
+}
+
+.space {
+	margin-top:0px;
+}
+
+.voltar {
+	background-color:#c41b1b !important;
+	border-color:#c41b1b !important;
+}
+
+@media (hover:none)  and (max-device-width: 768px) {
+	.aviso {font-size: 14px !important;height:65px;display:flex; align-items:center; justify-content:center;}
+	
+	.image-note {
+	margin-top:12px;
+	margin-left:5px;
+}
+
+.text-aviso {
+	margin-left:27px;
+	text-align:center;
+	position:absolute;
+	width:73%;
+	
+}
+
+
+}

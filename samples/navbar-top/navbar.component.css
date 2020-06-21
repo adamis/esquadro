@@ -1,0 +1,321 @@
+.top {
+	max-height:56px !important;
+	text-align:center;
+}
+
+
+#sidebar-wrapper {
+  min-height: 100vh;
+  margin-left: -15rem;
+  -webkit-transition: margin .25s ease-out;
+  -moz-transition: margin .25s ease-out;
+  -o-transition: margin .25s ease-out;
+  transition: margin .25s ease-out;
+}
+
+#sidebar-wrapper .sidebar-heading {
+  padding: 0.875rem 1.25rem;
+  font-size: 1.2rem;
+}
+
+#sidebar-wrapper .list-group {
+  width: 15rem;
+}
+
+#page-content-wrapper {
+  min-width: 100vw;
+}
+
+::ng-deep .pi-calendar-plus:before {
+	content: url("src/assets/note.png") !important;
+}
+
+::ng-deep .pi-sort:before {
+	content: url("src/assets/pc.png") !important;
+}
+
+::ng-deep .pi-question:before {
+	content: url("src/assets/consulta2.png") !important;
+}
+
+::ng-deep .pi-cog:before {
+	content: url("src/assets/pdf.png") !important;
+}
+
+::ng-deep .pi-info:before {
+	content: url("src/assets/help.png") !important;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+  margin-left: 0;
+}
+
+.mobile, .settings {
+	display:none;
+}
+
+@media (min-width: 768px) {
+  #sidebar-wrapper {
+    margin-left: 0;
+  }
+
+  .dropdown-menu {
+	  position:absolute;
+	  left:40%;
+  }
+
+  #page-content-wrapper {
+    min-width: 0;
+    width: 100%;
+  }
+
+  #wrapper.toggled #sidebar-wrapper {
+    margin-left: -15rem;
+  }
+
+}
+
+#img-logo {
+	position:absolute;
+	top:28%;
+	left:32%;
+}
+
+.user {
+	position:absolute;
+	right:120px;
+}	
+
+#container {
+	margin: 0 auto;
+	right:10px;
+	width:110px;
+	position:absolute;
+}
+
+nav ul  {
+	padding: 0;
+    margin: 0;
+	list-style: none;
+	position: relative;
+	}
+	
+nav ul li {
+	display:inline-block;
+	background-color: #007ad9;
+	}	
+
+nav li:nth-child(1) {
+	background-color:none !important;
+	margin:auto;
+	}
+
+nav a {
+	display:block;
+	padding:0 10px;	
+	color:#FFF;
+	font-size:1s0px;
+	line-height: 60px;
+	text-decoration:none;
+}
+
+nav a:hover {
+  
+	background-color: #33a2f7; 
+}
+
+.navbar {
+	height: 65px;
+}
+
+/* Hide Dropdowns by Default */
+nav ul ul {
+	display: none;
+	position: absolute; 
+	top: 60px;
+	width:100%;
+	right:0px;
+	/* the height of the main nav */
+}
+	
+/* Display Dropdowns on Hover */
+nav ul li:hover > ul {
+	display:inherit;
+}
+	
+/* Fisrt Tier Dropdown */
+nav ul ul li {
+	width:190%;
+	float:none;
+	display:list-item;
+	position: relative;
+}
+
+/* Second, Third and more Tiers	*/
+nav ul ul ul li {
+	position: relative;
+	top:-60px; 
+	left:170px;
+}
+
+.navbar, .nav-item {
+	  background-color: #007ad9 !important;
+	  color:white !important;
+}
+
+.navbar-nav a {
+	color:white !important;
+}
+
+.navbar-light .navbar-toggler-icon {
+	background-image: url('src/assets/settings.png');
+}
+
+#menu-toggle, #menu-toggle:active, #menu-toggle:focus {
+	background-color: #007ad9;
+	color:black !important;
+	border: none !important;
+}
+
+.dropdown-item {
+	background-color: white !important;
+}
+
+#sidebar-wrapper .sidebar-heading {
+	padding: 0rem 1.25rem !important;
+    font-size: 1.2rem;
+}
+
+.esquadro {
+	position:fixed;
+	left:5%;
+	margin:auto;
+	font-size:30px;
+	margin-left:20px;
+	font-weight: 500	;
+	font-style:italic;
+}
+
+.red {
+	color:red;
+}
+
+.nav-item {
+	margin-left:20px;
+}
+
+.align-codiub {
+	margin-left:25%;
+}
+
+.top-leave {
+	display: block;
+	margin-left: 11px;
+	margin-right: auto;
+	margin-top:9px;
+}
+
+.btn-sair {
+
+  float: right;
+  margin-left:20px;
+  margin-right:40px;
+  padding-top: 5px;
+  color:white;
+  background-color: red;
+  width:50px;
+  padding-left:16px;
+  padding-bottom: 5px;
+  border-radius: 10px;
+  margin-top:2px;
+  font-size:11px;
+}
+.pc {
+    width: 210%;
+}
+
+@media (hover: none) {
+
+.esquadro {
+	margin-left:10%;
+	font-size:20px;
+}
+
+nav ul ul {
+	top: 35px !important;
+	left:-70px !important;
+	text-align:center;
+}
+
+.mobile, .settings {
+	display:block !important;
+	position:absolute;
+	right: 10px;
+	top:-2px;
+}
+
+.pc {
+	display:none !important;	
+}
+.user {
+	display:none !important;
+}	
+	
+#container {
+	margin: 0 auto;
+	right:0px;
+}	
+	
+  #img-logo {
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    font-weight: bold;
+}
+
+.btn-sair {
+  margin-left:10px;
+  margin-right:0px;
+}
+
+ #menu-toggle {
+	 width:50px;
+ }
+
+ .responsive {
+  position: absolute;
+  left:33%;
+  top:50px;
+ }
+}
+
+@media (hover: none) and (min-width:768px) {
+  .responsive {
+    position: absolute;
+    left:70%;
+    top:10px;
+   }
+
+   #img-logo {
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    font-weight: bold;
+    font-size: 20px !important;
+}
+}
+
+@media screen and (device-aspect-ratio: 40/71) {
+  .responsive {
+    position: absolute;
+    left:20%;
+    top:90px;
+   }
+
+}
+
+body .ui-panelmenu .ui-panelmenu-header > a {
+	width:21% !important;
+}

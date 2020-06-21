@@ -1,0 +1,40 @@
+<style>
+  body {
+    padding-left: 20px !important;
+    overflow-y: inherit !important;
+  }
+
+</style>
+
+<app-bread-crumb [items]="[{label:'Trocar Senha'}]"></app-bread-crumb>
+<br/>
+<div class="margin">
+	<div class="p-grid ui-fluid">
+	  <p-toast ></p-toast>
+	  <div class="p-col-12 p-md-12 p-lg-12 p-col-12">
+		<div class="p-md-6 p-lg-4 p-col-12 aviso">
+			<img src="assets/note.png" class="image-note"/><span class="text-aviso"> <b> Atenção! </b> Preencha as senhas para efetuar a alteração!</span>
+		</div>
+	  </div>
+
+	  <div class="p-col-12 p-md-4 ui-lg-4 p-col-12 space">
+		<div class="p-md-12 p-lg-12 p-md-12 p-col-12">
+			<input pInputText type="password" name="senha" placeholder="Senha Atual" ngModel required #senha>
+		</div>
+		<div class="p-md-6 p-lg-6 p-md-6 p-col-6" style="float:left;">
+			<input pInputText type="password" name="novaSenha" placeholder="Nova Senha" ngModel required #novaSenha>
+		</div>
+		<div class="p-md-6 p-lg-6 p-md-6 p-col-6" style="float:left;"> 
+			<input pInputText type="password" name="repitaSenha" placeholder="Repetir Nova Senha" ngModel required #repitaSenha>
+		</div>		
+		<div class="p-col-6" style="float:left;">
+			<a routerLink="/home"><button pButton type="submit" label="Voltar" class="voltar"></button></a>
+		</div>
+	
+		<div class="p-col-6" style="float:right;">
+			<button pButton type="submit" label="Alterar" (click)="alterarSenha(senha.value,novaSenha.value,repitaSenha.value)"></button>
+		</div>
+
+	  </div>
+	</div>
+</div>

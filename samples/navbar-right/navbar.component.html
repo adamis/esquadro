@@ -1,0 +1,40 @@
+    <nav class="navbar navbar-expand-lg navbar-light border-bottom">
+	<a href="javascript:void(0)" style="width:1px; height:55px;"><img src="assets/menu.png" class="menu" (click)="display = true"/></a>
+      <span class="esquadro" style="height:41px;">
+
+        <a routerLink="/home" (click)="display = false" routerLinkActive="ativo">
+			<label class="title">Esquadro</label>
+			<label class="title2">Esquadro</label>
+        </a>
+      </span>
+      <img src="assets/user.png" class="user" style="z-index:0;"/>
+      <div id="container" style="z-index:200;">
+        <nav>
+          <ul>
+            <li><a class="pc" style="z-index:20; width:230px; text-align:left;">SR(A) {{ user.nome.split(' ')[0] }}</a>
+              <a class="mobile">
+				    <img *ngIf="user.foto == null" src="assets/settings.png" class="settings" />
+				     <img *ngIf="user.foto != null" src="{{user.foto}}" class="settings" />
+			  </a>
+              <ul class="list-options">
+                <li class="option option1"><a routerLink="/troca-senha/troca">Trocar Senha</a></li>
+                <li class="option option2"><a routerLink="/login" (click)="logoff()"><img src="assets/logout.png" class="logout"/>
+                    Logout</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </nav>
+
+    <p-sidebar [(visible)]="display" id="sidebarnosso" [style]="{overflow: 'auto'}" position="left">
+
+      <a routerLink="/home" (click)="display = false" routerLinkActive="ativo">
+        <div class="sidebar-heading align-codiub">
+          <img src="assets/logo-codiub.svg" width="120px" />
+        </div>
+      </a>
+      <br />
+      <p-panelMenu [model]="items"></p-panelMenu>
+
+    </p-sidebar>

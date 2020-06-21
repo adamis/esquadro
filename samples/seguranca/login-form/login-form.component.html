@@ -1,0 +1,55 @@
+<body class="snow" id="snow">
+
+  <div class="container">
+    <p-toast></p-toast>
+    <div class="left">
+      <br />
+      <div class="align-center">
+        <h4>Angular ProjectMaker</h4>
+        <h1><b>Esquadro</b></h1>
+      </div>
+      <br /><br />
+      <img src="assets/logo-codiub.svg" width="130px" class="logo" />
+      <br />
+      <div class="align-center version">
+        <h6>v{{version}}</h6>
+      </div>
+    </div>
+
+    <div class="right align-center">
+      <form autocomplete="off" #f="ngForm">
+        <div class="ui-g-12">
+          <div class="ui-g-12 warning" *ngIf="isVisible">
+            * Digite seu CPF/CNPJ para recuperar sua senha!
+          </div>
+          <input pInputText placeholder="CPF/CNPJ" [imask]="masks" name="usuario" class="inputtext" [unmask]="true"
+            ngModel #usuario />
+        </div>
+
+
+        <div class="ui-g-12" [hidden]="!isVisible">
+          <button pButton type="submit" label="Voltar" (click)="isVisible = !isVisible" class="btn btnVoltar"></button>
+          <button pButton type="submit" label="Recuperar" class="btn btnRecuperar"
+            (click)="clickRecuperar(usuario.value)"></button>
+        </div>
+
+        <div class="ui-g-12" [hidden]="isVisible">
+          <input pInputText type="password" class="inputtext" name="senha" placeholder="Senha" ngModel required #senha>
+        </div>
+
+        <div class="ui-g-12 captcha" [hidden]="isVisible">
+          <p-captcha siteKey="6Lf44awUAAAAAJuF_N-JVax3_AkO5_Yt5bsulxR4" (onResponse)="showResponse($event)"
+            initCallback="loadCaptcha"></p-captcha>
+        </div>
+
+        <div class="ui-g-12" [hidden]="isVisible">
+          <button pButton type="submit" label="Login" [disabled]="!f.valid" class="btnLogin"
+            (click)="login(usuario.value, senha.value)"></button>
+          <br /><br />
+          <span class="recover">Esqueceu sua senha? </span> <a href="javascript:void(0)"
+            (click)="isVisible = !isVisible" class="recover"><b>Clique aqui.</b></a>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
