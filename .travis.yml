@@ -1,0 +1,5 @@
+language: java
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
