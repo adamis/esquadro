@@ -155,9 +155,20 @@ public class AddEsquadroSB extends JInternalFrame {
 
 				if (personalItem.getValue() != null) {
 					bancoDados = (BancoDados) personalItem.getValue();
+					
+					if(bancoDados.getTipo().equalsIgnoreCase("mysql")) {
+						chkMysql.setSelected(true);
+						chkOracle.setSelected(false);
+					}else {
+						chkMysql.setSelected(false);
+						chkOracle.setSelected(true);
+					}
+					
 				} else {
 					bancoDados = null;
 				}
+				
+				
 			}
 
 		});
@@ -395,8 +406,7 @@ public class AddEsquadroSB extends JInternalFrame {
 				}
 			}
 		});
-		chkSpringSecurity.setSelected(true);
-		chkSpringSecurity.setBounds(6, 33, 97, 23);
+		chkSpringSecurity.setBounds(399, 7, 196, 23);
 		pPom.add(chkSpringSecurity);
 
 		chkH2 = new JCheckBox("H2");
@@ -410,7 +420,6 @@ public class AddEsquadroSB extends JInternalFrame {
 				}
 			}
 		});
-		chkH2.setSelected(true);
 		chkH2.setToolTipText("");
 		chkH2.setBounds(105, 33, 97, 23);
 		pPom.add(chkH2);
@@ -426,7 +435,6 @@ public class AddEsquadroSB extends JInternalFrame {
 				}
 			}
 		});
-		chkFlyway.setSelected(true);
 		chkFlyway.setBounds(201, 7, 97, 23);
 		pPom.add(chkFlyway);
 
@@ -456,7 +464,6 @@ public class AddEsquadroSB extends JInternalFrame {
 				}
 			}
 		});
-		chkMysql.setSelected(true);
 		chkMysql.setBounds(300, 7, 97, 23);
 		pPom.add(chkMysql);
 
@@ -471,7 +478,6 @@ public class AddEsquadroSB extends JInternalFrame {
 				}
 			}
 		});
-		chkOracle.setSelected(true);
 		chkOracle.setBounds(300, 33, 97, 23);
 		pPom.add(chkOracle);
 
@@ -486,13 +492,12 @@ public class AddEsquadroSB extends JInternalFrame {
 				}
 			}
 		});
-		chkEhCache.setSelected(true);
-		chkEhCache.setBounds(399, 7, 97, 23);
+		chkEhCache.setBounds(105, 59, 97, 23);
 		pPom.add(chkEhCache);
 
 		chkSwagger = new JCheckBox("Swagger");
 		chkSwagger.setSelected(true);
-		chkSwagger.setBounds(399, 33, 97, 23);
+		chkSwagger.setBounds(6, 59, 97, 23);
 		chkSwagger.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
@@ -507,7 +512,7 @@ public class AddEsquadroSB extends JInternalFrame {
 
 		chckbxSpringEmail = new JCheckBox("Spring Email");
 		chckbxSpringEmail.setSelected(true);
-		chckbxSpringEmail.setBounds(6, 59, 97, 23);
+		chckbxSpringEmail.setBounds(6, 33, 97, 23);
 		chckbxSpringEmail.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
@@ -523,7 +528,7 @@ public class AddEsquadroSB extends JInternalFrame {
 
 		chckbxModelMapper = new JCheckBox("Model Mapper");
 		chckbxModelMapper.setSelected(true);
-		chckbxModelMapper.setBounds(105, 59, 97, 23);
+		chckbxModelMapper.setBounds(399, 33, 196, 23);
 		chckbxModelMapper.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
@@ -553,7 +558,7 @@ public class AddEsquadroSB extends JInternalFrame {
 
 		chckbxMetamodelGen = new JCheckBox("Metamodel Gen");
 		chckbxMetamodelGen.setSelected(true);
-		chckbxMetamodelGen.setBounds(399, 59, 130, 23);
+		chckbxMetamodelGen.setBounds(399, 59, 196, 23);
 		chckbxMetamodelGen.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {

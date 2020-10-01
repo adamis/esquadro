@@ -30,6 +30,7 @@ public class AddEsquadroSBController implements Runnable {
 	private List<DEPEND> listDepend;
 	private Boolean changePOM;
 	private boolean configConexao;
+	private String BARRA = System.getProperty("file.separator");  
 
 	public AddEsquadroSBController(BancoDados bancoDados, ConsoleLog consoleLog, String urlProject, String packages,
 			Boolean changePOM, List<DEPEND> listDepend, Boolean configConexao) {
@@ -50,50 +51,50 @@ public class AddEsquadroSBController implements Runnable {
 			consoleLog.moveToFront();
 
 			consoleLog.setText("Iniciando Processamento...");
-			packages = packages.replace(".", "/");
+			packages = packages.replace(".", BARRA);
 
 			consoleLog.setText("Criando Pasta...");
-			File file = new File(this.urlProject + "/" + packages);
-
-			if (!file.exists()) {
-				file.mkdirs();
-			}
+//			File file = new File(this.urlProject + BARRA + packages);
+//
+//			if (!file.exists()) {
+//				file.mkdirs();
+//			}
 
 			consoleLog.setText("OK!");
 
 			consoleLog.setText("Copy all...");
-			consoleLog.setText("Copiando Arquivos para:" + this.urlProject + "/src/main/java/" + packages);
+			consoleLog.setText("Copiando Arquivos para:" + this.urlProject + BARRA+"src"+BARRA+"main"+BARRA+"java"+BARRA+ packages);
 			
-			Utils.doCopyDirectory(new File("EsquadroSB/copyAll"), this.urlProject + "/src/main/java/" + packages,false);			
+			Utils.doCopyDirectory(new File("EsquadroSB"+BARRA+"copyAll"), this.urlProject + BARRA+"src"+BARRA+"main"+BARRA+"java"+BARRA+ packages,false);			
 						
 			
 			consoleLog.setText("OK!");
 			
 			consoleLog.setText("Replace Package...");
 			
-			replacePackage(
-					new File(this.urlProject + "/src/main/java/" + packages + "/config/property/" + "ApiProperty.java"),
-					packages.replace("/", "."), ".config.property");
+//			replacePackage(
+//					new File(this.urlProject + "/src/main/java/" + packages + "/config/property/" + "ApiProperty.java"),
+//					packages.replace("/", "."), ".config.property");
 			
-			replacePackage(new File(this.urlProject + "/src/main/java/" + packages + "/cors/" + "CorsFilter.java"),
-					packages.replace("/", "."), ".cors");
+			replacePackage(new File(this.urlProject + BARRA +"src"+ BARRA +"main"+ BARRA +"java"+ BARRA + packages + BARRA +"cors"+ BARRA + "CorsFilter.java"),
+					packages.replace(BARRA, "."), ".cors");
 			
-			replacePackage(new File(
-					this.urlProject + "/src/main/java/" + packages + "/event/listener/" + "RecursoCriadoListener.java"),
-					packages.replace("/", "."), ".event.listener");
+//			replacePackage(new File(
+//					this.urlProject + "/src/main/java/" + packages + "/event/listener/" + "RecursoCriadoListener.java"),
+//					packages.replace("/", "."), ".event.listener");
 			
-			replacePackage(
-					new File(this.urlProject + "/src/main/java/" + packages + "/event/" + "RecursoCriadoEvent.java"),
-					packages.replace("/", "."), ".event");
+//			replacePackage(
+//					new File(this.urlProject + "/src/main/java/" + packages + "/event/" + "RecursoCriadoEvent.java"),
+//					packages.replace("/", "."), ".event");
 			
-			replacePackage(new File(this.urlProject + "/src/main/java/" + packages + "/exceptionhandler/"
-					+ "PersonalExceptionHandler.java"), packages.replace("/", "."), ".exceptionhandler");
+			replacePackage(new File(this.urlProject + BARRA + "src"+ BARRA +"main"+ BARRA +"java"+ BARRA + packages + BARRA +"exceptionhandler"+ BARRA 
+					+ "PersonalExceptionHandler.java"), packages.replace(BARRA, "."), ".exceptionhandler");
 
-			replacePackage(new File(this.urlProject + "/src/main/java/" + packages + "/utils/" + "Utils.java"),
-					packages.replace("/", "."), ".utils");
+			replacePackage(new File(this.urlProject + BARRA + "src"+ BARRA +"main"+ BARRA +"java"+ BARRA + packages + BARRA +"utils"+ BARRA + "Utils.java"),
+					packages.replace(BARRA, "."), ".utils");
 
-			replacePackage(new File(this.urlProject + "/src/main/java/" + packages + "/config/" + "SwaggerConfig.java"),
-					packages.replace("/", "."), ".config");
+			replacePackage(new File(this.urlProject + BARRA + "src"+ BARRA +"main"+ BARRA +"java"+ BARRA + packages + BARRA +"config"+ BARRA + "SwaggerConfig.java"),
+					packages.replace(BARRA, "."), ".config");
 
 			consoleLog.setText("OK!");
 
@@ -109,14 +110,14 @@ public class AddEsquadroSBController implements Runnable {
 				consoleLog.setText("Configurando Finalizadas!");
 			}
 			
-			Utils.doCopyFile(new File("EsquadroSB/messages_pt_BR.properties"), this.urlProject + "/src/main/resources/messages_pt_BR.properties");
-			Utils.doCopyFile(new File("EsquadroSB/messages.properties"), this.urlProject + "/src/main/resources/messages.properties");
-			Utils.doCopyFile(new File("EsquadroSB/ValidationMessages.properties"), this.urlProject + "/src/main/resources/ValidationMessages.properties");
-			Utils.doCopyFile(new File("EsquadroSB/.factorypath"), this.urlProject +"/.factorypath");
+			Utils.doCopyFile(new File("EsquadroSB"+ BARRA +"messages_pt_BR.properties"), this.urlProject + BARRA + "src"+ BARRA +"main"+ BARRA +"resources"+ BARRA +"messages_pt_BR.properties");
+			Utils.doCopyFile(new File("EsquadroSB"+ BARRA +"messages.properties"), this.urlProject + BARRA + "src"+ BARRA +"main"+ BARRA +"resources"+ BARRA +"messages.properties");
+			Utils.doCopyFile(new File("EsquadroSB"+ BARRA +"ValidationMessages.properties"), this.urlProject + BARRA + "src"+ BARRA +"main"+ BARRA +"resources"+ BARRA +"ValidationMessages.properties");
+			Utils.doCopyFile(new File("EsquadroSB"+ BARRA +".factorypath"), this.urlProject + BARRA +".factorypath");
 			
 			consoleLog.setText("Criando pastas de Recursos...");
-			new File(this.urlProject + "/src/main/resources/db/migration").mkdirs();
-			new File(this.urlProject + "/src/main/resources/hibernate").mkdirs();
+			new File(this.urlProject + BARRA + "src"+ BARRA +"main"+ BARRA +"resources"+ BARRA +"db"+ BARRA +"migration").mkdirs();
+			new File(this.urlProject + BARRA +"src"+ BARRA +"main"+ BARRA +"resources"+ BARRA +"hibernate").mkdirs();
 			consoleLog.setText("Pastas Criadas!");
 
 			consoleLog.setText("Processamento Finalizado!");
@@ -129,50 +130,58 @@ public class AddEsquadroSBController implements Runnable {
 
 	private void configurarConexao(BancoDados bancoDados) throws IOException {
 		List<String> readApplication = Utils.readTxtList(this.urlProject + "/src/main/resources/application.properties");
-		StringBuilder sb = new StringBuilder();
+		
+		List<String> properties = new ArrayList<>();
+		
+		checkExit(readApplication, properties, "server.port=8080");		
+		checkExit(readApplication, properties, "spring.profiles.active=prod");
+		properties.add("");
+		checkExit(readApplication, properties, "#JSON");
+		checkExit(readApplication, properties, "spring.jackson.deserialization.fail-on-unknown-properties=true");
+		checkExit(readApplication, properties, "spring.jackson.date-format=yyyy-MM-dd");
+		checkExit(readApplication, properties, "spring.jackson.serialization.FAIL_ON_EMPTY_BEANS=false");
 
-		if (bancoDados.getTipo().equalsIgnoreCase("MySQL")) {// MYSQL
-			sb.append("# CONEXAO MYSQL" + "\n");
-			sb.append("spring.jpa.database=MYSQL" + "\n");
-			sb.append("spring.datasource.url=jdbc:mysql://" + bancoDados.getIp() + ":" + bancoDados.getPorta() + "/"
-					+ bancoDados.getNameBd()
-					+ "?createDatabaseIfNotExist=true&useSSL=false&useTimezone=true&serverTimezone=UTC" + "\n");
-			sb.append("spring.datasource.username=" + bancoDados.getUsuario() + "" + "\n");
-			sb.append("spring.datasource.password=" + bancoDados.getSenha() + "\n");
+		Utils.writeTxtList(this.urlProject + "/src/main/resources/application.properties", properties, true);
 
-		} else if (bancoDados.getTipo().equalsIgnoreCase("ORACLE")) { // ORACLE
-			sb.append("# CONEXAO ORACLE" + "\n");
-			sb.append("spring.datasource.url= jdbc:oracle:thin:@//" + bancoDados.getIp() + ":" + bancoDados.getPorta()
-					+ "/" + bancoDados.getNameBd() + "\n");
-			sb.append("spring.datasource.username=" + bancoDados.getUsuario() + "\n");
-			sb.append("spring.datasource.password=" + bancoDados.getSenha() + "\n");
-			sb.append("spring.datasource.driver-class-name=oracle.jdbc.OracleDriver" + "\n");
-			sb.append("\n");
-			sb.append("#hibernate config" + "\n");
-			sb.append("spring.jpa.database-platform=org.hibernate.dialect.Oracle10gDialect" + "\n");
-		}
+		
+		// ----------------------- NOVO -----------------------------------------------
+		
+		File prod = new File(this.urlProject + "/src/main/resources/application-prod.properties");
+		prod.createNewFile();
+		
+		List<String> listProd = new ArrayList<>();
 
-		sb.append("\n");
-		sb.append("# SERVER PORT" + "\n");
-		sb.append("server.port=8080" + "\n");
-		sb.append("\n");
-		sb.append("spring.jpa.hibernate.ddl-auto=none" + "\n");
-		sb.append("spring.jpa.show-sql=true" + "\n");
-		sb.append("spring.jpa.properties.hibernate.use_sql_comments=true" + "\n");
-		sb.append("spring.jpa.properties.hibernate.format_sql=true" + "\n");
-		sb.append("spring.jpa.properties.hibernate.type=trace" + "\n");
-		sb.append("\n");
-		sb.append("spring.jackson.deserialization.fail-on-unknown-properties=true" + "\n");
-		sb.append("spring.jackson.serialization.FAIL_ON_EMPTY_BEANS=false" + "\n");
+		listProd.add("spring.datasource.url= jdbc:oracle:thin:@//" + bancoDados.getIp() + ":" + bancoDados.getPorta() + "/" + bancoDados.getNameBd());		
+		listProd.add("spring.datasource.username=" + bancoDados.getUsuario());
+		listProd.add("spring.datasource.password=" + bancoDados.getSenha() );
+		listProd.add("");
+		listProd.add("spring.datasource.driver-class-name=oracle.jdbc.OracleDriver");
+		listProd.add("");
+		listProd.add("#hibernate config");
+		listProd.add("spring.jpa.database-platform=org.hibernate.dialect.Oracle10gDialect");		
+		listProd.add("spring.jpa.show-sql=false");
+		listProd.add("spring.jpa.properties.hibernate.format_sql=false");
 
-		if (readApplication.size() > 0) {
-			readApplication.set(0, sb.toString() + "\n" + readApplication.get(0));
-		} else {
-			readApplication.add(sb.toString());
-		}
-
-		Utils.writeTxtList(this.urlProject + "/src/main/resources/application.properties", readApplication, true);
-
+		
+		Utils.writeTxtList(this.urlProject + "/src/main/resources/application-prod.properties", listProd, true);
+		
+		File dev = new File(this.urlProject + "/src/main/resources/application-dev.properties");
+		dev.createNewFile();
+		
+		List<String> listDev = new ArrayList<>();
+		listDev.add("spring.datasource.url= jdbc:oracle:thin:@//" + bancoDados.getIp() + ":" + bancoDados.getPorta() + "/" + bancoDados.getNameBd());		
+		listDev.add("spring.datasource.username=" + bancoDados.getUsuario());
+		listDev.add("spring.datasource.password=" + bancoDados.getSenha() );
+		listDev.add("");
+		listDev.add("spring.datasource.driver-class-name=oracle.jdbc.OracleDriver");
+		listDev.add("");
+		listDev.add("#hibernate config");
+		listDev.add("spring.jpa.database-platform=org.hibernate.dialect.Oracle10gDialect");		
+		listDev.add("spring.jpa.show-sql=true");
+		listDev.add("spring.jpa.properties.hibernate.format_sql=true");
+		
+		Utils.writeTxtList(this.urlProject + "/src/main/resources/application-dev.properties", listDev, true);
+		
 	}
 
 	private void processandoPOM(String urlProject, List<DEPEND> list) throws IOException {
@@ -282,4 +291,19 @@ public class AddEsquadroSBController implements Runnable {
 
 	}
 
+	private void checkExit(List<String> list,List<String> addProperties, String line) {
+		boolean control = false;
+		
+		for (int i = 0; i < list.size(); i++) {
+			if(list.get(i).equals(line)) {
+				control = true;
+			}
+		}
+
+		if(!control) {
+			addProperties.add(line);
+		}
+		
+	}
+	
 }

@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>Esquadro</groupId>
 	<artifactId>Esquadro</artifactId>
-	<version>1.9.4</version>
+	<version>1.9.5</version>
 	<name>Esquadro</name>
 
 
@@ -25,6 +25,8 @@
 	</repositories>
 
 	<dependencies>
+
+
 
 		<!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc6 -->
 		<dependency>
@@ -124,6 +126,13 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 			<version>[2.9.10.5,)</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-model</artifactId>
+			<version>3.3.9</version>
 		</dependency>
 
 	</dependencies>
