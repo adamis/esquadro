@@ -2,6 +2,7 @@ package br.com.esquadro.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -110,9 +111,9 @@ public class Conexao {
 					// Class.forName("org.gjt.mm.mysql.Driver");
 					Class.forName("com.mysql.cj.jdbc.Driver");
 					conexao = DriverManager.getConnection("jdbc:mysql://" + ip + ":" + port + "/" + nameBD
-					// +
-					// "?relaxAutoCommit=true&autoReconnect=true&useTimezone=true&serverTimezone=UTC"
-					// +"?relaxAutoCommit=true"
+							// +
+							// "?relaxAutoCommit=true&autoReconnect=true&useTimezone=true&serverTimezone=UTC"
+							// +"?relaxAutoCommit=true"
 							+ "?autoReconnect=true&relaxAutoCommit=true", props);
 
 					break;
@@ -266,10 +267,12 @@ public class Conexao {
 	 */
 	public ResultSet executeQuery(String sql) throws SQLException {
 
-		//System.out.println(sql);
-		statement = conexao.createStatement();
-		resultSet = statement.executeQuery(sql);
-		return resultSet;
+		System.out.println(sql);
+		ResultSet resultSettemp;
+		
+		statement = conexao.createStatement();		
+		resultSettemp = statement.executeQuery(sql);
+		return resultSettemp;
 	}
 
 	public void beginTransaction() {

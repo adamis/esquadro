@@ -227,7 +227,7 @@ public class AutomaticDB extends JInternalFrame {
 	}
 
 	private void updateGrid(BancoDados bancoDados) {
-		ListTableController controller = new ListTableController(bancoDados, table, true, consoleLog);
+		ListTableController controller = new ListTableController(bancoDados, table, true, consoleLog, "");
 		controller.run();
 	}
 }

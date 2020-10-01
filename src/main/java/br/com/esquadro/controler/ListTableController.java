@@ -23,12 +23,14 @@ public class ListTableController extends Thread {
 	private BancoDados bancoDados;
 	private JTable table;
 	private Boolean commomCase;
+	private String filterTableName;
 	// private ConsoleLog consoleLog;
 
-	public ListTableController(BancoDados bancoDados, JTable table, Boolean commomCase, ConsoleLog consoleLog) {
+	public ListTableController(BancoDados bancoDados, JTable table, Boolean commomCase, ConsoleLog consoleLog, String filterTableName) {
 		this.bancoDados = bancoDados;
 		this.table = table;
 		this.commomCase = commomCase;
+		this.filterTableName = filterTableName;
 		// this.consoleLog = consoleLog;
 	}
 
@@ -39,8 +41,16 @@ public class ListTableController extends Thread {
 
 		try {
 
-			List<HashMap<String, String>> tables = databaseUtils.getTables(this.bancoDados);
-
+			List<HashMap<String, String>> tables;
+			
+			if(this.filterTableName != null && this.filterTableName.length() > 0 ) {
+				tables = databaseUtils.getTables(this.bancoDados,this.filterTableName);
+			}else {
+				tables = databaseUtils.getTables(this.bancoDados);
+			}
+			
+			System.err.println("Size>"+ tables.size());
+			
 			String[] columnNames = { "ck", "Tabelas", "Tipo" };
 
 			DefaultTableModel dtm = new DefaultTableModel() {
@@ -93,7 +103,7 @@ public class ListTableController extends Thread {
 			this.table.setRowHeight(20);
 
 		} catch (Exception e) {
-			// System.err.println("ERRO AKI>>" + e.getMessage());
+			System.err.println("ERRO AKI>>" + e.getMessage());
 			JOptionPane.showMessageDialog(null, "" + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}

@@ -63,23 +63,29 @@ public class AddEsquadroSBController implements Runnable {
 
 			consoleLog.setText("Copy all...");
 			consoleLog.setText("Copiando Arquivos para:" + this.urlProject + "/src/main/java/" + packages);
-			Utils.doCopyDirectory(new File("EsquadroSB/copyAll"), this.urlProject + "/src/main/java/" + packages,
-					false);
+			
+			Utils.doCopyDirectory(new File("EsquadroSB/copyAll"), this.urlProject + "/src/main/java/" + packages,false);			
+						
+			
 			consoleLog.setText("OK!");
-
+			
 			consoleLog.setText("Replace Package...");
-
+			
 			replacePackage(
 					new File(this.urlProject + "/src/main/java/" + packages + "/config/property/" + "ApiProperty.java"),
 					packages.replace("/", "."), ".config.property");
+			
 			replacePackage(new File(this.urlProject + "/src/main/java/" + packages + "/cors/" + "CorsFilter.java"),
 					packages.replace("/", "."), ".cors");
+			
 			replacePackage(new File(
 					this.urlProject + "/src/main/java/" + packages + "/event/listener/" + "RecursoCriadoListener.java"),
 					packages.replace("/", "."), ".event.listener");
+			
 			replacePackage(
 					new File(this.urlProject + "/src/main/java/" + packages + "/event/" + "RecursoCriadoEvent.java"),
 					packages.replace("/", "."), ".event");
+			
 			replacePackage(new File(this.urlProject + "/src/main/java/" + packages + "/exceptionhandler/"
 					+ "PersonalExceptionHandler.java"), packages.replace("/", "."), ".exceptionhandler");
 
@@ -106,7 +112,8 @@ public class AddEsquadroSBController implements Runnable {
 			Utils.doCopyFile(new File("EsquadroSB/messages_pt_BR.properties"), this.urlProject + "/src/main/resources/messages_pt_BR.properties");
 			Utils.doCopyFile(new File("EsquadroSB/messages.properties"), this.urlProject + "/src/main/resources/messages.properties");
 			Utils.doCopyFile(new File("EsquadroSB/ValidationMessages.properties"), this.urlProject + "/src/main/resources/ValidationMessages.properties");
-
+			Utils.doCopyFile(new File("EsquadroSB/.factorypath"), this.urlProject +"/.factorypath");
+			
 			consoleLog.setText("Criando pastas de Recursos...");
 			new File(this.urlProject + "/src/main/resources/db/migration").mkdirs();
 			new File(this.urlProject + "/src/main/resources/hibernate").mkdirs();

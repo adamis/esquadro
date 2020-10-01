@@ -2,6 +2,7 @@ package br.com.esquadro.util;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.RowId;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,8 +50,11 @@ public class DatabaseUtils {
 
 		if (tipo.toString().equals("ORACLE")) {
 
-			sql.append("SELECT owner as schematic, table_name as tableName FROM dba_tables WHERE dba_tables.owner = '"
-					+ bancoDados.getSchema().toUpperCase() + "' order by tableName");
+			sql.append("SELECT owner as schematic, table_name as tableName FROM dba_tables WHERE dba_tables.owner =" );
+			sql.append("'");
+			sql.append(bancoDados.getSchema().toUpperCase());
+			sql.append("'");
+			sql.append("order by tableName");
 
 			executeQuery = conexao.executeQuery(sql.toString());
 
@@ -92,6 +96,86 @@ public class DatabaseUtils {
 		conexao.commit();
 		return listTable;
 	}
+	
+	/**
+	 * List All with Tables in Database
+	 * 
+	 * @param schema
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<HashMap<String, String>> getTables(BancoDados bancoDados, String findTableName) throws Exception {
+		conexao.conect();
+		sql = new StringBuilder();
+
+		listTable = new ArrayList<>();
+
+		System.err.println("FILTRAR POR: "+findTableName);
+		
+		if (tipo.toString().equals("ORACLE")) {
+
+			
+			sql.append("SELECT owner as schematic, table_name as tableName FROM dba_tables WHERE dba_tables.owner = ");
+			sql.append("'");
+			sql.append(bancoDados.getSchema().toUpperCase());
+			sql.append("'");			
+			sql.append("order by table_name");
+
+			executeQuery = conexao.executeQuery(sql.toString());
+					
+			while (executeQuery.next()) {
+				
+				System.err.println("TABLE: "+executeQuery.getString("tableName"));
+				
+				if(executeQuery.getString("tableName").contains(findTableName.toUpperCase())) {
+					HashMap<String, String> hm = new HashMap<String, String>();
+					hm.put("tableName", executeQuery.getString("tableName"));
+					hm.put("tableType", "BASE TABLE");				
+					listTable.add(hm);
+				}				
+			}
+
+			sql = new StringBuilder();
+			sql.append("SELECT view_name,owner as schematic FROM all_views WHERE owner = ");
+			sql.append("'");
+			sql.append(bancoDados.getSchema().toUpperCase());
+			sql.append("'");			
+			sql.append("order by view_name");
+			
+			executeQuery = conexao.executeQuery(sql.toString());
+
+			while (executeQuery.next()) {
+				System.err.println("VIEW");
+				if(executeQuery.getString("view_name").contains(findTableName.toUpperCase())) {
+					HashMap<String, String> hm = new HashMap<String, String>();
+					hm.put("tableName", executeQuery.getString("view_name"));
+					hm.put("tableType", "VIEW");				
+					listTable.add(hm);
+				}				
+			}
+
+		} else if (tipo.toString().equals("MYSQL")) {
+
+			String filter = findTableName.equals("") ? "" : " LIKE '%"+findTableName+"%'";
+			
+			sql.append("SHOW FULL TABLES IN " + bancoDados.getNameBd() + filter);
+
+			executeQuery = conexao.executeQuery(sql.toString());
+
+			while (executeQuery.next()) {
+				HashMap<String, String> hm = new HashMap<String, String>();
+				hm.put("tableName", executeQuery.getString(1));
+				hm.put("tableType", executeQuery.getString(2));
+				listTable.add(hm);
+
+			}
+
+		}
+
+		conexao.commit();
+		return listTable;
+	}
+	
 
 	public String getRowsJson(String table) throws Exception {
 

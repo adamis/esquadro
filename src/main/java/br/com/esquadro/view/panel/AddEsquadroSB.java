@@ -34,6 +34,8 @@ import br.com.esquadro.util.HintTextField;
 import br.com.esquadro.util.PersonalItem;
 import br.com.esquadro.util.SqliteHelper;
 import br.com.esquadro.view.ConsoleLog;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class AddEsquadroSB extends JInternalFrame {
 
@@ -76,7 +78,8 @@ public class AddEsquadroSB extends JInternalFrame {
 	private boolean configuration = true;
 	private boolean metamodelGen = true;
 	private boolean devTools = true;
-
+	private String temp = "";
+	
 	private JCheckBox chckbxDevtools;
 
 	public void setUrl(TextField inputProject) {
@@ -258,6 +261,16 @@ public class AddEsquadroSB extends JInternalFrame {
 		getContentPane().add(panel);
 
 		inputProject = new TextField();
+		inputProject.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				if(inputProject.getText() != null) {
+					buscaPackage(inputProject.getText());
+				}
+			}
+
+
+		});
 		inputProject.setPreferredSize(new Dimension(10, 0));
 		inputProject.setMaximumSize(new Dimension(10, 10));
 		inputProject.setColumns(70);
@@ -289,7 +302,7 @@ public class AddEsquadroSB extends JInternalFrame {
 
 		panel.add(btnWorkspace);
 
-		txtPackages = new HintTextField(" br.com.project");
+		txtPackages = new JTextField(" br.com.project");
 		txtPackages.setBounds(10, 101, 643, 30);
 		getContentPane().add(txtPackages);
 		txtPackages.setColumns(10);
@@ -583,4 +596,36 @@ public class AddEsquadroSB extends JInternalFrame {
 			component.setEnabled(isEnabled);
 		}
 	}
+
+	
+	
+	private void buscaPackage(String url) {
+		if(url != null && url.length() > 0) {
+			
+			url = url+"/src/main/java";
+			File directory = new File(url);
+			listar(directory);
+			
+			String replace = temp.replace(directory.getAbsolutePath(),"").replace("\\", ".");
+			replace = replace.substring(1, replace.length());
+			
+			System.err.println(""+replace);		
+			txtPackages.setText(replace);
+			
+		}
+	}
+	
+	 public void listar(File directory) {
+	        if(directory.isDirectory()) {
+	            //System.out.println(directory.getPath());
+	            temp = directory.getPath();
+	            String[] subDirectory = directory.list();
+	            if(subDirectory != null) {
+	                for(String dir : subDirectory){
+	                    listar(new File(directory + File.separator  + dir));
+	                }
+	            }
+	        }
+	    }
+	
 }

@@ -41,6 +41,8 @@ import br.com.esquadro.util.DatabaseUtils;
 import br.com.esquadro.util.PersonalItem;
 import br.com.esquadro.util.SqliteHelper;
 import br.com.esquadro.view.ConsoleLog;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class AddAPI extends JInternalFrame {
 
@@ -64,7 +66,11 @@ public class AddAPI extends JInternalFrame {
 	private JCheckBox chkRepositoryImpl;
 	private JCheckBox chkFilter;
 	private JLabel lblNewLabel_2;
+	private String temp;
+	private JTextField textField_1;
 
+	private String filterTableName;
+	
 	public void setUrl(TextField inputProject) {
 		this.inputProject = inputProject;
 	}
@@ -156,7 +162,7 @@ public class AddAPI extends JInternalFrame {
 		table.setBounds(0, 0, 500, 300);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 203, 643, 310);
+		scrollPane.setBounds(10, 244, 643, 269);
 		scrollPane.setViewportView(table);
 		getContentPane().add(scrollPane);
 
@@ -216,6 +222,14 @@ public class AddAPI extends JInternalFrame {
 		getContentPane().add(panel);
 
 		inputProject = new TextField();
+		inputProject.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {							
+				if(inputProject.getText() != null) {
+					buscaPackage(inputProject.getText());					
+				}
+			}
+		});
 		inputProject.setPreferredSize(new Dimension(10, 0));
 		inputProject.setMaximumSize(new Dimension(10, 10));
 		inputProject.setColumns(70);
@@ -251,32 +265,20 @@ public class AddAPI extends JInternalFrame {
 		txtPackage.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-
 				JTextField textField = (JTextField) e.getSource();
 
 				if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
 					String text = textField.getText();
+					
 					if ((text != null) && (text.length() > 0)) {
 						text = text.substring(0, text.length() - 1);
 					}
-
-					txtEntity.setText(text + ".entity");
-					txtFilter.setText(text + ".filter");
-					txtResource.setText(text + ".resource");
-					txtRepository.setText(text + ".repository");
-					txtServices.setText(text + ".service");
-					txtRepository.setText(text + ".repository");
-					txtRepositoryImpl.setText(text + ".repository.{{EntityFolder}}");
+					
+					setText(text);
 
 				} else {
 					String text = textField.getText();
-					txtEntity.setText(text + e.getKeyChar() + ".entity");
-					txtFilter.setText(text + e.getKeyChar() + ".filter");
-					txtResource.setText(text + e.getKeyChar() + ".resource");
-					txtRepository.setText(text + e.getKeyChar() + ".repository");
-					txtServices.setText(text + e.getKeyChar() + ".services");
-					txtRepository.setText(text + e.getKeyChar() + ".repository");
-					txtRepositoryImpl.setText(text + e.getKeyChar() + ".repository.{{EntityFolder}}");
+					setText(text+ e.getKeyChar());
 				}
 			}
 		});
@@ -289,9 +291,9 @@ public class AddAPI extends JInternalFrame {
 		lblPacote.setBounds(10, 71, 198, 14);
 		getContentPane().add(lblPacote);
 
-		JLabel lblTabelas = new JLabel("Tabelas");
+		JLabel lblTabelas = new JLabel("Tabelas (Atenção ao buscar uma tabela ele cancela as anteriores marcas)");
 		lblTabelas.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblTabelas.setBounds(10, 184, 198, 14);
+		lblTabelas.setBounds(10, 184, 643, 14);
 		getContentPane().add(lblTabelas);
 
 		JPanel panel_1 = new JPanel();
@@ -533,11 +535,81 @@ public class AddAPI extends JInternalFrame {
 		lblNewLabel_2.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNewLabel_2.setBounds(20, 470, 198, 14);
 		panel_1.add(lblNewLabel_2);
+		
+		textField_1 = new JTextField();
+		textField_1.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				
+				//BUSCAR TABELA PELO NOME
+				//TODO
+				
+				JTextField textField = (JTextField) e.getSource();
+
+				if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+					String text = textField.getText();
+					
+					if ((text != null) && (text.length() > 0)) {
+						text = text.substring(0, text.length() - 1);
+					}
+
+					filterTableName = text;
+				} else {
+					String text = textField.getText();
+					filterTableName = text+ e.getKeyChar();
+				}
+				
+				ListTableController controller = new ListTableController(bancoDados, table, true, consoleLog, filterTableName);
+				controller.run();
+			}
+		});
+		textField_1.setToolTipText("Buscar Tabelas");
+		textField_1.setBounds(10, 209, 643, 30);
+		getContentPane().add(textField_1);
+		textField_1.setColumns(10);
 
 	}
 
 	private void updateGrid(BancoDados bancoDados) {
-		ListTableController controller = new ListTableController(bancoDados, table, true, consoleLog);
+		ListTableController controller = new ListTableController(bancoDados, table, true, consoleLog, "");
 		controller.run();
+	}
+
+	private void buscaPackage(String url) {
+		if(url != null && url.length() > 0) {
+
+			url = url+"/src/main/java";
+			File directory = new File(url);
+			listar(directory);
+
+			String replace = temp.replace(directory.getAbsolutePath(),"").replace("\\", ".");
+			replace = replace.substring(1, replace.length());
+
+			txtPackage.setText(replace);
+			setText(replace);
+		}
+	}
+
+	public void listar(File directory) {
+		if(directory.isDirectory()) {
+			//System.out.println(directory.getPath());
+			temp = directory.getPath();
+			String[] subDirectory = directory.list();
+			if(subDirectory != null) {
+				for(String dir : subDirectory){
+					listar(new File(directory + File.separator  + dir));
+				}
+			}
+		}
+	}
+
+	public void setText(String text) {
+		txtEntity.setText(text + ".entity");
+		txtFilter.setText(text  + ".filter");
+		txtResource.setText(text + ".resource");
+		txtRepository.setText(text + ".repository");
+		txtServices.setText(text + ".services");
+		txtRepository.setText(text  + ".repository");
+		txtRepositoryImpl.setText(text  + ".repository.{{EntityFolder}}");
 	}
 }
