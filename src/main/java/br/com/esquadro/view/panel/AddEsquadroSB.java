@@ -8,6 +8,8 @@ import java.awt.Rectangle;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
@@ -30,12 +32,9 @@ import br.com.esquadro.model.BancoDados;
 import br.com.esquadro.model.DependenciasPOM.DEPEND;
 import br.com.esquadro.resources.ResourcesImages;
 import br.com.esquadro.util.Conexao;
-import br.com.esquadro.util.HintTextField;
 import br.com.esquadro.util.PersonalItem;
 import br.com.esquadro.util.SqliteHelper;
 import br.com.esquadro.view.ConsoleLog;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 
 public class AddEsquadroSB extends JInternalFrame {
 
@@ -65,15 +64,15 @@ public class AddEsquadroSB extends JInternalFrame {
 
 	private boolean lombok = true;
 	private boolean commons = true;
-	private boolean springSecurity = true;
-	private boolean h2 = true;
-	private boolean flyway = true;
+	private boolean springSecurity = false;
+	private boolean h2 = false;
+	private boolean flyway = false;
 	private boolean jpa = true;
-	private boolean mysql = true;
-	private boolean oracle = true;
-	private boolean ehCache = true;
+	private boolean mysql = false;
+	private boolean oracle = false;
+	private boolean ehCache = false;
 	private boolean swagger = true;
-	private boolean springEmail = true;
+	private boolean springEmail = false;
 	private boolean modelMapper = true;
 	private boolean configuration = true;
 	private boolean metamodelGen = true;
@@ -115,7 +114,7 @@ public class AddEsquadroSB extends JInternalFrame {
 
 		ResultSet executeQuery;
 		try {
-			executeQuery = conexao.executeQuery("SELECT * FROM \"banco_dados\"");
+			executeQuery = conexao.executeQuery("SELECT * FROM \"banco_dados\" ORDER BY nome ASC");
 
 			PersonalItem item = new PersonalItem();
 			item.setName("Selecione...");
@@ -159,9 +158,14 @@ public class AddEsquadroSB extends JInternalFrame {
 					if(bancoDados.getTipo().equalsIgnoreCase("mysql")) {
 						chkMysql.setSelected(true);
 						chkOracle.setSelected(false);
+						mysql = true;
+						oracle = false;
+						
 					}else {
 						chkMysql.setSelected(false);
 						chkOracle.setSelected(true);
+						mysql = false;
+						oracle = true;
 					}
 					
 				} else {
@@ -511,7 +515,6 @@ public class AddEsquadroSB extends JInternalFrame {
 		pPom.add(chkSwagger);
 
 		chckbxSpringEmail = new JCheckBox("Spring Email");
-		chckbxSpringEmail.setSelected(true);
 		chckbxSpringEmail.setBounds(6, 33, 97, 23);
 		chckbxSpringEmail.addItemListener(new ItemListener() {
 			@Override
