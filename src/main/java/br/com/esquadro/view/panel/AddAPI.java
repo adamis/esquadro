@@ -69,7 +69,7 @@ public class AddAPI extends JInternalFrame {
 	private String temp;
 	private JTextField textField_1;
 
-	private String filterTableName;
+//	private String filterTableName;
 	
 	public void setUrl(TextField inputProject) {
 		this.inputProject = inputProject;
@@ -263,23 +263,12 @@ public class AddAPI extends JInternalFrame {
 
 		txtPackage = new JTextField();
 		txtPackage.addKeyListener(new KeyAdapter() {
+			
 			@Override
-			public void keyPressed(KeyEvent e) {
+			public void keyReleased(KeyEvent e) {
 				JTextField textField = (JTextField) e.getSource();
-
-				if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-					String text = textField.getText();
-					
-					if ((text != null) && (text.length() > 0)) {
-						text = text.substring(0, text.length() - 1);
-					}
-					
-					setText(text);
-
-				} else {
-					String text = textField.getText();
-					setText(text+ e.getKeyChar());
-				}
+				String text = textField.getText();
+				setText(text);
 			}
 		});
 		txtPackage.setBounds(10, 87, 643, 36);
@@ -537,30 +526,17 @@ public class AddAPI extends JInternalFrame {
 		panel_1.add(lblNewLabel_2);
 		
 		textField_1 = new JTextField();
-		textField_1.addKeyListener(new KeyAdapter() {
+		textField_1.addKeyListener(new KeyAdapter() {			
 			@Override
-			public void keyPressed(KeyEvent e) {
-				
-				//BUSCAR TABELA PELO NOME
-				//TODO
+			public void keyReleased(KeyEvent e) {
+				System.err.println("RELEASED");
 				
 				JTextField textField = (JTextField) e.getSource();
-
-				if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-					String text = textField.getText();
-					
-					if ((text != null) && (text.length() > 0)) {
-						text = text.substring(0, text.length() - 1);
-					}
-
-					filterTableName = text;
-				} else {
-					String text = textField.getText();
-					filterTableName = text+ e.getKeyChar();
-				}
+				String text = textField.getText();				
 				
-				ListTableController controller = new ListTableController(bancoDados, table, true, consoleLog, filterTableName);
+				ListTableController controller = new ListTableController(bancoDados, table, true, consoleLog, text);
 				controller.run();
+				
 			}
 		});
 		textField_1.setToolTipText("Buscar Tabelas");

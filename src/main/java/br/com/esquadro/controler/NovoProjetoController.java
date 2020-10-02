@@ -133,7 +133,7 @@ public class NovoProjetoController implements Runnable {
 				// +" npm install jquery --save"//ADD JQUERY
 				;
 
-				System.err.println(bat);
+				//System.err.println(bat);
 
 				ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", bat);
 
@@ -195,7 +195,7 @@ public class NovoProjetoController implements Runnable {
 				consoleLog.setText("FAIL");
 				consoleLog.setText("Tente novamente após ter instalado no NODE!");
 			}
-			System.err.println("FIM");
+//			System.err.println("FIM");
 
 		} catch (Exception e) {
 			consoleLog.setText("ERRO> " + e.getMessage());

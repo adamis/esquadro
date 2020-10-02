@@ -109,11 +109,10 @@ public class DatabaseUtils {
 		sql = new StringBuilder();
 
 		listTable = new ArrayList<>();
-
-		System.err.println("FILTRAR POR: "+findTableName);
 		
+				
 		if (tipo.toString().equals("ORACLE")) {
-
+			findTableName = findTableName.replace("-", "_");
 			
 			sql.append("SELECT owner as schematic, table_name as tableName FROM dba_tables WHERE dba_tables.owner = ");
 			sql.append("'");
@@ -125,7 +124,7 @@ public class DatabaseUtils {
 					
 			while (executeQuery.next()) {
 				
-				System.err.println("TABLE: "+executeQuery.getString("tableName"));
+				//System.err.println("TABLE: "+executeQuery.getString("tableName")+" FILTER> " +findTableName.toUpperCase());
 				
 				if(executeQuery.getString("tableName").contains(findTableName.toUpperCase())) {
 					HashMap<String, String> hm = new HashMap<String, String>();
@@ -145,7 +144,6 @@ public class DatabaseUtils {
 			executeQuery = conexao.executeQuery(sql.toString());
 
 			while (executeQuery.next()) {
-				System.err.println("VIEW");
 				if(executeQuery.getString("view_name").contains(findTableName.toUpperCase())) {
 					HashMap<String, String> hm = new HashMap<String, String>();
 					hm.put("tableName", executeQuery.getString("view_name"));

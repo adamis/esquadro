@@ -100,8 +100,8 @@ public class Conexao {
 						port = "3306";
 					}
 
-					System.err.println("jdbc:mysql://" + ip + ":" + port + "/" + nameBD);
-					System.err.println("" + props.toString());
+					//System.err.println("jdbc:mysql://" + ip + ":" + port + "/" + nameBD);
+					//System.err.println("" + props.toString());
 
 					// props.setProperty("relaxAutoCommit", "true");
 					props.setProperty("autoReconnect", "true");
@@ -243,10 +243,8 @@ public class Conexao {
 
 		try {
 			//System.out.println(sql);
-
 			statement = conexao.createStatement();
 			statement.executeUpdate(sql);
-			// System.out.println(""+sql);
 			resultado = "OK";
 
 		} catch (SQLException e) {
@@ -320,8 +318,6 @@ public class Conexao {
 			guia = "null";
 		} else {
 			SimpleDateFormat dateFormatParse = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-			// System.err.println("DATA: "+date);
-
 			guia = "to_date('" + dateFormatParse.format(date) + "','dd/MM/yyyy hh24:mi:ss')";
 
 		}

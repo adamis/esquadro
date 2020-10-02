@@ -78,7 +78,6 @@ public class ListDatabaseController extends Thread {
 			JtableActionPerformace delete = new JtableActionPerformace(table) {
 				@Override
 				public void exec(int col, int row) {
-//					System.err.println("c: " + row + " r: " + col);
 					deletar(this.getjTable().getValueAt(col, 0) + "");
 				};
 			};

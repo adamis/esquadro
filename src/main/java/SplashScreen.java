@@ -79,16 +79,25 @@ public class SplashScreen extends JFrame {
 				try {
 					progressBar.setValue(10);
 					lbText.setText("Iniciando...");
-
+					Thread.sleep(300);
 					lbText.setText("Conectando Banco de Dados Interno...");
 					if (SqliteHelper.conexaoSQLITE != null) {
-						System.err.println("DIFERENTE");
+						//System.err.println("DIFERENTE");
 					}
-					lbText.setText("Conecta!");
-					Thread.sleep(500);
+					lbText.setText("Conectado!");
+					progressBar.setValue(20);
+					Thread.sleep(600);
 					lbText.setText("Iniciando Menu...");
-
-					progressBar.setValue(100);
+					
+					System.err.println(""+progressBar.getValue());
+					System.err.println(""+(100-progressBar.getValue()));
+					
+					int rangeLimbo = (100-progressBar.getValue());
+					for (int i = 0; i < rangeLimbo; i++) {
+						Thread.sleep(10);
+						progressBar.setValue(progressBar.getValue()+1);
+					}
+					
 					UIManager.setLookAndFeel(Styles.style);
 
 					Thread.sleep(1000);

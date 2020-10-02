@@ -49,7 +49,7 @@ public class ListTableController extends Thread {
 				tables = databaseUtils.getTables(this.bancoDados);
 			}
 			
-			System.err.println("Size>"+ tables.size());
+			
 			
 			String[] columnNames = { "ck", "Tabelas", "Tipo" };
 

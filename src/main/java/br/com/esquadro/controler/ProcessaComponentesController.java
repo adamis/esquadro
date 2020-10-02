@@ -59,7 +59,6 @@ public class ProcessaComponentesController implements Runnable {
 				if (listComponent.get(i) != null && !listComponent.get(i).trim().equals("")) {
 
 					String table = listComponent.get(i);
-					// System.err.println("TABLE: " + table);
 
 					consoleLog.setText("Processando: " + table + "...");
 					execBat(table);
@@ -130,7 +129,6 @@ public class ProcessaComponentesController implements Runnable {
 
 		table = Utils.normalizerString(table.trim());
 
-		// System.err.println("INICIO " + table);
 
 		String params = "";
 
@@ -337,13 +335,12 @@ public class ProcessaComponentesController implements Runnable {
 
 			String type = coluns.get(i).get("type");
 			String colum = Utils.normalizerStringCommomNotCap(coluns.get(i).get("colum"));
-			// System.err.println(i+" - "+colum);
+
 			// String columTracinho =
 			// Utils.normalizerStringCommomNotCap(coluns.get(i).get("colum"));
 			String columCammonNotCapInit = Utils.normalizerStringCommomNotCap(coluns.get(i).get("colum"));
 			String columCap = (Character.toUpperCase(colum.charAt(0)) + colum.substring(1)).trim().replace("-", "");
 
-			// System.err.println("type: " + type);
 
 			boolean controlFk = false;
 			for (int j = 0; j < fks.size(); j++) {
@@ -648,7 +645,7 @@ public class ProcessaComponentesController implements Runnable {
 		String file = this.urlProject + "/src/app/" + Statics.MODULE_NAME + "/" + tableLow + "/" + tableLow
 				+ "-routing.module.ts";
 
-		// System.err.println("file>: " + file);
+
 
 		List<String> readTxtList = Utils.readTxtList(file);
 		String imp = "import { " + tableCap + "CadastroComponent } from './" + tableLow + "-cadastro/" + tableLow

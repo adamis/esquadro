@@ -64,14 +64,12 @@ public class CheckNodeAngularCLI {
 
 		while ((ligne = output.readLine()) != null) {
 			this.consoleLog.setText("" + ligne);
-			version = ligne;
-			// System.err.println("" + ligne);
+			version = ligne;			
 		}
 
 		while ((ligne = error.readLine()) != null) {
 			this.consoleLog.setText("" + ligne);
 			erro = ligne;
-			// System.err.println("" + ligne);
 		}
 
 		p.waitFor();
@@ -97,26 +95,24 @@ public class CheckNodeAngularCLI {
 		while ((ligne = output.readLine()) != null) {
 			this.consoleLog.setText("" + ligne);
 			version = ligne;
-			// System.err.println("" + ligne);
+
 		}
 
 		while ((ligne = error.readLine()) != null) {
 			this.consoleLog.setText("" + ligne);
 			erro = ligne;
-			// System.err.println("" + ligne);
+
 		}
 
 		p.waitFor();
 
-		// System.err.println("v: " + version);
-		// System.err.println("e: " + erro);
 
 		this.consoleLog.setText("Versão do Node: " + version);
 
 		if (version.equals("")) {
 			return 0;
 		} else {
-			// System.err.println(version.replace(".", "").replace("v", ""));
+
 			try {
 				return Integer.valueOf(version.replace(".", "").replace("v", ""));
 			} catch (Exception e) {
@@ -187,7 +183,7 @@ public class CheckNodeAngularCLI {
 
 		while ((ligne = error.readLine()) != null) {
 			this.consoleLog.setText("" + ligne);
-			// System.err.println("erro: " + ligne);
+
 		}
 
 		p.waitFor();
@@ -231,7 +227,6 @@ public class CheckNodeAngularCLI {
 
 	private static boolean updateAngular() throws Exception {
 
-		// System.err.println("update ANGULAR");
 
 		// String cmd = "ng remove -g @angular/cli && npm cache verify && npm install -g
 		// @angular/cli@^7";
@@ -248,12 +243,12 @@ public class CheckNodeAngularCLI {
 		String ligne = "";
 		String result = "";
 		while ((ligne = output.readLine()) != null) {
-			// System.err.println("output: " + ligne);
+
 			result = ligne;
 		}
 
 		while ((ligne = error.readLine()) != null) {
-			// System.err.println("erro: " + ligne);
+
 		}
 
 		p.waitFor();

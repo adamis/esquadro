@@ -76,6 +76,10 @@ public class ResourcesImages {
 		return toolkitIcon("information.png");
 	}
 
+	public static Image informationIcon() {
+		return toolkit("information.png");
+	}
+	
 	public static ImageIcon faq() {
 		return toolkitIcon("faq.png");
 	}
@@ -112,6 +116,12 @@ public class ResourcesImages {
 		return toolkitIcon("database2.png");
 	}
 
+	public static ImageIcon angularMini() {
+		return toolkitIcon("angular-mini.png");
+	}
+	
+	
+	
 	public static ImageIcon tutorial1() {
 		return toolkitIcon("tutorial-1.png");
 	}

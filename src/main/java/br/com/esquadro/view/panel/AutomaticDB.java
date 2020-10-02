@@ -2,12 +2,15 @@ package br.com.esquadro.view.panel;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JInternalFrame;
@@ -23,6 +25,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import br.com.esquadro.controler.ListTableController;
@@ -40,10 +43,9 @@ public class AutomaticDB extends JInternalFrame {
 	private TextField inputProject;
 	private JTable table;
 	private BancoDados bancoDados = null;
-	private JCheckBox chckbxSpec;
-	private JCheckBox chckbxMockJson;
 
 	private ConsoleLog consoleLog;
+	private JTextField textField;
 
 	public void setUrl(TextField inputProject) {
 		this.inputProject = inputProject;
@@ -127,14 +129,14 @@ public class AutomaticDB extends JInternalFrame {
 
 		});
 
-		comboBox.setBounds(55, 88, 455, 30);
+		comboBox.setBounds(55, 88, 598, 30);
 		getContentPane().add(comboBox);
 
 		table = new JTable();
 		table.setBounds(0, 0, 500, 300);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 128, 643, 388);
+		scrollPane.setBounds(10, 202, 643, 314);
 		scrollPane.setViewportView(table);
 		getContentPane().add(scrollPane);
 
@@ -163,9 +165,7 @@ public class AutomaticDB extends JInternalFrame {
 				if (listComponents.size() > 0) {
 
 					ProcessaComponentesController processaComponentesController = new ProcessaComponentesController(
-							listComponents, getUrl(), chckbxSpec.isSelected(), consoleLog, chckbxMockJson.isSelected(),
-							bancoDados);
-					// processaComponentesController.run();
+							listComponents, getUrl(), false, consoleLog, false,	bancoDados);
 
 					new Thread(processaComponentesController).start();
 
@@ -174,12 +174,6 @@ public class AutomaticDB extends JInternalFrame {
 		});
 		btnNewButton.setBounds(240, 527, 198, 36);
 		getContentPane().add(btnNewButton);
-
-		chckbxSpec = new JCheckBox("Spec");
-
-		chckbxSpec.setSelected(true);
-		chckbxSpec.setBounds(101, 534, 133, 23);
-		getContentPane().add(chckbxSpec);
 
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
@@ -218,11 +212,29 @@ public class AutomaticDB extends JInternalFrame {
 		btnWorkspace.setIcon(ResourcesImages.report());
 
 		panel.add(btnWorkspace);
-
-		chckbxMockJson = new JCheckBox("Mock Json");
-		chckbxMockJson.setSelected(true);
-		chckbxMockJson.setBounds(464, 534, 133, 23);
-		getContentPane().add(chckbxMockJson);
+		
+		JLabel lblTabelas = new JLabel("Tabelas (Atenção ao buscar uma tabela ele cancela as anteriores marcas)");
+		lblTabelas.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblTabelas.setBounds(10, 136, 643, 14);
+		getContentPane().add(lblTabelas);
+		
+		textField = new JTextField();
+		textField.addKeyListener(new KeyAdapter() {			
+			@Override
+			public void keyReleased(KeyEvent e) {
+								
+				JTextField textField = (JTextField) e.getSource();
+				String text = textField.getText();
+				
+				ListTableController controller = new ListTableController(bancoDados, table, true, consoleLog, text);
+				controller.run();
+				
+			}
+		});
+		textField.setToolTipText("Buscar Tabelas");
+		textField.setColumns(10);
+		textField.setBounds(10, 161, 643, 30);
+		getContentPane().add(textField);
 
 	}
 

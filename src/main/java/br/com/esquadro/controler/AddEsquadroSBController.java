@@ -197,7 +197,7 @@ public class AddEsquadroSBController implements Runnable {
 			}
 		}
 
-		System.err.println("" + urlProject + "/pom.xml");
+		
 		List<String> readPOM = Utils.readTxtList(urlProject + "/pom.xml");
 
 		for (int i = 0; i < instalar.size(); i++) {
@@ -208,8 +208,7 @@ public class AddEsquadroSBController implements Runnable {
 
 				if (("<artifactId>" + instalar.get(i).getArtifactId() + "</artifactId>")
 						.equals(readPOM.get(j).trim())) {
-					control = true;
-					System.err.println("Encontrado: " + instalar.get(i).getArtifactId());
+					control = true;		
 				}
 
 			}

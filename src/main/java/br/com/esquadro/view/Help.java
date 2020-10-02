@@ -20,8 +20,8 @@ public class Help extends JFrame {
 	 * Create the panel.
 	 */
 	public Help() {
-		setBackground(Color.WHITE);
-		setLocationRelativeTo(null);
+		setIconImage(ResourcesImages.informationIcon());
+		setBackground(Color.WHITE);		
 		setType(Type.POPUP);
 		setResizable(false);
 		getContentPane().setBackground(Color.WHITE);
@@ -93,5 +93,6 @@ public class Help extends JFrame {
 		btnNewButton.setBounds(281, 286, 89, 35);
 		getContentPane().add(btnNewButton);
 
+		setLocationRelativeTo(null);
 	}
 }

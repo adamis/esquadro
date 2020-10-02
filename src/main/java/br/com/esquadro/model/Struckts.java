@@ -529,8 +529,7 @@ public class Struckts {
 			List<HashMap<String, String>> coluns = this.databaseUtils.getColuns(entidade);
 
 			for (int i = 0; i < coluns.size(); i++) {
-				System.err.println("colum: "+coluns.get(i).get("colum")+" type:"+coluns.get(i).get("type"));
-				
+								
 				String type = coluns.get(i).get("type").toLowerCase();
 
 					if (type.contains("char")) {
