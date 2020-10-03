@@ -14,12 +14,7 @@ import javax.swing.ImageIcon;
  * @since 1.0, 31 de ago de 2017
  */
 public class ResourcesImages {
-	private static String version = "1.3 b";
-
-	public static String version() {
-		return version;
-	}
-
+	
 	public static ImageIcon springBoot() {
 		return toolkitIcon("SpringBoot.png");
 	}
