@@ -222,14 +222,7 @@ public class AddAPI extends JInternalFrame {
 		getContentPane().add(panel);
 
 		inputProject = new TextField();
-		inputProject.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {							
-				if(inputProject.getText() != null) {
-					buscaPackage(inputProject.getText());					
-				}
-			}
-		});
+		
 		inputProject.setPreferredSize(new Dimension(10, 0));
 		inputProject.setMaximumSize(new Dimension(10, 10));
 		inputProject.setColumns(70);
@@ -262,6 +255,14 @@ public class AddAPI extends JInternalFrame {
 		panel.add(btnWorkspace);
 
 		txtPackage = new JTextField();
+		txtPackage.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				if(inputProject.getText() != null) {
+					buscaPackage(inputProject.getText());					
+				}
+			}
+		});
 		txtPackage.addKeyListener(new KeyAdapter() {
 			
 			@Override

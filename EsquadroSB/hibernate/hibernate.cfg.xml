@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+	
+        <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
+        <property name="hibernate.connection.driver_class">{DRIVERCLASS}</property>
+        
+        <property name="hibernate.connection.url">{URL}</property>
+        <property name="hibernate.connection.username">{USERNAME}</property>
+        <property name="hibernate.connection.password">{PASSWORD}</property>
+        
+        <property name="hibernate.default_catalog">{DEFAULT_CATALOG}</property>
+        <property name="hibernate.default_schema">{DEFAULT_SCHEMA}</property>
+        <property name="hibernate.match-schema">{MATCH_CATALOG}</property>        
+        <property name="hibernate.dialect">{DIALECT}</property>
+        <property name="hibernate.search.autoregister_listeners">true</property>
+        <property name="hibernate.validator.apply_to_ddl">false</property>
+		
+    </session-factory>
+</hibernate-configuration>

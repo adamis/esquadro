@@ -50,11 +50,11 @@ public class Struckts {
 		sb.append("\n");
 		sb.append("  ");
 		sb.append("\n");
-		sb.append("import javax.servlet.http.HttpServletResponse; ");
-		sb.append("\n");
-		sb.append("import javax.validation.Valid; ");
+		sb.append("import javax.servlet.http.HttpServletResponse; ");		
 		sb.append("\n");
 		sb.append("  ");
+		sb.append("\n");
+		sb.append("import org.springframework.validation.annotation.Validated;");
 		sb.append("\n");
 		sb.append("import org.springframework.beans.factory.annotation.Autowired; ");
 		sb.append("\n");
@@ -88,9 +88,7 @@ public class Struckts {
 		sb.append("\n");
 		sb.append("  ");
 		sb.append("\n");
-		sb.append("import {{packEntity}}.{{entity}}; ");
-		sb.append("\n");
-		sb.append("import {{packBase}}.event.RecursoCriadoEvent; ");
+		sb.append("import {{packEntity}}.{{entity}}; ");		
 		sb.append("\n");
 		sb.append("import {{packRepository}}.{{entity}}Repository; ");
 		sb.append("\n");
@@ -135,10 +133,7 @@ public class Struckts {
 		sb.append(
 				" 	public ResponseEntity<{{entity}}> criar(@Valid @RequestBody {{entity}} {{entityL}}, HttpServletResponse response) { ");
 		sb.append("\n");
-		sb.append(" 		{{entity}} {{entityL}}Salva = {{entityL}}Repository.save({{entityL}}); ");
-		sb.append("\n");
-		sb.append(
-				" 		publisher.publishEvent(new RecursoCriadoEvent(this, response, {{entityL}}Salva.getId())); ");
+		sb.append(" 		{{entity}} {{entityL}}Salva = {{entityL}}Repository.save({{entityL}}); ");				
 		sb.append("\n");
 		sb.append(" 		return ResponseEntity.status(HttpStatus.CREATED).body({{entityL}}Salva); ");
 		sb.append("\n");
@@ -174,7 +169,7 @@ public class Struckts {
 		sb.append(" 	@PutMapping(\"/{codigo}\")	 ");
 		sb.append("\n");
 		sb.append(
-				" 	public ResponseEntity<{{entity}}> atualizar(@PathVariable Long codigo, @Valid @RequestBody {{entity}} {{entityL}}) { ");
+				" 	public ResponseEntity<{{entity}}> atualizar(@PathVariable Long codigo, @Validated @RequestBody {{entity}} {{entityL}}) { ");
 		sb.append("\n");
 		sb.append(" 		{{entity}} {{entityL}}Salva = {{entityL}}Service.atualizar(codigo, {{entityL}}); ");
 		sb.append("\n");

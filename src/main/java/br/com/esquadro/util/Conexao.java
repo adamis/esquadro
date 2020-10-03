@@ -242,7 +242,7 @@ public class Conexao {
 		String resultado = "";
 
 		try {
-			//System.out.println(sql);
+			System.out.println(sql);
 			statement = conexao.createStatement();
 			statement.executeUpdate(sql);
 			resultado = "OK";

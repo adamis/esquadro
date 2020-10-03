@@ -276,16 +276,7 @@ public class AddEsquadroSB extends JInternalFrame {
 		getContentPane().add(panel);
 
 		inputProject = new TextField();
-		inputProject.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				if(inputProject.getText() != null) {
-					buscaPackage(inputProject.getText());
-				}
-			}
-
-
-		});
+		
 		inputProject.setPreferredSize(new Dimension(10, 0));
 		inputProject.setMaximumSize(new Dimension(10, 10));
 		inputProject.setColumns(70);
@@ -318,6 +309,14 @@ public class AddEsquadroSB extends JInternalFrame {
 		panel.add(btnWorkspace);
 
 		txtPackages = new JTextField(" br.com.project");
+		txtPackages.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				if(inputProject.getText() != null) {
+					buscaPackage(inputProject.getText());
+				}
+			}
+		});
 		txtPackages.setBounds(10, 101, 643, 30);
 		getContentPane().add(txtPackages);
 		txtPackages.setColumns(10);
