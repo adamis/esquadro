@@ -131,7 +131,7 @@ public class Struckts {
 		sb.append(" 	@PostMapping	 ");
 		sb.append("\n");
 		sb.append(
-				" 	public ResponseEntity<{{entity}}> criar(@Valid @RequestBody {{entity}} {{entityL}}, HttpServletResponse response) { ");
+				" 	public ResponseEntity<{{entity}}> criar( @RequestBody {{entity}} {{entityL}}, HttpServletResponse response) { ");
 		sb.append("\n");
 		sb.append(" 		{{entity}} {{entityL}}Salva = {{entityL}}Repository.save({{entityL}}); ");				
 		sb.append("\n");
@@ -535,6 +535,10 @@ public class Struckts {
 						sb.append("\n");
 						sb.append(" 	predicates.add(builder.like( ");
 						sb.append("\n");
+						
+						System.err.println("COLUM: "+coluns.get(i).get("colum"));
+						System.err.println("COLUM-UP: "+Utils.normalizerString(coluns.get(i).get("colum")).replace("-","_").toUpperCase());
+						
 						sb.append(" 		builder.lower(root.get("+Utils.normalizerStringCaps(entidade)+"_."+Utils.normalizerString(coluns.get(i).get("colum")).replace("-","_").toUpperCase()+")), \"%\" + {{entityL}}Filter.get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"().toLowerCase() + \"%\")); ");
 						sb.append("\n");
 						sb.append(" } ");
@@ -633,10 +637,14 @@ public class Struckts {
 	}
 
 	private String processClean(StringBuilder sb) {
-		return sb.toString().replace("{{packBase}}", packBase).replace("{{packEntity}}", packEntity)
-				.replace("{{packResource}}", packResource).replace("{{packFilter}}", packFilter)
-				.replace("{{packRepository}}", packRepository).replace("{{packServices}}", packServices)
-				.replace("{{packRepositoryImpl}}", packRepositoryImpl).replace("{{entity}}", this.entity)
+		return sb.toString().replace("{{packBase}}", packBase)
+				.replace("{{packEntity}}", packEntity)
+				.replace("{{packResource}}", packResource)
+				.replace("{{packFilter}}", packFilter)
+				.replace("{{packRepository}}", packRepository)
+				.replace("{{packServices}}", packServices)
+				.replace("{{packRepositoryImpl}}", packRepositoryImpl)
+				.replace("{{entity}}", Utils.normalizerStringCaps(this.entity))
 				.replace("{{EntityFolder}}", Utils.normalizerStringCommomNotCap(this.entity))
 				.replace("{{entityL}}", Utils.normalizerStringCommomNotCap(this.entity));
 	}
