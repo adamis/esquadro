@@ -539,7 +539,7 @@ public class Struckts {
 						System.err.println("COLUM: "+coluns.get(i).get("colum"));
 						System.err.println("COLUM-UP: "+Utils.normalizerString(coluns.get(i).get("colum")).replace("-","_").toUpperCase());
 						
-						sb.append(" 		builder.lower(root.get("+Utils.normalizerStringCaps(entidade)+"_."+Utils.normalizerString(coluns.get(i).get("colum")).replace("-","_").toUpperCase()+")), \"%\" + {{entityL}}Filter.get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"().toLowerCase() + \"%\")); ");
+						sb.append(" 		builder.lower(root.get("+Utils.normalizerStringCaps(entidade)+"_."+Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-","_")).toUpperCase()+")), \"%\" + {{entityL}}Filter.get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"().toLowerCase() + \"%\")); ");
 						sb.append("\n");
 						sb.append(" } ");
 
@@ -565,7 +565,7 @@ public class Struckts {
 							sb.append("\n");
 							sb.append(" 	predicates.add(builder.equal( ");
 							sb.append("\n");
-							sb.append(" 		root.get("+Utils.normalizerStringCaps(entidade)+"_."+Utils.normalizerString(coluns.get(i).get("colum")).replace("-","_").toUpperCase()+"), {{entityL}}Filter.get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"())); ");
+							sb.append(" 		root.get("+Utils.normalizerStringCaps(entidade)+"_."+Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-","_")).toUpperCase() +"), {{entityL}}Filter.get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"())); ");
 							sb.append("\n");
 							sb.append(" } ");
 						}
@@ -579,7 +579,7 @@ public class Struckts {
 						sb.append("\n");
 						sb.append(" 	predicates.add(builder.equal( ");
 						sb.append("\n");
-						sb.append(" 		root.get("+Utils.normalizerStringCaps(entidade)+"_."+Utils.normalizerString(coluns.get(i).get("colum")).replace("-","_").toUpperCase()+"), {{entityL}}Filter.get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"())); ");
+						sb.append(" 		root.get("+Utils.normalizerStringCaps(entidade)+"_."+Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-","_")).toUpperCase()+"), {{entityL}}Filter.get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"())); ");
 						sb.append("\n");
 						sb.append(" } ");
 					} else {
@@ -589,7 +589,7 @@ public class Struckts {
 						sb.append("\n");
 						sb.append(" 	predicates.add(builder.equal( ");
 						sb.append("\n");
-						sb.append(" 		root.get("+Utils.normalizerStringCaps(entidade)+"_."+Utils.normalizerString(coluns.get(i).get("colum")).replace("-","_").toUpperCase()+"), {{entityL}}Filter.get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"())); ");
+						sb.append(" 		root.get("+Utils.normalizerStringCaps(entidade)+"_."+Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-","_")).toUpperCase()+"), {{entityL}}Filter.get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"())); ");
 						sb.append("\n");
 						sb.append(" } ");
 					}
@@ -646,7 +646,8 @@ public class Struckts {
 				.replace("{{packRepositoryImpl}}", packRepositoryImpl)
 				.replace("{{entity}}", Utils.normalizerStringCaps(this.entity))
 				.replace("{{EntityFolder}}", Utils.normalizerStringCommomNotCap(this.entity))
-				.replace("{{entityL}}", Utils.normalizerStringCommomNotCap(this.entity));
+				.replace("{{entityL}}", Utils.normalizerStringCommomNotCap(this.entity))
+				;
 	}
 
 	private String processTypeDatabase(String type, String fk, StringBuilder sbImport) {

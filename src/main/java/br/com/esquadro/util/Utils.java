@@ -82,6 +82,25 @@ public class Utils {
 		return text;
 	}
 
+	
+	
+	public static String normalizerStringCapHifen(String text) {
+		
+		String temp = "";
+		
+		char[] palavraArray = text.toCharArray();
+
+        for(char c : palavraArray){
+            if(Character.isUpperCase(c)){
+                temp += "_"+c;
+            }else {
+            	temp += c;
+            }
+        }
+
+		return text;
+	}
+	
 	/**
 	 * (alunoscursos)
 	 * 
