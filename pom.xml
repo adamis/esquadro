@@ -16,14 +16,6 @@
 
 
 
-
-	<repositories>
-		<repository>
-			<id>codiub</id>
-			<url>http://docker:8081/artifactory/codiub-repo</url>
-		</repository>
-	</repositories>
-
 	<dependencies>
 
 
