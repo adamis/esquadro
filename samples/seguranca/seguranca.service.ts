@@ -25,40 +25,18 @@ export class SegurancaService extends BaseResourceService<Usuarios> {
    *  E O HEADER É PASSADO SOZINHO, TUDO COMO ESTÁ ABAIXO
    */
 
-  login(cpfCnpj: string, senha: string, empresa: any, sistema: any): Promise<any> {
-    const param = { cpfCnpj, senha, empresa, sistema };
-	
-	//REMOVER ESTE BLOCO DO IF PARA REMOVER O USUARIO ADMIN MOCK
-	if(usuario == '12345678909' && senhaP == 'admin'){
-			const temp = '{
-						  "message": "",
-						  "response": {    
-							"usuarios": {
-							  "id": 1,
-							  "cpfCnpj": "12345678909",
-							  "nome": "admin",
-							  "email": "admin@dominio.com",
-							  "contato": "",
-							  "dataCadastro": "2018-01-01",            
-							  "foto": null,
-							  "situacao": "A",      
-							  "primeiroAcesso": "N"
-							}
-						  }
-						}';
-		return temp;
-		
-	}else{
-		//ATE AQUI
-		return this.http.post(environment.apiUrl + 'login', JSON.stringify(param),
-		  { headers: this.header }
-		)
-		  .toPromise()
-		  .then(response => {
-			return response;
-		  });
-	  
-	}
+  login(usuario: string, senhaP: string, empresa: any, sistema: any): Promise<any> {
+    const param = { usuario, senhaP, empresa, sistema };
+
+    //ATE AQUI
+    return this.http.post(environment.apiUrl + 'login', JSON.stringify(param),
+      { headers: this.header }
+    )
+      .toPromise()
+      .then(response => {
+        return response;
+      });
+
   }
 
   trocarSenha(usuario: string, senhaP: string, novaSenhaP: string, repitaSenhaP: string): Promise<any> {
