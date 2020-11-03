@@ -537,7 +537,7 @@ public class Struckts {
 			for (int i = 0; i < coluns.size(); i++) {
 				
 				sb.append("\n");
-				sb.append("//"+coluns.get(i).get("colum").toUpperCase());
+				sb.append("//"+Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-","_")).toUpperCase());
 				
 				String type = coluns.get(i).get("type").toLowerCase();
 

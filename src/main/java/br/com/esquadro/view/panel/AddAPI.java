@@ -559,9 +559,15 @@ public class AddAPI extends JInternalFrame {
 			File directory = new File(url);
 			listar(directory);
 
-			String replace = temp.replace(directory.getAbsolutePath(),"").replace("\\", ".");
+			String replace = temp
+					.replace(directory.getAbsolutePath(),"")
+					.replace("\\", ".");
 			replace = replace.substring(1, replace.length());
-
+			
+			if(replace.contains(".utils")) {
+				replace = replace.replace(".utils", "");
+			}
+			
 			txtPackage.setText(replace);
 			setText(replace);
 		}
