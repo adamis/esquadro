@@ -201,10 +201,6 @@ public class Struckts {
 		sb.append("\n");
 		sb.append("  ");
 		sb.append("\n");
-		sb.append("import java.util.Optional; ");
-		sb.append("\n");
-		sb.append("  ");
-		sb.append("\n");
 		sb.append("import org.springframework.data.jpa.repository.JpaRepository; ");
 		sb.append("\n");
 		sb.append("  ");
