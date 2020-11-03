@@ -23,7 +23,8 @@ public class Utils {
 	}
 
 	public static void main(String[] args) {
-		String table = "alunos_cursos";
+		String table = "alunos-cursos";
+		System.err.println("1 "+normalizerStringCapHifen(table));		
 //		System.err.println("1 "+normalizerString(table));
 //		System.err.println("2 "+normalizerStringCaps(table));
 //		System.err.println("3 "+normalizerStringCommom(table));
@@ -98,7 +99,7 @@ public class Utils {
             }
         }
 
-		return text;
+		return temp;
 	}
 	
 	/**

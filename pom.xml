@@ -23,8 +23,6 @@
 
 	<dependencies>
 
-
-
 		<!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc6 -->
 		<dependency>
 			<groupId>com.oracle.database.jdbc</groupId>
@@ -119,7 +117,7 @@
 			<artifactId>commons-validator</artifactId>
 			<version>1.6</version>
 		</dependency>
-		
+
 		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -127,7 +125,11 @@
 			<version>2.11.2</version>
 		</dependency>
 
-
+		<dependency>
+			<groupId>com.google.googlejavaformat</groupId>
+			<artifactId>google-java-format</artifactId>
+			<version>1.9</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.apache.maven</groupId>
