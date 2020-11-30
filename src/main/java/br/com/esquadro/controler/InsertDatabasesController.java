@@ -55,6 +55,7 @@ public class InsertDatabasesController extends Thread {
 	 */
 
 	public void insertDatabase(String[] dados) throws Exception {
+		conexao.disconect();
 		conexao.conect();
 
 		StringBuilder sql = new StringBuilder();

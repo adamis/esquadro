@@ -2,6 +2,7 @@ package br.com.esquadro.util;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+
+import br.com.esquadro.util.Conexao.DATABASETYPE;
 
 public class Utils {
 
@@ -23,12 +26,12 @@ public class Utils {
 	}
 
 	public static void main(String[] args) {
-		String table = "alunos-cursos";
-		System.err.println("1 "+normalizerStringCapHifen(table));		
-//		System.err.println("1 "+normalizerString(table));
-//		System.err.println("2 "+normalizerStringCaps(table));
-//		System.err.println("3 "+normalizerStringCommom(table));
-//		System.err.println("4 "+normalizerStringCommomNotCap(table));		
+		//String table = "alunos-cursos";
+		//System.err.println("1 "+normalizerStringCapHifen(table));		
+		//		System.err.println("1 "+normalizerString(table));
+		//		System.err.println("2 "+normalizerStringCaps(table));
+		//		System.err.println("3 "+normalizerStringCommom(table));
+		//		System.err.println("4 "+normalizerStringCommomNotCap(table));		
 	}
 
 	/**
@@ -83,25 +86,32 @@ public class Utils {
 		return text;
 	}
 
-	
-	
-	public static String normalizerStringCapHifen(String text) {
-		
-		String temp = "";
-		
-		char[] palavraArray = text.toCharArray();
 
-        for(char c : palavraArray){
-            if(Character.isUpperCase(c)){
-                temp += "_"+c;
-            }else {
-            	temp += c;
-            }
-        }
 
-		return temp;
+	public static String normalizerStringCapHifen(String text, DATABASETYPE databaseType) {
+
+
+		if(databaseType != DATABASETYPE.ORACLE) {
+
+			String temp = "";
+
+			char[] palavraArray = text.toCharArray();
+
+			for(char c : palavraArray){
+				if(Character.isUpperCase(c)){
+					temp += "_"+c;
+				}else {
+					temp += c;
+				}
+			}
+
+			return temp;
+
+		}else {
+			return text;
+		}
 	}
-	
+
 	/**
 	 * (alunoscursos)
 	 * 
@@ -188,7 +198,7 @@ public class Utils {
 		PrintWriter gravarArq = new PrintWriter(new File(file), "UTF-8");
 
 		//System.err.println(""+text);
-		
+
 		//gravarArq.printf(text);
 		gravarArq.write(text);
 		gravarArq.close();
@@ -227,8 +237,29 @@ public class Utils {
 		if (replace && new File(destination).exists()) {
 			delete(new File(destination));
 		}
-		FileUtils.copyDirectory(source, new File(destination));
 
+		FileFilter fileFilter = new FileFilter() {
+
+			@Override
+			public boolean accept(File pathname) {
+				String[] ignoreList= new String[]{
+						".gitignore"								
+				};
+
+				return !(ignoreFile(pathname, ignoreList) && pathname.isFile());
+			}
+			
+		};
+
+		FileUtils.copyDirectory(source, new File(destination),fileFilter);
+
+	}
+
+	public static boolean ignoreFile(File file, String[] ignoreList) {
+		for (final String ignoreStr : ignoreList)
+			if (file.getAbsolutePath().contains(ignoreStr))
+				return true;
+		return false;
 	}
 
 	public static void delete(File file) throws IOException {

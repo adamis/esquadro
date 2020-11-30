@@ -147,11 +147,13 @@ public class AddEsquadroSBController implements Runnable {
 		List<String> properties = new ArrayList<>();
 
 		checkExit(readApplication, properties, "server.port=8080");		
-		checkExit(readApplication, properties, "spring.profiles.active=prod");
+		checkExit(readApplication, properties, "spring.profiles.active=dev");
 		properties.add("");
 		checkExit(readApplication, properties, "#JSON");
-		checkExit(readApplication, properties, "spring.jackson.deserialization.fail-on-unknown-properties=true");
-		checkExit(readApplication, properties, "spring.jackson.date-format=yyyy-MM-dd");
+		checkExit(readApplication, properties, "spring.jackson.deserialization.fail-on-unknown-properties=true");		
+		checkExit(readApplication, properties, "spring.jackson.date-format=yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+		checkExit(readApplication, properties, "spring.jackson.time-zone=GMT-3");
+		
 		checkExit(readApplication, properties, "spring.jackson.serialization.FAIL_ON_EMPTY_BEANS=false");
 
 		Utils.writeTxtList(this.urlProject + "/src/main/resources/application.properties", properties, true);

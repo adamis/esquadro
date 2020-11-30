@@ -27,16 +27,16 @@ public class Struckts {
 	private String packServices;
 	private String packRepositoryImpl;
 	private ConsoleLog console;
-	
+
 	private DatabaseUtils databaseUtils;
 	private StringBuilder imports = new StringBuilder();
-	
-	
+
+
 
 	public Struckts(String entity, String packBase, String packEntity, String packResource, String packFilter,
 			String packRepository, String packServices, String packRepositoryImpl, DatabaseUtils databaseUtils,
 			ConsoleLog console) {
-		
+
 		this.entity = entity;
 		this.packBase = packBase;
 		this.packEntity = packEntity;
@@ -245,19 +245,19 @@ public class Struckts {
 			String colum = "";
 			if (coluns.get(i).get("fk") != null && coluns.get(i).get("fk").length() != 0) {
 				colum = "Filter";
-				
+
 				sb.append("	private " + processTypeDatabase(coluns.get(i).get("type"), coluns.get(i).get("fk"), sbImport)
 				+ " " + Utils.normalizerStringCommomNotCap(coluns.get(i).get("fk"))
 				+ (Utils.normalizerStringCommomNotCap(coluns.get(i).get("colum")).equalsIgnoreCase("id") ? "" : colum)
 				+ ";");
-				
+
 			}else {
 
 				sb.append("	private " + processTypeDatabase(coluns.get(i).get("type"), coluns.get(i).get("fk"), sbImport)
 				+ " " + Utils.normalizerStringCommomNotCap(coluns.get(i).get("colum"))
 				+ (Utils.normalizerStringCommomNotCap(coluns.get(i).get("colum")).equalsIgnoreCase("id") ? "" : colum)
 				+ ";");
-			
+
 			}
 		}
 
@@ -345,17 +345,17 @@ public class Struckts {
 	}
 
 	public String getRepositoryImpl() {
-		
+
 		StringBuilder packageImpl = new StringBuilder();
 		imports = new StringBuilder();
 		StringBuilder sb = new StringBuilder();
-		
+
 		packageImpl.append("package {{packRepository}}.{{entityL}}; ");
 		packageImpl.append("\n");
-		
+
 		sb.append(" ");
 		sb.append("\n");
-		
+
 		imports.append("import java.util.ArrayList; ");
 		imports.append("\n");
 		imports.append("import java.util.List; ");
@@ -523,121 +523,149 @@ public class Struckts {
 		sb.append("}");
 
 		packageImpl.append(imports).append(sb);
-		
+
 		return processClean(packageImpl);
 	}
 
 	public String montaPredicados(String entidade, String last, String fkCriteria) {
-		
+
 		StringBuilder sb = new StringBuilder();
-		
+
 		try {
 			List<HashMap<String, String>> coluns = this.databaseUtils.getColuns(entidade);
 
 			for (int i = 0; i < coluns.size(); i++) {
-				
+
 				sb.append("\n");
-				sb.append("//"+Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-","_")).toUpperCase());
-				
+				sb.append("//"+Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-","_"), databaseUtils.getTipo()).toUpperCase());
+
 				String type = coluns.get(i).get("type").toLowerCase();
 
-					System.err.println("COLUM: "+coluns.get(i).get("colum"));
-				
-					if (type.contains("char")) {
-						//STRING						
-						sb.append("\n");						
-						sb.append(" if (!StringUtils.isEmpty({{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"())) { ");
-						sb.append("\n");
-						sb.append(" 	predicates.add(builder.like( ");
-						sb.append("\n");
-						
-//						System.err.println("COLUM: "+coluns.get(i).get("colum"));
-//						System.err.println("COLUM-UP: "+Utils.normalizerString(coluns.get(i).get("colum")).replace("-","_").toUpperCase());
-						
-						sb.append(" 		builder.lower(root."+fkCriteria+"get("+Utils.normalizerStringCaps(entidade)+"_."+Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-","_")).toUpperCase()+")), \"%\" + {{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"().toLowerCase() + \"%\")); ");
-						sb.append("\n");
-						sb.append(" } ");
-						sb.append("\n");
+				System.err.println("COLUM: "+coluns.get(i).get("colum"));
+
+				if (type.contains("char")) {
+					//STRING						
+					sb.append("\n");						
+					sb.append(" if (!StringUtils.hasLength({{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"())) { ");
+					sb.append("\n");
+					sb.append(" 	predicates.add(builder.like( ");
+					sb.append("\n");
+
+					//						System.err.println("COLUM: "+coluns.get(i).get("colum"));
+					//						System.err.println("COLUM-UP: "+Utils.normalizerString(coluns.get(i).get("colum")).replace("-","_").toUpperCase());
+
+					sb.append(" 		builder.lower(root."+fkCriteria+"get("+Utils.normalizerStringCaps(entidade)+"_."+Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-","_"), databaseUtils.getTipo()).toUpperCase()+")), \"%\" + {{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"().toLowerCase() + \"%\")); ");
+					sb.append("\n");
+					sb.append(" } ");
+					sb.append("\n");
 
 
-					} else if (
-							   type.contains("real")
-							|| type.contains("dec")
-							|| type.contains("num")
-							|| type.contains("double")
-							|| type.contains("int")
-							|| type.contains("long")
-					) {
-						
-						//INTEGER						
-						if(!coluns.get(i).get("fk").isEmpty()) {
-							
+				} else if (
+						type.contains("real")
+						|| type.contains("dec")
+						|| type.contains("num")
+						|| type.contains("double")
+						|| type.contains("int")
+						|| type.contains("long")
+						) {
+
+					//INTEGER						
+					if(!coluns.get(i).get("fk").isEmpty()) {
+
+						System.err.println(Utils.normalizerStringCaps(this.entity) +" = "+ entidade);
+
+						if(		!imports.toString().contains(Utils.normalizerStringCaps(coluns.get(i).get("fk").replace("-","_"))+"_; ") 
+								&&								
+								!coluns.get(i).get("fk").equals(entidade)
+								&&
+								!Utils.normalizerStringCaps(this.entity).equalsIgnoreCase(entidade)
+								) {
+
 							imports.append("\n");
 							imports.append("import {{packEntity}}."+Utils.normalizerStringCaps(coluns.get(i).get("fk").replace("-","_"))+"_; ");
 							imports.append("\n");
-							
+
+						}
+
+						if(!coluns.get(i).get("fk").equals(entidade)) {								
+
 							//FK							
 							sb.append("\n");														
-							sb.append("	if (!StringUtils.isEmpty({{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("fk"))+"Filter())) { ");
-							
+							sb.append("	if ({{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("fk"))+"Filter() != null) { ");
+
 							String montaPredicados = montaPredicados(
 									coluns.get(i).get("fk")
 									, last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("fk"))+"Filter()."
-									, fkCriteria+"get("+Utils.normalizerStringCaps(entidade)+"_."+Utils.normalizerStringCapHifen(coluns.get(i).get("fk").replace("-","_")).toUpperCase()+")."
+									, fkCriteria+"get("+Utils.normalizerStringCaps(entidade)+"_."+Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-","_"), databaseUtils.getTipo()).toUpperCase()+")."
 									);
 							sb.append(montaPredicados);
-							
+
 							sb.append("\n");
 							sb.append("	}");
 							sb.append("\n");
-							
+
 						}else {
-							sb.append("\n");							
-							sb.append(" if (!StringUtils.isEmpty({{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"())) { ");
+
+							sb.append("\n");
+							sb.append("/*");
+							sb.append("\n");
+							sb.append(" if ({{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"() != null) { ");
 							sb.append("\n");
 							sb.append(" 	predicates.add(builder.equal( ");
 							sb.append("\n");
-							sb.append(" 		root."+fkCriteria+"get("+Utils.normalizerStringCaps(entidade)+"_."+Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-","_")).toUpperCase() +"), {{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"())); ");
+							sb.append(" 		root."+fkCriteria+"get("+Utils.normalizerStringCaps(entidade)+"_."+Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-","_"), databaseUtils.getTipo()).toUpperCase() +"), {{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"())); ");
+							sb.append("\n");							
+							sb.append(" } ");
 							sb.append("\n");
-							sb.append(" } ");							
+							sb.append("*/");
 						}
-					} else if (
-							   type.contains("date") 
-							|| type.contains("time")
-					) {
-						//DATE
-						sb.append("\n");						
-						sb.append(" if (!StringUtils.isEmpty({{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"())) { ");
+					}else {
+						sb.append("\n");							
+						sb.append(" if ({{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"() != null) { ");
 						sb.append("\n");
 						sb.append(" 	predicates.add(builder.equal( ");
 						sb.append("\n");
-						sb.append(" 		root."+fkCriteria+"get("+Utils.normalizerStringCaps(entidade)+"_."+Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-","_")).toUpperCase()+"), {{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"())); ");
+						sb.append(" 		root."+fkCriteria+"get("+Utils.normalizerStringCaps(entidade)+"_."+Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-","_"), databaseUtils.getTipo()).toUpperCase() +"), {{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"())); ");
 						sb.append("\n");
-						sb.append(" } ");
-						sb.append("\n");
-					} else {
-						//OTHER
-						sb.append("\n");						
-						sb.append(" if (!StringUtils.isEmpty({{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"())) { ");
-						sb.append("\n");
-						sb.append(" 	predicates.add(builder.equal( ");
-						sb.append("\n");
-						sb.append(" 		root."+fkCriteria+"get("+Utils.normalizerStringCaps(entidade)+"_."+Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-","_")).toUpperCase()+"), {{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"())); ");
-						sb.append("\n");
-						sb.append(" } ");
-						sb.append("\n");
+						sb.append(" } ");							
 					}
-				
+				} else if (
+						type.contains("date") 
+						|| type.contains("time")
+						) {
+					//DATE
+					sb.append("\n");						
+					sb.append(" if (!StringUtils.hasLength({{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"())) { ");
+					sb.append("\n");
+					sb.append(" 	predicates.add(builder.equal( ");
+					sb.append("\n");
+					sb.append(" 		root."+fkCriteria+"get("+Utils.normalizerStringCaps(entidade)+"_."+Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-","_"), databaseUtils.getTipo()).toUpperCase()+"), {{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"())); ");
+					sb.append("\n");
+					sb.append(" } ");
+					sb.append("\n");
+				} else {
+					//OTHER
+					sb.append("\n");						
+					sb.append(" if (!StringUtils.hasLength({{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"())) { ");
+					sb.append("\n");
+					sb.append(" 	predicates.add(builder.equal( ");
+					sb.append("\n");
+					sb.append(" 		root."+fkCriteria+"get("+Utils.normalizerStringCaps(entidade)+"_."+Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-","_"), databaseUtils.getTipo()).toUpperCase()+"), {{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"())); ");
+					sb.append("\n");
+					sb.append(" } ");
+					sb.append("\n");
+				}
+
 			}
 
 		} catch (Exception e) {
 			System.err.println("erro>> "+e.getMessage());
 			e.printStackTrace();
 		}
-		
+
 		return sb.toString();
 	}
-	
+
 	public String getRepositoryQuery() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("package {{packRepositoryImpl}}; ");
@@ -671,7 +699,7 @@ public class Struckts {
 	}
 
 	private String processClean(StringBuilder sb) {
-		
+
 		try {
 			String replace = sb.toString().replace("{{packBase}}", packBase)
 					.replace("{{packEntity}}", packEntity)
@@ -684,14 +712,14 @@ public class Struckts {
 					.replace("{{EntityFolder}}", Utils.normalizerStringCommomNotCap(this.entity))
 					.replace("{{entityL}}", Utils.normalizerStringCommomNotCap(this.entity))
 					;
-			 
-			 
-			 return new Formatter().formatSource(replace);	
+
+
+			return new Formatter().formatSource(replace);	
 		} catch (Exception e) {
 			this.console.setText(""+e.getMessage());
 			return "";
 		}
-		 
+
 	}
 
 	private String processTypeDatabase(String type, String fk, StringBuilder sbImport) {

@@ -1,5 +1,6 @@
 package br.com.esquadro.util;
 
+import java.io.File;
 import java.io.FileReader;
 
 import org.apache.maven.model.Model;
@@ -17,7 +18,17 @@ public class Statics {
 
 		try {
 			MavenXpp3Reader reader = new MavenXpp3Reader();
-	        Model model = reader.read(new FileReader("pom.xml"));
+			
+			String fileT = "";
+			
+			if(new File("META-INF/maven/Esquadro/Esquadro/pom.xml").exists()) {
+				fileT = "META-INF/maven/Esquadro/Esquadro/pom.xml";
+			}else if (new File("pom.xml").exists()) {
+				fileT = "pom.xml";
+			}
+			
+			
+	        Model model = reader.read(new FileReader(fileT));
 	        version = model.getVersion();
 	        
 		} catch (Exception e) {		

@@ -591,7 +591,7 @@ public class AddAPI extends JInternalFrame {
 		txtFilter.setText(text  + ".filter");
 		txtResource.setText(text + ".resource");
 		txtRepository.setText(text + ".repository");
-		txtServices.setText(text + ".services");
+		txtServices.setText(text + ".service");
 		txtRepository.setText(text  + ".repository");
 		txtRepositoryImpl.setText(text  + ".repository.{{EntityFolder}}");
 	}

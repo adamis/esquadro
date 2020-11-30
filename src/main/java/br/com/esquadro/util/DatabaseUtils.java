@@ -25,7 +25,7 @@ public class DatabaseUtils {
 	private List<HashMap<String, String>> listTableHash;
 	private HashMap<String, String> hm;
 
-	DATABASETYPE tipo;
+	private DATABASETYPE tipo;
 	String owner;
 
 	public DatabaseUtils(BancoDados bancoDados) {
@@ -364,6 +364,14 @@ public class DatabaseUtils {
 		conexao.commit();
 
 		return listTableHash;
+	}
+
+	public DATABASETYPE getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(DATABASETYPE tipo) {
+		this.tipo = tipo;
 	}
 
 }

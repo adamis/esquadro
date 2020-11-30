@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>Esquadro</groupId>
 	<artifactId>Esquadro</artifactId>
-	<version>1.10.0</version>
+	<version>1.10.2</version>
 	<name>Esquadro</name>
 
 
@@ -13,13 +13,6 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-
-	<repositories>
-		<repository>
-			<id>codiub</id>
-			<url>http://docker:8081/artifactory/codiub-repo</url>
-		</repository>
-	</repositories>
 
 	<dependencies>
 
@@ -128,7 +121,7 @@
 		<dependency>
 			<groupId>com.google.googlejavaformat</groupId>
 			<artifactId>google-java-format</artifactId>
-			<version>1.9</version>
+			<version>1.7</version>
 		</dependency>
 
 		<dependency>
