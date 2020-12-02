@@ -247,7 +247,7 @@ public class AddEsquadroSBController implements Runnable {
 			} else {//ORACLE
 
 				line = line.replace("{DRIVERCLASS}", "oracle.jdbc.driver.OracleDriver");
-				line = line.replace("{URL}", "jdbc:oracle:thin:@"+bancoDados.getIp()+":"+bancoDados.getPorta()+":"+bancoDados.getNameBd());	
+				line = line.replace("{URL}", "jdbc:oracle:thin:@"+bancoDados.getIp()+":"+bancoDados.getPorta()+"/"+bancoDados.getNameBd());	
 
 				line = line.replace("{DIALECT}", "org.hibernate.dialect.Oracle10gDialect");
 			}
