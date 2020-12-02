@@ -594,9 +594,10 @@ public class Struckts {
 							sb.append("	if ({{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("fk"))+"Filter() != null) { ");
 
 							String montaPredicados = montaPredicados(
-									coluns.get(i).get("fk")
-									, last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("fk"))+"Filter()."
-									, fkCriteria+"get("+Utils.normalizerStringCaps(entidade)+"_."+Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-","_"), databaseUtils.getTipo()).toUpperCase()+")."
+									coluns.get(i).get("fk"), 
+									last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("fk"))+"Filter()."
+									, fkCriteria+"get("+Utils.normalizerStringCaps(entidade)+"_."+Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-","_")
+									, databaseUtils.getTipo()).toUpperCase()+")."
 									);
 							sb.append(montaPredicados);
 
