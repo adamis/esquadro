@@ -21,7 +21,7 @@ public class Help extends JFrame {
 	 */
 	public Help() {
 		setIconImage(ResourcesImages.informationIcon());
-		setBackground(Color.WHITE);		
+		setBackground(Color.WHITE);
 		setType(Type.POPUP);
 		setResizable(false);
 		getContentPane().setBackground(Color.WHITE);

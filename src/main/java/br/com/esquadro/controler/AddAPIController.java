@@ -71,9 +71,9 @@ public class AddAPIController implements Runnable {
 		for (int i = 0; i < this.listEntity.size(); i++) {
 
 			try {
-								
-				Struckts struckts = new Struckts(listEntity.get(i), packsBase, packsEntity,
-						packsResource, packsFilter, packsRepository, packsServices, packsRepositoryImpl, databaseUtils,consoleLog);
+
+				Struckts struckts = new Struckts(listEntity.get(i), packsBase, packsEntity, packsResource, packsFilter,
+						packsRepository, packsServices, packsRepositoryImpl, databaseUtils, consoleLog);
 
 				consoleLog.setText("Entity identificado: " + Utils.normalizerStringCaps(listEntity.get(i)));
 

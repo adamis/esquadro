@@ -15,6 +15,7 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -28,13 +29,16 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
+
 import br.com.esquadro.controler.ListTableController;
 import br.com.esquadro.controler.ProcessaComponentesController;
-import br.com.esquadro.model.BancoDados;
 import br.com.esquadro.resources.ResourcesImages;
+import br.com.esquadro.sqlite.entity.BancoDadosEntity;
+import br.com.esquadro.sqlite.helper.SqliteHelper;
 import br.com.esquadro.util.Conexao;
 import br.com.esquadro.util.PersonalItem;
-import br.com.esquadro.util.SqliteHelper;
 import br.com.esquadro.view.ConsoleLog;
 
 public class AutomaticDB extends JInternalFrame {
@@ -42,7 +46,7 @@ public class AutomaticDB extends JInternalFrame {
 	private static final long serialVersionUID = 4593163889948851947L;
 	private TextField inputProject;
 	private JTable table;
-	private BancoDados bancoDados = null;
+	private BancoDadosEntity bancoDados = null;
 
 	private ConsoleLog consoleLog;
 	private JTextField textField;
@@ -77,11 +81,11 @@ public class AutomaticDB extends JInternalFrame {
 
 		JComboBox<PersonalItem> comboBox = new JComboBox<PersonalItem>();
 
-		Conexao conexao = SqliteHelper.conexaoSQLITE;
 
-		ResultSet executeQuery;
 		try {
-			executeQuery = conexao.executeQuery("SELECT * FROM \"banco_dados\"");
+			Dao<BancoDadosEntity, Integer> bancoDadosDao= DaoManager.createDao(SqliteHelper.connectionSource, BancoDadosEntity.class);
+
+			List<BancoDadosEntity> listBancoDados = bancoDadosDao.queryForAll();
 
 			PersonalItem item = new PersonalItem();
 			item.setName("Selecione...");
@@ -89,24 +93,15 @@ public class AutomaticDB extends JInternalFrame {
 
 			comboBox.addItem(item);
 
-			while (executeQuery.next()) {
-				item = new PersonalItem();
-				item.setName(executeQuery.getString("nome") + " (" + executeQuery.getString("nameBd") + ")");
+			for (Iterator iterator = listBancoDados.iterator(); iterator.hasNext();) {
+				BancoDadosEntity bancoDados = (BancoDadosEntity) iterator.next();
 
-				BancoDados bancoDados = new BancoDados();
-				bancoDados.setId(executeQuery.getInt("id"));
-				bancoDados.setNome(executeQuery.getString("nome"));
-				bancoDados.setIp(executeQuery.getString("ip"));
-				bancoDados.setPorta(executeQuery.getString("porta"));
-				bancoDados.setUsuario(executeQuery.getString("usuario"));
-				bancoDados.setSenha(executeQuery.getString("senha"));
-				bancoDados.setCharset(executeQuery.getString("charset"));
-				bancoDados.setNameBd(executeQuery.getString("nameBd"));
-				bancoDados.setSchema(executeQuery.getString("schema"));
-				bancoDados.setTipo(executeQuery.getString("tipo"));
+				item = new PersonalItem();
+				item.setName(bancoDados.getNome() + " (" + bancoDados.getNameBd() + ")");				
 				item.setValue(bancoDados);
 
 				comboBox.addItem(item);
+
 			}
 		} catch (SQLException e) {
 			this.consoleLog.setText("Erro: " + e.getMessage());
@@ -119,7 +114,7 @@ public class AutomaticDB extends JInternalFrame {
 			public void itemStateChanged(ItemEvent item) {
 				PersonalItem personalItem = (PersonalItem) item.getItem();
 				if (personalItem.getValue() != null) {
-					bancoDados = (BancoDados) personalItem.getValue();
+					bancoDados = (BancoDadosEntity) personalItem.getValue();
 					updateGrid(bancoDados);
 				} else {
 					DefaultTableModel dtm = new DefaultTableModel();
@@ -165,7 +160,7 @@ public class AutomaticDB extends JInternalFrame {
 				if (listComponents.size() > 0) {
 
 					ProcessaComponentesController processaComponentesController = new ProcessaComponentesController(
-							listComponents, getUrl(), false, consoleLog, false,	bancoDados);
+							listComponents, getUrl(), false, consoleLog, false, bancoDados);
 
 					new Thread(processaComponentesController).start();
 
@@ -212,23 +207,23 @@ public class AutomaticDB extends JInternalFrame {
 		btnWorkspace.setIcon(ResourcesImages.report());
 
 		panel.add(btnWorkspace);
-		
+
 		JLabel lblTabelas = new JLabel("Tabelas (Atenção ao buscar uma tabela ele cancela as anteriores marcas)");
 		lblTabelas.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblTabelas.setBounds(10, 136, 643, 14);
 		getContentPane().add(lblTabelas);
-		
+
 		textField = new JTextField();
-		textField.addKeyListener(new KeyAdapter() {			
+		textField.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-								
+
 				JTextField textField = (JTextField) e.getSource();
 				String text = textField.getText();
-				
+
 				ListTableController controller = new ListTableController(bancoDados, table, true, consoleLog, text);
 				controller.run();
-				
+
 			}
 		});
 		textField.setToolTipText("Buscar Tabelas");
@@ -238,7 +233,7 @@ public class AutomaticDB extends JInternalFrame {
 
 	}
 
-	private void updateGrid(BancoDados bancoDados) {
+	private void updateGrid(BancoDadosEntity bancoDados) {
 		ListTableController controller = new ListTableController(bancoDados, table, true, consoleLog, "");
 		controller.run();
 	}

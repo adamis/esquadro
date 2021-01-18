@@ -174,39 +174,39 @@ public class Menu extends JFrame {
 		menuArquivo.add(mntmConsole);
 		mntmSair.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
 		menuArquivo.add(mntmSair);
-		
+
 		JMenu menu_12_1 = new JMenu("    ");
 		menu_12_1.setFocusable(false);
 		menu_12_1.setEnabled(false);
 		menuBar.add(menu_12_1);
-		
+
 		JMenu mnNewMenu = new JMenu("Gerenciar");
 		mnNewMenu.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		mnNewMenu.setIcon(ResourcesImages.database2());
 		menuBar.add(mnNewMenu);
-		
-				JMenuItem mntmNewMenuItem_1 = new JMenuItem("Banco de Dados");
-				mntmNewMenuItem_1.setIcon(null);
-				mnNewMenu.add(mntmNewMenuItem_1);
-				mntmNewMenuItem_1.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, InputEvent.ALT_MASK));
-				mntmNewMenuItem_1.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
-						BancoDados bancoDados;
-						try {
 
-							bancoDados = new BancoDados(consoleLog);
-							bancoDados.setVisible(true);
-							conteudo.add(bancoDados);
-							conteudo.revalidate();
-							conteudo.repaint();
-							bancoDados.moveToFront();
+		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Banco de Dados");
+		mntmNewMenuItem_1.setIcon(null);
+		mnNewMenu.add(mntmNewMenuItem_1);
+		mntmNewMenuItem_1.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, InputEvent.ALT_MASK));
+		mntmNewMenuItem_1.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				BancoDados bancoDados;
+				try {
 
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-				});
+					bancoDados = new BancoDados(consoleLog);
+					bancoDados.setVisible(true);
+					conteudo.add(bancoDados);
+					conteudo.revalidate();
+					conteudo.repaint();
+					bancoDados.moveToFront();
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 
 		JMenu menu_12 = new JMenu("    ");
 		menu_12.setFocusable(false);
@@ -303,7 +303,8 @@ public class Menu extends JFrame {
 		menuBar.add(mnGerar);
 
 		JMenuItem mntmNovoComponent = new JMenuItem("Component");
-		mntmNovoComponent.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK | InputEvent.ALT_MASK));
+		mntmNovoComponent
+				.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK | InputEvent.ALT_MASK));
 		mntmNovoComponent.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -319,7 +320,8 @@ public class Menu extends JFrame {
 		mnGerar.add(mntmNovoComponent);
 
 		JMenuItem mntmNovaDiretiva = new JMenuItem("Diretiva");
-		mntmNovaDiretiva.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK | InputEvent.ALT_MASK));
+		mntmNovaDiretiva
+				.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK | InputEvent.ALT_MASK));
 		mntmNovaDiretiva.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -382,7 +384,8 @@ public class Menu extends JFrame {
 		mnGerar.add(mntmPipe);
 
 		JMenuItem mntmNewMenuItem = new JMenuItem("Service");
-		mntmNewMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK | InputEvent.ALT_MASK));
+		mntmNewMenuItem
+				.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK | InputEvent.ALT_MASK));
 		mntmNewMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {

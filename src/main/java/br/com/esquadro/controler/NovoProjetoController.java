@@ -108,11 +108,9 @@ public class NovoProjetoController implements Runnable {
 
 				String bat = inputWorkspace.getText().substring(0, 2) + " & " + "cd " + inputWorkspace.getText() + " & "
 						+ " ng new " + textField.getText() + " --skip-git " + style
-						+ " --skipInstall=true --routing=true " + spec + " & " 
-						+ "cacls " + textField.getText()
-						+ " /E /P Total:F" + " & " 
-						+ " cd " + textField.getText() + " & " 
-						+ " ng g m " + Statics.MODULE_NAME + "/home --routing=true " // + spec
+						+ " --skipInstall=true --routing=true " + spec + " & " + "cacls " + textField.getText()
+						+ " /E /P Total:F" + " & " + " cd " + textField.getText() + " & " + " ng g m "
+						+ Statics.MODULE_NAME + "/home --routing=true " // + spec
 						+ " & " + " ng g c " + Statics.MODULE_NAME + "/home --export " // + spec
 						+ " & " + " ng g m core " // + spec
 						+ " & " + " ng g c core/navbar --export " // + spec
@@ -122,19 +120,13 @@ public class NovoProjetoController implements Runnable {
 				;
 
 				// INSTALAÇÃO DOS RECURSOS(NPM)
-				bat += " & " + " npm cache verify" + " & " 
-						+ " npm i primeng@~9 --save " + " & "
-						+ " npm i --save quill " + " & "
-						+ " npm i --save @fullcalendar/core " + " & "
-						+ " npm i @angular/animations --save "+ " & " 
-						+ " npm i primeicons --save " + " & "
-						+ " npm i primeflex --save " + " & " 
-						+ " npm i @angular/cdk --save " + " & "
-						+ " npm i moment  --save " + " & " 
-						+ " npm install ngx-currency --save" // MASK MONEY
+				bat += " & " + " npm cache verify" + " & " + " npm i primeng@~9 --save " + " & "
+						+ " npm i --save quill " + " & " + " npm i --save @fullcalendar/core " + " & "
+						+ " npm i @angular/animations --save " + " & " + " npm i primeicons --save " + " & "
+						+ " npm i primeflex --save " + " & " + " npm i @angular/cdk --save " + " & "
+						+ " npm i moment  --save " + " & " + " npm install ngx-currency --save" // MASK MONEY
 																								// https://www.npmjs.com/package/ngx-currency
-						+ " & " + " npm i angular-imask --save" + " & " 
-						+ " npm i chart.js --save" + " & "						
+						+ " & " + " npm i angular-imask --save" + " & " + " npm i chart.js --save" + " & "
 						+ " npm i ngx-show-hide-password --save" + " & "
 						+ " npm i @fortawesome/angular-fontawesome --save" + " & "
 						+ " npm i @fortawesome/fontawesome-svg-core --save" + " & "
@@ -143,7 +135,7 @@ public class NovoProjetoController implements Runnable {
 				// +" npm install jquery --save"//ADD JQUERY
 				;
 
-				//System.err.println(bat);
+				// System.err.println(bat);
 
 				ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", bat);
 
@@ -443,12 +435,12 @@ public class NovoProjetoController implements Runnable {
 		JSONArray scripts = (JSONArray) jsonOptions.get("scripts");
 		scripts.put("./node_modules/chart.js/dist/Chart.js");
 
-		System.err.println(""+jsonObject.toString());
-		
+		System.err.println("" + jsonObject.toString());
+
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		Object json = gson.fromJson(jsonObject.toString(), Object.class);				
+		Object json = gson.fromJson(jsonObject.toString(), Object.class);
 		String styleFormated = gson.toJson(json); // done
-		
+
 //		ObjectMapper mapper = new ObjectMapper();
 //		Object json = mapper.readValue(jsonObject.toString(), Object.class);
 //		String styleFormated = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);

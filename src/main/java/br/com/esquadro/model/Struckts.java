@@ -31,8 +31,6 @@ public class Struckts {
 	private DatabaseUtils databaseUtils;
 	private StringBuilder imports = new StringBuilder();
 
-
-
 	public Struckts(String entity, String packBase, String packEntity, String packResource, String packFilter,
 			String packRepository, String packServices, String packRepositoryImpl, DatabaseUtils databaseUtils,
 			ConsoleLog console) {
@@ -58,11 +56,11 @@ public class Struckts {
 		sb.append("\n");
 		sb.append("import java.util.Optional; ");
 		sb.append("\n");
-		sb.append("import javax.servlet.http.HttpServletResponse; ");		
-		sb.append("\n");		
+		sb.append("import javax.servlet.http.HttpServletResponse; ");
+		sb.append("\n");
 		sb.append("import org.springframework.validation.annotation.Validated;");
 		sb.append("\n");
-		sb.append("import org.springframework.beans.factory.annotation.Autowired; ");		
+		sb.append("import org.springframework.beans.factory.annotation.Autowired; ");
 		sb.append("\n");
 		sb.append("import org.springframework.data.domain.Page; ");
 		sb.append("\n");
@@ -92,7 +90,7 @@ public class Struckts {
 		sb.append("\n");
 		sb.append("  ");
 		sb.append("\n");
-		sb.append("import {{packEntity}}.{{entity}}; ");		
+		sb.append("import {{packEntity}}.{{entity}}; ");
 		sb.append("\n");
 		sb.append("import {{packRepository}}.{{entity}}Repository; ");
 		sb.append("\n");
@@ -133,7 +131,7 @@ public class Struckts {
 		sb.append(
 				" 	public ResponseEntity<{{entity}}> criar( @RequestBody {{entity}} {{entityL}}, HttpServletResponse response) { ");
 		sb.append("\n");
-		sb.append(" 		{{entity}} {{entityL}}Salva = {{entityL}}Repository.save({{entityL}}); ");				
+		sb.append(" 		{{entity}} {{entityL}}Salva = {{entityL}}Repository.save({{entityL}}); ");
 		sb.append("\n");
 		sb.append(" 		return ResponseEntity.status(HttpStatus.CREATED).body({{entityL}}Salva); ");
 		sb.append("\n");
@@ -246,17 +244,21 @@ public class Struckts {
 			if (coluns.get(i).get("fk") != null && coluns.get(i).get("fk").length() != 0) {
 				colum = "Filter";
 
-				sb.append("	private " + processTypeDatabase(coluns.get(i).get("type"), coluns.get(i).get("fk"), sbImport)
-				+ " " + Utils.normalizerStringCommomNotCap(coluns.get(i).get("fk"))
-				+ (Utils.normalizerStringCommomNotCap(coluns.get(i).get("colum")).equalsIgnoreCase("id") ? "" : colum)
-				+ ";");
+				sb.append("	private "
+						+ processTypeDatabase(coluns.get(i).get("type"), coluns.get(i).get("fk"), sbImport) + " "
+						+ Utils.normalizerStringCommomNotCap(coluns.get(i).get("fk"))
+						+ (Utils.normalizerStringCommomNotCap(coluns.get(i).get("colum")).equalsIgnoreCase("id") ? ""
+								: colum)
+						+ ";");
 
-			}else {
+			} else {
 
-				sb.append("	private " + processTypeDatabase(coluns.get(i).get("type"), coluns.get(i).get("fk"), sbImport)
-				+ " " + Utils.normalizerStringCommomNotCap(coluns.get(i).get("colum"))
-				+ (Utils.normalizerStringCommomNotCap(coluns.get(i).get("colum")).equalsIgnoreCase("id") ? "" : colum)
-				+ ";");
+				sb.append("	private "
+						+ processTypeDatabase(coluns.get(i).get("type"), coluns.get(i).get("fk"), sbImport) + " "
+						+ Utils.normalizerStringCommomNotCap(coluns.get(i).get("colum"))
+						+ (Utils.normalizerStringCommomNotCap(coluns.get(i).get("colum")).equalsIgnoreCase("id") ? ""
+								: colum)
+						+ ";");
 
 			}
 		}
@@ -359,7 +361,7 @@ public class Struckts {
 		imports.append("import java.util.ArrayList; ");
 		imports.append("\n");
 		imports.append("import java.util.List; ");
-		imports.append("\n");		
+		imports.append("\n");
 		imports.append(" ");
 		imports.append("\n");
 		imports.append("import javax.persistence.EntityManager; ");
@@ -462,9 +464,9 @@ public class Struckts {
 		sb.append("		");
 		sb.append("\n");
 
-		//FOR PREDICATES
-		//TODO
-		sb.append(montaPredicados(this.entity, "",""));
+		// FOR PREDICATES
+		// TODO
+		sb.append(montaPredicados(this.entity, "", ""));
 
 		sb.append("\n");
 		sb.append("				");
@@ -537,121 +539,142 @@ public class Struckts {
 			for (int i = 0; i < coluns.size(); i++) {
 
 				sb.append("\n");
-				sb.append("//"+Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-","_"), databaseUtils.getTipo()).toUpperCase());
+				sb.append("//" + Utils
+						.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-", "_"), databaseUtils.getTipo())
+						.toUpperCase());
 
 				String type = coluns.get(i).get("type").toLowerCase();
 
-				System.err.println("COLUM: "+coluns.get(i).get("colum"));
+				System.err.println("COLUM: " + coluns.get(i).get("colum"));
 
 				if (type.contains("char")) {
-					//STRING						
-					sb.append("\n");						
-					sb.append(" if (!StringUtils.hasLength({{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"())) { ");
+					// STRING
+					sb.append("\n");
+					sb.append(" if (StringUtils.hasLength({{entityL}}Filter." + last + "get"
+							+ Utils.normalizerStringCaps(coluns.get(i).get("colum")) + "())) { ");
 					sb.append("\n");
 					sb.append(" 	predicates.add(builder.like( ");
 					sb.append("\n");
 
-					//						System.err.println("COLUM: "+coluns.get(i).get("colum"));
-					//						System.err.println("COLUM-UP: "+Utils.normalizerString(coluns.get(i).get("colum")).replace("-","_").toUpperCase());
+					// System.err.println("COLUM: "+coluns.get(i).get("colum"));
+					// System.err.println("COLUM-UP:
+					// "+Utils.normalizerString(coluns.get(i).get("colum")).replace("-","_").toUpperCase());
 
-					sb.append(" 		builder.lower(root."+fkCriteria+"get("+Utils.normalizerStringCaps(entidade)+"_."+Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-","_"), databaseUtils.getTipo()).toUpperCase()+")), \"%\" + {{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"().toLowerCase() + \"%\")); ");
+					sb.append(" 		builder.lower(root." + fkCriteria + "get("
+							+ Utils.normalizerStringCaps(entidade) + "_."
+							+ Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-", "_"),
+									databaseUtils.getTipo()).toUpperCase()
+							+ ")), \"%\" + {{entityL}}Filter." + last + "get"
+							+ Utils.normalizerStringCaps(coluns.get(i).get("colum")) + "().toLowerCase() + \"%\")); ");
 					sb.append("\n");
 					sb.append(" } ");
 					sb.append("\n");
 
+				} else if (type.contains("real") || type.contains("dec") || type.contains("num")
+						|| type.contains("double") || type.contains("int") || type.contains("long")) {
 
-				} else if (
-						type.contains("real")
-						|| type.contains("dec")
-						|| type.contains("num")
-						|| type.contains("double")
-						|| type.contains("int")
-						|| type.contains("long")
-						) {
+					// INTEGER
+					if (!coluns.get(i).get("fk").isEmpty()) {
 
-					//INTEGER						
-					if(!coluns.get(i).get("fk").isEmpty()) {
+						System.err.println(Utils.normalizerStringCaps(this.entity) + " = " + entidade);
 
-						System.err.println(Utils.normalizerStringCaps(this.entity) +" = "+ entidade);
-
-						if(		!imports.toString().contains(Utils.normalizerStringCaps(coluns.get(i).get("fk").replace("-","_"))+"_; ") 
-								&&								
-								!coluns.get(i).get("fk").equals(entidade)
-								&&
-								!Utils.normalizerStringCaps(this.entity).equalsIgnoreCase(entidade)
-								) {
+						if (!imports.toString()
+								.contains(Utils.normalizerStringCaps(coluns.get(i).get("fk").replace("-", "_")) + "_; ")
+								&& !coluns.get(i).get("fk").equals(entidade)
+								&& !Utils.normalizerStringCaps(this.entity).equalsIgnoreCase(entidade)) {
 
 							imports.append("\n");
-							imports.append("import {{packEntity}}."+Utils.normalizerStringCaps(coluns.get(i).get("fk").replace("-","_"))+"_; ");
+							imports.append("import {{packEntity}}."
+									+ Utils.normalizerStringCaps(coluns.get(i).get("fk").replace("-", "_")) + "_; ");
 							imports.append("\n");
 
 						}
 
-						if(!coluns.get(i).get("fk").equals(entidade)) {								
+						if (!coluns.get(i).get("fk").equals(entidade)) {
 
-							//FK							
-							sb.append("\n");														
-							sb.append("	if ({{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("fk"))+"Filter() != null) { ");
+							// FK
+							sb.append("\n");
+							sb.append("	if ({{entityL}}Filter." + last + "get"
+									+ Utils.normalizerStringCaps(coluns.get(i).get("fk")) + "Filter() != null) { ");
 
-							String montaPredicados = montaPredicados(
-									coluns.get(i).get("fk"), 
-									last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("fk"))+"Filter()."
-									, fkCriteria+"get("+Utils.normalizerStringCaps(entidade)+"_."+Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-","_")
-									, databaseUtils.getTipo()).toUpperCase()+")."
-									);
+							String montaPredicados = montaPredicados(coluns.get(i).get("fk"),
+									last + "get" + Utils.normalizerStringCaps(coluns.get(i).get("fk")) + "Filter().",
+									fkCriteria + "get(" + Utils.normalizerStringCaps(entidade) + "_."
+											+ Utils.normalizerStringCapHifen(
+													coluns.get(i).get("colum").replace("-", "_"),
+													databaseUtils.getTipo()).toUpperCase()
+											+ ").");
 							sb.append(montaPredicados);
 
 							sb.append("\n");
 							sb.append("	}");
 							sb.append("\n");
 
-						}else {
+						} else {
 
 							sb.append("\n");
 							sb.append("/*");
 							sb.append("\n");
-							sb.append(" if ({{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"() != null) { ");
+							sb.append(" if ({{entityL}}Filter." + last + "get"
+									+ Utils.normalizerStringCaps(coluns.get(i).get("colum")) + "() != null) { ");
 							sb.append("\n");
 							sb.append(" 	predicates.add(builder.equal( ");
 							sb.append("\n");
-							sb.append(" 		root."+fkCriteria+"get("+Utils.normalizerStringCaps(entidade)+"_."+Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-","_"), databaseUtils.getTipo()).toUpperCase() +"), {{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"())); ");
-							sb.append("\n");							
+							sb.append(" 		root." + fkCriteria + "get(" + Utils.normalizerStringCaps(entidade)
+									+ "_."
+									+ Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-", "_"),
+											databaseUtils.getTipo()).toUpperCase()
+									+ "), {{entityL}}Filter." + last + "get"
+									+ Utils.normalizerStringCaps(coluns.get(i).get("colum")) + "())); ");
+							sb.append("\n");
 							sb.append(" } ");
 							sb.append("\n");
 							sb.append("*/");
 						}
-					}else {
-						sb.append("\n");							
-						sb.append(" if ({{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"() != null) { ");
+					} else {
+						sb.append("\n");
+						sb.append(" if ({{entityL}}Filter." + last + "get"
+								+ Utils.normalizerStringCaps(coluns.get(i).get("colum")) + "() != null) { ");
 						sb.append("\n");
 						sb.append(" 	predicates.add(builder.equal( ");
 						sb.append("\n");
-						sb.append(" 		root."+fkCriteria+"get("+Utils.normalizerStringCaps(entidade)+"_."+Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-","_"), databaseUtils.getTipo()).toUpperCase() +"), {{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"())); ");
+						sb.append(" 		root." + fkCriteria + "get(" + Utils.normalizerStringCaps(entidade) + "_."
+								+ Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-", "_"),
+										databaseUtils.getTipo()).toUpperCase()
+								+ "), {{entityL}}Filter." + last + "get"
+								+ Utils.normalizerStringCaps(coluns.get(i).get("colum")) + "())); ");
 						sb.append("\n");
-						sb.append(" } ");							
+						sb.append(" } ");
 					}
-				} else if (
-						type.contains("date") 
-						|| type.contains("time")
-						) {
-					//DATE
-					sb.append("\n");						
-					sb.append(" if (!StringUtils.hasLength({{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"())) { ");
+				} else if (type.contains("date") || type.contains("time")) {
+					// DATE
+					sb.append("\n");
+					sb.append(" if ({{entityL}}Filter." + last + "get"
+							+ Utils.normalizerStringCaps(coluns.get(i).get("colum")) + "() != null) { ");
 					sb.append("\n");
 					sb.append(" 	predicates.add(builder.equal( ");
 					sb.append("\n");
-					sb.append(" 		root."+fkCriteria+"get("+Utils.normalizerStringCaps(entidade)+"_."+Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-","_"), databaseUtils.getTipo()).toUpperCase()+"), {{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"())); ");
+					sb.append(" 		root." + fkCriteria + "get(" + Utils.normalizerStringCaps(entidade) + "_."
+							+ Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-", "_"),
+									databaseUtils.getTipo()).toUpperCase()
+							+ "), {{entityL}}Filter." + last + "get"
+							+ Utils.normalizerStringCaps(coluns.get(i).get("colum")) + "())); ");
 					sb.append("\n");
 					sb.append(" } ");
 					sb.append("\n");
 				} else {
-					//OTHER
-					sb.append("\n");						
-					sb.append(" if (!StringUtils.hasLength({{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"())) { ");
+					// OTHER
+					sb.append("\n");
+					sb.append(" if (StringUtils.hasLength({{entityL}}Filter." + last + "get"
+							+ Utils.normalizerStringCaps(coluns.get(i).get("colum")) + "())) { ");
 					sb.append("\n");
 					sb.append(" 	predicates.add(builder.equal( ");
 					sb.append("\n");
-					sb.append(" 		root."+fkCriteria+"get("+Utils.normalizerStringCaps(entidade)+"_."+Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-","_"), databaseUtils.getTipo()).toUpperCase()+"), {{entityL}}Filter."+last+"get"+Utils.normalizerStringCaps(coluns.get(i).get("colum"))+"())); ");
+					sb.append(" 		root." + fkCriteria + "get(" + Utils.normalizerStringCaps(entidade) + "_."
+							+ Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-", "_"),
+									databaseUtils.getTipo()).toUpperCase()
+							+ "), {{entityL}}Filter." + last + "get"
+							+ Utils.normalizerStringCaps(coluns.get(i).get("colum")) + "())); ");
 					sb.append("\n");
 					sb.append(" } ");
 					sb.append("\n");
@@ -660,7 +683,7 @@ public class Struckts {
 			}
 
 		} catch (Exception e) {
-			System.err.println("erro>> "+e.getMessage());
+			System.err.println("erro>> " + e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -702,22 +725,17 @@ public class Struckts {
 	private String processClean(StringBuilder sb) {
 
 		try {
-			String replace = sb.toString().replace("{{packBase}}", packBase)
-					.replace("{{packEntity}}", packEntity)
-					.replace("{{packResource}}", packResource)
-					.replace("{{packFilter}}", packFilter)
-					.replace("{{packRepository}}", packRepository)
-					.replace("{{packServices}}", packServices)
+			String replace = sb.toString().replace("{{packBase}}", packBase).replace("{{packEntity}}", packEntity)
+					.replace("{{packResource}}", packResource).replace("{{packFilter}}", packFilter)
+					.replace("{{packRepository}}", packRepository).replace("{{packServices}}", packServices)
 					.replace("{{packRepositoryImpl}}", packRepositoryImpl)
 					.replace("{{entity}}", Utils.normalizerStringCaps(this.entity))
 					.replace("{{EntityFolder}}", Utils.normalizerStringCommomNotCap(this.entity))
-					.replace("{{entityL}}", Utils.normalizerStringCommomNotCap(this.entity))
-					;
+					.replace("{{entityL}}", Utils.normalizerStringCommomNotCap(this.entity));
 
-
-			return new Formatter().formatSource(replace);	
+			return new Formatter().formatSource(replace);
 		} catch (Exception e) {
-			this.console.setText(""+e.getMessage());
+			this.console.setText("" + e.getMessage());
 			return "";
 		}
 

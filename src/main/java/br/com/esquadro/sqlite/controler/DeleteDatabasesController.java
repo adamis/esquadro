@@ -1,13 +1,17 @@
 /**
  * 
  */
-package br.com.esquadro.controler;
+package br.com.esquadro.sqlite.controler;
 
 import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 
-import br.com.esquadro.util.Conexao;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
+
+import br.com.esquadro.sqlite.entity.BancoDadosEntity;
+import br.com.esquadro.sqlite.helper.SqliteHelper;
 import br.com.esquadro.view.panel.BancoDados;
 
 /**
@@ -16,14 +20,13 @@ import br.com.esquadro.view.panel.BancoDados;
  */
 public class DeleteDatabasesController extends Thread {
 
-	private Conexao conexao;
-	private String id;
+	
+	private Integer id;
 	// private String nomeBD;
 	private BancoDados bancoDados;
 
-	public DeleteDatabasesController(BancoDados bancoDados, Conexao conexao, String id, String nomeBD) {
-		this.bancoDados = bancoDados;
-		this.conexao = conexao;
+	public DeleteDatabasesController(BancoDados bancoDados, Integer id, String nomeBD) {
+		this.bancoDados = bancoDados;		
 		this.id = id;
 		// this.nomeBD = nomeBD;
 	}
@@ -53,16 +56,10 @@ public class DeleteDatabasesController extends Thread {
 	 * @throws SQLException
 	 */
 
-	public void deleteDatabase(String id) throws Exception {
-		conexao.conect();
-
-		StringBuilder sql = new StringBuilder();
-
-		sql.append(" DELETE FROM banco_dados WHERE id = " + id);
-
-		conexao.beginTransaction();
-		conexao.executeQueryUpdate(sql.toString());
-		conexao.commit();
+	public void deleteDatabase(Integer id) throws Exception {
+		Dao<BancoDadosEntity, Integer> bancoDadosDao = DaoManager.createDao(SqliteHelper.connectionSource, BancoDadosEntity.class);		
+		bancoDadosDao.deleteById(id);
+		
 	}
 
 }

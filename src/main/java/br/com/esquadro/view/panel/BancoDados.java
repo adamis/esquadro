@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
-import java.awt.Point;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,13 +32,12 @@ import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
-import br.com.esquadro.controler.DeleteDatabasesController;
-import br.com.esquadro.controler.InsertDatabasesController;
-import br.com.esquadro.controler.ListDatabasesController;
-import br.com.esquadro.controler.UpdateDatabasesController;
 import br.com.esquadro.resources.ResourcesImages;
-import br.com.esquadro.util.Conexao;
-import br.com.esquadro.util.SqliteHelper;
+import br.com.esquadro.sqlite.controler.DeleteDatabasesController;
+import br.com.esquadro.sqlite.controler.InsertDatabasesController;
+import br.com.esquadro.sqlite.controler.ListTablesController;
+import br.com.esquadro.sqlite.controler.UpdateDatabasesController;
+import br.com.esquadro.sqlite.entity.BancoDadosEntity;
 import br.com.esquadro.view.ConsoleLog;
 
 public class BancoDados extends JInternalFrame {
@@ -54,11 +52,10 @@ public class BancoDados extends JInternalFrame {
 	private JTextField txtNomeBD;
 	private JTextField txtSchema;
 	private JComboBox<String> cbTipo;
-	private String bdSendoAlterado;
+	private Integer bdSendoAlterado;
 	private JPasswordField txtSenha;
 	private JTextField txtCharset;
-	private JTextField txtIp;
-	private Conexao conexao;
+	private JTextField txtIp;	
 	private JCheckBox ckboxPsw;
 	private JButton btnAlterar;
 	private JButton btnCadastrarBd;
@@ -186,19 +183,10 @@ public class BancoDados extends JInternalFrame {
 
 				if (valid) {
 
-					String[] dados = new String[9];
-					dados[0] = txtNome.getText();
-					dados[1] = txtIp.getText();
-					dados[2] = txtPorta.getText();
-					dados[3] = txtUsuario.getText();
-					dados[4] = new String(txtSenha.getPassword());
-					dados[5] = txtCharset.getText();
-					dados[6] = txtNomeBD.getText();
-					dados[7] = txtSchema.getText();
-					dados[8] = String.valueOf(cbTipo.getSelectedItem());
-
-					UpdateDatabasesController controller = new UpdateDatabasesController(BancoDados.this, conexao,
-							bdSendoAlterado, dados);
+					
+					BancoDadosEntity bancoDadosEntity = getFormData();
+					
+					UpdateDatabasesController controller = new UpdateDatabasesController(BancoDados.this, bdSendoAlterado, bancoDadosEntity);
 					controller.run();
 
 				} else {
@@ -209,6 +197,11 @@ public class BancoDados extends JInternalFrame {
 				// TODO
 
 			}
+
+			/**
+			 * @return
+			 */
+			
 		});
 
 		btnAlterar.setBounds(65, 421, 240, 37);
@@ -332,19 +325,9 @@ public class BancoDados extends JInternalFrame {
 
 				if (valid) {
 
-					String[] dados = new String[9];
-					dados[0] = txtNome.getText();
-					dados[1] = txtIp.getText();
-					dados[2] = txtPorta.getText();
-					dados[3] = txtUsuario.getText();
-					dados[4] = new String(txtSenha.getPassword());
-					dados[5] = txtCharset.getText();
-					dados[6] = txtNomeBD.getText();
-					dados[7] = txtSchema.getText();
-					dados[8] = String.valueOf(cbTipo.getSelectedItem());
+					BancoDadosEntity bancoDadosEntity = getFormData();
 
-					InsertDatabasesController controller = new InsertDatabasesController(BancoDados.this, conexao,
-							dados);
+					InsertDatabasesController controller = new InsertDatabasesController(BancoDados.this,bancoDadosEntity);
 					controller.run();
 
 				} else {
@@ -383,6 +366,11 @@ public class BancoDados extends JInternalFrame {
 		DefaultTableModel model = new DefaultTableModel(null, colHdrs);
 
 		tblTabelas = new JTable(model) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 612081287363465231L;
+
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
@@ -396,8 +384,8 @@ public class BancoDados extends JInternalFrame {
 			@Override
 			public void mousePressed(MouseEvent mouseEvent) {
 				JTable table = (JTable) mouseEvent.getSource();
-				Point point = mouseEvent.getPoint();
-				int row = table.rowAtPoint(point);
+				//Point point = mouseEvent.getPoint();
+				//int row = table.rowAtPoint(point);
 				if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
 					callEdit();
 				}
@@ -453,8 +441,8 @@ public class BancoDados extends JInternalFrame {
 							"Excluir as configurações de banco de dados é um caminho sem volta. \n Deseja prosseguir?",
 							null, JOptionPane.YES_NO_OPTION);
 					if (dialogResult == JOptionPane.YES_OPTION) {
-						DeleteDatabasesController controller = new DeleteDatabasesController(BancoDados.this, conexao,
-								tblTabelas.getValueAt(tblTabelas.getSelectedRow(), 0).toString(),
+						DeleteDatabasesController controller = new DeleteDatabasesController(BancoDados.this, 
+								Integer.valueOf(tblTabelas.getValueAt(tblTabelas.getSelectedRow(), 0).toString()),
 								tblTabelas.getValueAt(tblTabelas.getSelectedRow(), 0).toString());
 						controller.run();
 
@@ -464,12 +452,12 @@ public class BancoDados extends JInternalFrame {
 			}
 		});
 
-		conexao = SqliteHelper.conexaoSQLITE;
+		
 		loadTable();
 	}
 
 	public void loadTable() {
-		ListDatabasesController controller = new ListDatabasesController(conexao, tblTabelas, consoleLog);
+		ListTablesController controller = new ListTablesController(tblTabelas, consoleLog);
 		controller.run();
 	}
 
@@ -486,6 +474,20 @@ public class BancoDados extends JInternalFrame {
 		ckboxPsw.setSelected(false);
 
 	}
+	
+	private BancoDadosEntity getFormData() {
+		BancoDadosEntity bancoDadosEntity = new BancoDadosEntity();
+		bancoDadosEntity.setNome(txtNome.getText());
+		bancoDadosEntity.setIp(txtIp.getText());
+		bancoDadosEntity.setPorta(txtPorta.getText());
+		bancoDadosEntity.setUsuario(txtUsuario.getText());
+		bancoDadosEntity.setSenha(new String(txtSenha.getPassword()));
+		bancoDadosEntity.setCharset(txtCharset.getText());
+		bancoDadosEntity.setNameBd(txtNomeBD.getText());
+		bancoDadosEntity.setSchema(txtSchema.getText());
+		bancoDadosEntity.setTipo(String.valueOf(cbTipo.getSelectedItem()));
+		return bancoDadosEntity;
+	}
 
 	private void callEdit() {
 		if (tblTabelas.getSelectedRow() == -1) {
@@ -499,25 +501,24 @@ public class BancoDados extends JInternalFrame {
 
 				btnAlterar.setVisible(true);
 				btnCadastrarBd.setVisible(false);
-				UpdateDatabasesController controller = new UpdateDatabasesController(conexao);
-				String[] dados = controller
-						.editDatabaseRequest(tblTabelas.getValueAt(tblTabelas.getSelectedRow(), 0).toString());
+				UpdateDatabasesController controller = new UpdateDatabasesController();
+				BancoDadosEntity dados = controller.findById(Integer.valueOf(tblTabelas.getValueAt(tblTabelas.getSelectedRow(), 0).toString()));
 				panel.setVisible(true);
 				scrollPane.setVisible(false);
-				txtNome.setText(dados[0]);
-				txtIp.setText(dados[1]);
-				txtPorta.setText(dados[2]);
-				txtUsuario.setText(dados[3]);
-				txtSenha.setText(dados[4]);
-				txtCharset.setText(dados[5]);
-				txtNomeBD.setText(dados[6]);
-				txtSchema.setText(dados[7]);
+				txtNome.setText(dados.getNome());
+				txtIp.setText(dados.getIp());
+				txtPorta.setText(dados.getPorta());
+				txtUsuario.setText(dados.getUsuario());
+				txtSenha.setText(dados.getSenha());
+				txtCharset.setText(dados.getCharset());
+				txtNomeBD.setText(dados.getNameBd());
+				txtSchema.setText(dados.getSchema());
 
 				for (int i = 0; i < cbTipo.getItemCount(); i++) {
 
-					System.err.println("dados> " + dados[8]);
+					
 
-					if (dados[8].toUpperCase().equals(cbTipo.getItemAt(i).toUpperCase())) {
+					if (dados.getTipo().toUpperCase().equals(cbTipo.getItemAt(i).toUpperCase())) {
 
 						cbTipo.setSelectedIndex(i);
 
@@ -527,7 +528,7 @@ public class BancoDados extends JInternalFrame {
 
 				}
 
-				bdSendoAlterado = dados[9];
+				bdSendoAlterado = dados.getId();
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage(), "Atenção", JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();

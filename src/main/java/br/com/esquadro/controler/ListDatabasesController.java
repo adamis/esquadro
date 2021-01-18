@@ -11,7 +11,7 @@ import java.util.List;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import br.com.esquadro.model.BancoDados;
+import br.com.esquadro.sqlite.entity.BancoDadosEntity;
 import br.com.esquadro.util.Conexao;
 import br.com.esquadro.view.ConsoleLog;
 
@@ -35,7 +35,7 @@ public class ListDatabasesController extends Thread {
 	public void run() {
 
 		try {
-			List<BancoDados> databases = getDatabases(conexao);
+			List<BancoDadosEntity> databases = getDatabases(conexao);
 
 			String[] columnNames = { "id", "Nome", "Banco de Dados", "tipo", "usuario" };
 
@@ -93,10 +93,10 @@ public class ListDatabasesController extends Thread {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<BancoDados> getDatabases(Conexao conexao) throws Exception {
+	public List<BancoDadosEntity> getDatabases(Conexao conexao) throws Exception {
 		conexao.conect();
 
-		List<BancoDados> listBancoDados = new ArrayList<>();
+		List<BancoDadosEntity> listBancoDados = new ArrayList<>();
 
 		StringBuilder sql = new StringBuilder();
 		sql.append(" SELECT ");
@@ -118,7 +118,7 @@ public class ListDatabasesController extends Thread {
 		ResultSet executeQuery = conexao.executeQuery(sql.toString());
 
 		while (executeQuery.next()) {
-			BancoDados bancoDados = new BancoDados();
+			BancoDadosEntity bancoDados = new BancoDadosEntity();
 			bancoDados.setId(executeQuery.getInt("id"));
 			bancoDados.setNome(executeQuery.getString("nome"));
 			bancoDados.setIp(executeQuery.getString("ip"));

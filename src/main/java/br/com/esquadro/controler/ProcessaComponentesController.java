@@ -11,7 +11,7 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import br.com.esquadro.model.BancoDados;
+import br.com.esquadro.sqlite.entity.BancoDadosEntity;
 import br.com.esquadro.util.DatabaseUtils;
 import br.com.esquadro.util.Statics;
 import br.com.esquadro.util.Utils;
@@ -28,11 +28,11 @@ public class ProcessaComponentesController implements Runnable {
 	private Boolean spec;
 	private ConsoleLog consoleLog;
 	private Boolean mockJson;
-	private BancoDados bancoDados;
+	private BancoDadosEntity bancoDados;
 	private String dbFile = "";
 
 	public ProcessaComponentesController(List<String> listComponent, String urlProject, Boolean spec,
-			ConsoleLog consoleLog, Boolean mockJson, BancoDados bancoDados) {
+			ConsoleLog consoleLog, Boolean mockJson, BancoDadosEntity bancoDados) {
 		this.listComponent = listComponent;
 		this.urlProject = urlProject;
 		this.spec = spec;
@@ -128,7 +128,6 @@ public class ProcessaComponentesController implements Runnable {
 	private void execBat(String table) throws IOException, InterruptedException {
 
 		table = Utils.normalizerString(table.trim());
-
 
 		String params = "";
 
@@ -340,7 +339,6 @@ public class ProcessaComponentesController implements Runnable {
 			// Utils.normalizerStringCommomNotCap(coluns.get(i).get("colum"));
 			String columCammonNotCapInit = Utils.normalizerStringCommomNotCap(coluns.get(i).get("colum"));
 			String columCap = (Character.toUpperCase(colum.charAt(0)) + colum.substring(1)).trim().replace("-", "");
-
 
 			boolean controlFk = false;
 			for (int j = 0; j < fks.size(); j++) {
@@ -644,8 +642,6 @@ public class ProcessaComponentesController implements Runnable {
 		String tableCap = Utils.normalizerStringCaps(table.trim());
 		String file = this.urlProject + "/src/app/" + Statics.MODULE_NAME + "/" + tableLow + "/" + tableLow
 				+ "-routing.module.ts";
-
-
 
 		List<String> readTxtList = Utils.readTxtList(file);
 		String imp = "import { " + tableCap + "CadastroComponent } from './" + tableLow + "-cadastro/" + tableLow

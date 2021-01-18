@@ -14,7 +14,7 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import br.com.esquadro.resources.ResourcesImages;
-import br.com.esquadro.util.SqliteHelper;
+import br.com.esquadro.sqlite.helper.SqliteHelper;
 import br.com.esquadro.util.Styles;
 import br.com.esquadro.view.Menu;
 
@@ -81,23 +81,21 @@ public class SplashScreen extends JFrame {
 					lbText.setText("Iniciando...");
 					Thread.sleep(300);
 					lbText.setText("Conectando Banco de Dados Interno...");
-					if (SqliteHelper.conexaoSQLITE != null) {
-						//System.err.println("DIFERENTE");
-					}
+					SqliteHelper.init();
 					lbText.setText("Conectado!");
 					progressBar.setValue(20);
 					Thread.sleep(600);
 					lbText.setText("Iniciando Menu...");
-					
-					System.err.println(""+progressBar.getValue());
-					System.err.println(""+(100-progressBar.getValue()));
-					
-					int rangeLimbo = (100-progressBar.getValue());
+
+					System.err.println("" + progressBar.getValue());
+					System.err.println("" + (100 - progressBar.getValue()));
+
+					int rangeLimbo = (100 - progressBar.getValue());
 					for (int i = 0; i < rangeLimbo; i++) {
 						Thread.sleep(10);
-						progressBar.setValue(progressBar.getValue()+1);
+						progressBar.setValue(progressBar.getValue() + 1);
 					}
-					
+
 					UIManager.setLookAndFeel(Styles.style);
 
 					Thread.sleep(1000);

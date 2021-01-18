@@ -3,7 +3,7 @@
  */
 package br.com.esquadro.controler;
 
-import br.com.esquadro.model.BancoDados;
+import br.com.esquadro.sqlite.entity.BancoDadosEntity;
 import br.com.esquadro.util.DatabaseUtils;
 
 /**
@@ -12,9 +12,9 @@ import br.com.esquadro.util.DatabaseUtils;
  */
 public class AutomaticDBController extends Thread {
 
-	private BancoDados bancoDados;
+	private BancoDadosEntity bancoDados;
 
-	public AutomaticDBController(BancoDados bancoDados) {
+	public AutomaticDBController(BancoDadosEntity bancoDados) {
 		this.bancoDados = bancoDados;
 	}
 

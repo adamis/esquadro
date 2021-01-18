@@ -2,7 +2,6 @@ package br.com.esquadro.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -100,8 +99,8 @@ public class Conexao {
 						port = "3306";
 					}
 
-					//System.err.println("jdbc:mysql://" + ip + ":" + port + "/" + nameBD);
-					//System.err.println("" + props.toString());
+					// System.err.println("jdbc:mysql://" + ip + ":" + port + "/" + nameBD);
+					// System.err.println("" + props.toString());
 
 					// props.setProperty("relaxAutoCommit", "true");
 					props.setProperty("autoReconnect", "true");
@@ -111,9 +110,9 @@ public class Conexao {
 					// Class.forName("org.gjt.mm.mysql.Driver");
 					Class.forName("com.mysql.cj.jdbc.Driver");
 					conexao = DriverManager.getConnection("jdbc:mysql://" + ip + ":" + port + "/" + nameBD
-							// +
-							// "?relaxAutoCommit=true&autoReconnect=true&useTimezone=true&serverTimezone=UTC"
-							// +"?relaxAutoCommit=true"
+					// +
+					// "?relaxAutoCommit=true&autoReconnect=true&useTimezone=true&serverTimezone=UTC"
+					// +"?relaxAutoCommit=true"
 							+ "?autoReconnect=true&relaxAutoCommit=true", props);
 
 					break;
@@ -267,8 +266,8 @@ public class Conexao {
 
 		System.out.println(sql);
 		ResultSet resultSettemp;
-		
-		statement = conexao.createStatement();		
+
+		statement = conexao.createStatement();
 		resultSettemp = statement.executeQuery(sql);
 		return resultSettemp;
 	}

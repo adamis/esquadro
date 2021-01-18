@@ -64,7 +64,7 @@ public class CheckNodeAngularCLI {
 
 		while ((ligne = output.readLine()) != null) {
 			this.consoleLog.setText("" + ligne);
-			version = ligne;			
+			version = ligne;
 		}
 
 		while ((ligne = error.readLine()) != null) {
@@ -105,7 +105,6 @@ public class CheckNodeAngularCLI {
 		}
 
 		p.waitFor();
-
 
 		this.consoleLog.setText("Versão do Node: " + version);
 
@@ -226,7 +225,6 @@ public class CheckNodeAngularCLI {
 	}
 
 	private static boolean updateAngular() throws Exception {
-
 
 		// String cmd = "ng remove -g @angular/cli && npm cache verify && npm install -g
 		// @angular/cli@^7";

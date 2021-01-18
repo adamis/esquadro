@@ -14,7 +14,7 @@ import javax.swing.ImageIcon;
  * @since 1.0, 31 de ago de 2017
  */
 public class ResourcesImages {
-	
+
 	public static ImageIcon springBoot() {
 		return toolkitIcon("SpringBoot.png");
 	}
@@ -74,7 +74,7 @@ public class ResourcesImages {
 	public static Image informationIcon() {
 		return toolkit("information.png");
 	}
-	
+
 	public static ImageIcon faq() {
 		return toolkitIcon("faq.png");
 	}
@@ -114,9 +114,7 @@ public class ResourcesImages {
 	public static ImageIcon angularMini() {
 		return toolkitIcon("angular-mini.png");
 	}
-	
-	
-	
+
 	public static ImageIcon tutorial1() {
 		return toolkitIcon("tutorial-1.png");
 	}

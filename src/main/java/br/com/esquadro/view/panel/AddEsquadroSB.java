@@ -16,6 +16,7 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -27,20 +28,23 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
+
 import br.com.esquadro.controler.AddEsquadroSBController;
-import br.com.esquadro.model.BancoDados;
 import br.com.esquadro.model.DependenciasPOM.DEPEND;
 import br.com.esquadro.resources.ResourcesImages;
+import br.com.esquadro.sqlite.entity.BancoDadosEntity;
+import br.com.esquadro.sqlite.helper.SqliteHelper;
 import br.com.esquadro.util.Conexao;
 import br.com.esquadro.util.PersonalItem;
-import br.com.esquadro.util.SqliteHelper;
 import br.com.esquadro.view.ConsoleLog;
 
 public class AddEsquadroSB extends JInternalFrame {
 
 	private static final long serialVersionUID = 4593163889948851947L;
 	private TextField inputProject;
-	private BancoDados bancoDados = null;
+	private BancoDadosEntity bancoDados = null;
 
 	private ConsoleLog consoleLog;
 	private JTextField txtPackages;
@@ -78,7 +82,7 @@ public class AddEsquadroSB extends JInternalFrame {
 	private boolean metamodelGen = true;
 	private boolean devTools = true;
 	private String temp = "";
-	
+
 	private JCheckBox chckbxDevtools;
 
 	public void setUrl(TextField inputProject) {
@@ -110,11 +114,15 @@ public class AddEsquadroSB extends JInternalFrame {
 		JComboBox<PersonalItem> comboBox = new JComboBox<PersonalItem>();
 		comboBox.setEnabled(false);
 
-		Conexao conexao = SqliteHelper.conexaoSQLITE;
 
-		ResultSet executeQuery;
+		
 		try {
-			executeQuery = conexao.executeQuery("SELECT * FROM \"banco_dados\" ORDER BY nome ASC");
+			Dao<BancoDadosEntity, Integer> bancoDadosDao= DaoManager.createDao(SqliteHelper.connectionSource, BancoDadosEntity.class);
+			
+			List<BancoDadosEntity> listBancoDados = bancoDadosDao.queryBuilder()
+                    .orderBy("nome", true)
+                    .query();
+			
 
 			PersonalItem item = new PersonalItem();
 			item.setName("Selecione...");
@@ -122,25 +130,16 @@ public class AddEsquadroSB extends JInternalFrame {
 
 			comboBox.addItem(item);
 
-			while (executeQuery.next()) {
+			
+			
+			for (Iterator iterator = listBancoDados.iterator(); iterator.hasNext();) {
+				BancoDadosEntity bancoDados = (BancoDadosEntity) iterator.next();
 				item = new PersonalItem();
-				item.setName(executeQuery.getString("nome") + " (" + executeQuery.getString("nameBd") + ")");
-
-				BancoDados bancoDados = new BancoDados();
-				bancoDados.setId(executeQuery.getInt("id"));
-				bancoDados.setNome(executeQuery.getString("nome"));
-				bancoDados.setIp(executeQuery.getString("ip"));
-				bancoDados.setPorta(executeQuery.getString("porta"));
-				bancoDados.setUsuario(executeQuery.getString("usuario"));
-				bancoDados.setSenha(executeQuery.getString("senha"));
-				bancoDados.setCharset(executeQuery.getString("charset"));
-				bancoDados.setNameBd(executeQuery.getString("nameBd"));
-				bancoDados.setSchema(executeQuery.getString("schema"));
-				bancoDados.setTipo(executeQuery.getString("tipo"));
+				item.setName(bancoDados.getNome() + " (" + bancoDados.getNameBd() + ")");		
 				item.setValue(bancoDados);
-
 				comboBox.addItem(item);
 			}
+			
 		} catch (SQLException e) {
 			this.consoleLog.setText("Erro: " + e.getMessage());
 			e.printStackTrace();
@@ -153,26 +152,25 @@ public class AddEsquadroSB extends JInternalFrame {
 				PersonalItem personalItem = (PersonalItem) item.getItem();
 
 				if (personalItem.getValue() != null) {
-					bancoDados = (BancoDados) personalItem.getValue();
-					
-					if(bancoDados.getTipo().equalsIgnoreCase("mysql")) {
+					bancoDados = (BancoDadosEntity) personalItem.getValue();
+
+					if (bancoDados.getTipo().equalsIgnoreCase("mysql")) {
 						chkMysql.setSelected(true);
 						chkOracle.setSelected(false);
 						mysql = true;
 						oracle = false;
-						
-					}else {
+
+					} else {
 						chkMysql.setSelected(false);
 						chkOracle.setSelected(true);
 						mysql = false;
 						oracle = true;
 					}
-					
+
 				} else {
 					bancoDados = null;
 				}
-				
-				
+
 			}
 
 		});
@@ -276,7 +274,7 @@ public class AddEsquadroSB extends JInternalFrame {
 		getContentPane().add(panel);
 
 		inputProject = new TextField();
-		
+
 		inputProject.setPreferredSize(new Dimension(10, 0));
 		inputProject.setMaximumSize(new Dimension(10, 10));
 		inputProject.setColumns(70);
@@ -312,7 +310,7 @@ public class AddEsquadroSB extends JInternalFrame {
 		txtPackages.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				if(inputProject.getText() != null) {
+				if (inputProject.getText() != null) {
 					buscaPackage(inputProject.getText());
 				}
 			}
@@ -604,35 +602,33 @@ public class AddEsquadroSB extends JInternalFrame {
 		}
 	}
 
-	
-	
 	private void buscaPackage(String url) {
-		if(url != null && url.length() > 0) {
-			
-			url = url+"/src/main/java";
+		if (url != null && url.length() > 0) {
+
+			url = url + "/src/main/java";
 			File directory = new File(url);
 			listar(directory);
-			
-			String replace = temp.replace(directory.getAbsolutePath(),"").replace("\\", ".");
+
+			String replace = temp.replace(directory.getAbsolutePath(), "").replace("\\", ".");
 			replace = replace.substring(1, replace.length());
-			
-			System.err.println(""+replace);		
+
+			System.err.println("" + replace);
 			txtPackages.setText(replace);
-			
+
 		}
 	}
-	
-	 public void listar(File directory) {
-	        if(directory.isDirectory()) {
-	            //System.out.println(directory.getPath());
-	            temp = directory.getPath();
-	            String[] subDirectory = directory.list();
-	            if(subDirectory != null) {
-	                for(String dir : subDirectory){
-	                    listar(new File(directory + File.separator  + dir));
-	                }
-	            }
-	        }
-	    }
-	
+
+	public void listar(File directory) {
+		if (directory.isDirectory()) {
+			// System.out.println(directory.getPath());
+			temp = directory.getPath();
+			String[] subDirectory = directory.list();
+			if (subDirectory != null) {
+				for (String dir : subDirectory) {
+					listar(new File(directory + File.separator + dir));
+				}
+			}
+		}
+	}
+
 }

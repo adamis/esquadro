@@ -8,6 +8,8 @@ import java.awt.Rectangle;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
@@ -16,6 +18,7 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -32,24 +35,25 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
+
 import br.com.esquadro.controler.AddAPIController;
 import br.com.esquadro.controler.ListTableController;
-import br.com.esquadro.model.BancoDados;
 import br.com.esquadro.resources.ResourcesImages;
+import br.com.esquadro.sqlite.entity.BancoDadosEntity;
+import br.com.esquadro.sqlite.helper.SqliteHelper;
 import br.com.esquadro.util.Conexao;
 import br.com.esquadro.util.DatabaseUtils;
 import br.com.esquadro.util.PersonalItem;
-import br.com.esquadro.util.SqliteHelper;
 import br.com.esquadro.view.ConsoleLog;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 
 public class AddAPI extends JInternalFrame {
 
 	private static final long serialVersionUID = 4593163889948851947L;
 	private TextField inputProject;
 	private JTable table;
-	private BancoDados bancoDados = null;
+	private BancoDadosEntity bancoDados = null;
 
 	private ConsoleLog consoleLog;
 	private JTextField txtPackage;
@@ -69,8 +73,8 @@ public class AddAPI extends JInternalFrame {
 	private String temp;
 	private JTextField textField_1;
 
-//	private String filterTableName;
-	
+	//	private String filterTableName;
+
 	public void setUrl(TextField inputProject) {
 		this.inputProject = inputProject;
 	}
@@ -103,11 +107,13 @@ public class AddAPI extends JInternalFrame {
 
 		JComboBox<PersonalItem> comboBox = new JComboBox<PersonalItem>();
 
-		Conexao conexao = SqliteHelper.conexaoSQLITE;
 
-		ResultSet executeQuery;
+
+
 		try {
-			executeQuery = conexao.executeQuery("SELECT * FROM \"banco_dados\"");
+			Dao<BancoDadosEntity, Integer> bancoDadosDao= DaoManager.createDao(SqliteHelper.connectionSource, BancoDadosEntity.class);
+
+			List<BancoDadosEntity> listBancoDados = bancoDadosDao.queryForAll();
 
 			PersonalItem item = new PersonalItem();
 			item.setName("Selecione...");
@@ -115,25 +121,16 @@ public class AddAPI extends JInternalFrame {
 
 			comboBox.addItem(item);
 
-			while (executeQuery.next()) {
-				item = new PersonalItem();
-				item.setName(executeQuery.getString("nome") + " (" + executeQuery.getString("nameBd") + ")");
+			for (int i = 0; i < listBancoDados.size(); i++) {
 
-				BancoDados bancoDados = new BancoDados();
-				bancoDados.setId(executeQuery.getInt("id"));
-				bancoDados.setNome(executeQuery.getString("nome"));
-				bancoDados.setIp(executeQuery.getString("ip"));
-				bancoDados.setPorta(executeQuery.getString("porta"));
-				bancoDados.setUsuario(executeQuery.getString("usuario"));
-				bancoDados.setSenha(executeQuery.getString("senha"));
-				bancoDados.setCharset(executeQuery.getString("charset"));
-				bancoDados.setNameBd(executeQuery.getString("nameBd"));
-				bancoDados.setSchema(executeQuery.getString("schema"));
-				bancoDados.setTipo(executeQuery.getString("tipo"));
-				item.setValue(bancoDados);
+				item = new PersonalItem();
+				item.setName(listBancoDados.get(i).getNome() + " (" + listBancoDados.get(i).getNameBd() + ")");				
+				item.setValue(listBancoDados.get(i));
 
 				comboBox.addItem(item);
 			}
+
+
 		} catch (SQLException e) {
 			this.consoleLog.setText("Erro: " + e.getMessage());
 			e.printStackTrace();
@@ -145,8 +142,10 @@ public class AddAPI extends JInternalFrame {
 			public void itemStateChanged(ItemEvent item) {
 				PersonalItem personalItem = (PersonalItem) item.getItem();
 				if (personalItem.getValue() != null) {
-					bancoDados = (BancoDados) personalItem.getValue();
-					updateGrid(bancoDados);
+					bancoDados = (BancoDadosEntity) personalItem.getValue();
+					if(bancoDados != null){
+						updateGrid(bancoDados);
+					}
 				} else {
 					DefaultTableModel dtm = new DefaultTableModel();
 					table.setModel(dtm);
@@ -222,7 +221,7 @@ public class AddAPI extends JInternalFrame {
 		getContentPane().add(panel);
 
 		inputProject = new TextField();
-		
+
 		inputProject.setPreferredSize(new Dimension(10, 0));
 		inputProject.setMaximumSize(new Dimension(10, 10));
 		inputProject.setColumns(70);
@@ -258,13 +257,13 @@ public class AddAPI extends JInternalFrame {
 		txtPackage.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
-				if(inputProject.getText() != null) {
-					buscaPackage(inputProject.getText());					
+				if (inputProject.getText() != null) {
+					buscaPackage(inputProject.getText());
 				}
 			}
 		});
 		txtPackage.addKeyListener(new KeyAdapter() {
-			
+
 			@Override
 			public void keyReleased(KeyEvent e) {
 				JTextField textField = (JTextField) e.getSource();
@@ -525,19 +524,19 @@ public class AddAPI extends JInternalFrame {
 		lblNewLabel_2.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNewLabel_2.setBounds(20, 470, 198, 14);
 		panel_1.add(lblNewLabel_2);
-		
+
 		textField_1 = new JTextField();
-		textField_1.addKeyListener(new KeyAdapter() {			
+		textField_1.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				System.err.println("RELEASED");
-				
+
 				JTextField textField = (JTextField) e.getSource();
-				String text = textField.getText();				
-				
+				String text = textField.getText();
+
 				ListTableController controller = new ListTableController(bancoDados, table, true, consoleLog, text);
 				controller.run();
-				
+
 			}
 		});
 		textField_1.setToolTipText("Buscar Tabelas");
@@ -547,40 +546,40 @@ public class AddAPI extends JInternalFrame {
 
 	}
 
-	private void updateGrid(BancoDados bancoDados) {
-		ListTableController controller = new ListTableController(bancoDados, table, true, consoleLog, "");
+	private void updateGrid(BancoDadosEntity bancoDadosEntity) {
+		System.err.println("Banco: "+bancoDadosEntity.getNome());
+		System.err.println("Banco: "+bancoDadosEntity.getSenha());
+		ListTableController controller = new ListTableController(bancoDadosEntity, table, true, consoleLog, "");
 		controller.run();
 	}
 
 	private void buscaPackage(String url) {
-		if(url != null && url.length() > 0) {
+		if (url != null && url.length() > 0) {
 
-			url = url+"/src/main/java";
+			url = url + "/src/main/java";
 			File directory = new File(url);
 			listar(directory);
 
-			String replace = temp
-					.replace(directory.getAbsolutePath(),"")
-					.replace("\\", ".");
+			String replace = temp.replace(directory.getAbsolutePath(), "").replace("\\", ".");
 			replace = replace.substring(1, replace.length());
-			
-			if(replace.contains(".utils")) {
+
+			if (replace.contains(".utils")) {
 				replace = replace.replace(".utils", "");
 			}
-			
+
 			txtPackage.setText(replace);
 			setText(replace);
 		}
 	}
 
 	public void listar(File directory) {
-		if(directory.isDirectory()) {
-			//System.out.println(directory.getPath());
+		if (directory.isDirectory()) {
+			// System.out.println(directory.getPath());
 			temp = directory.getPath();
 			String[] subDirectory = directory.list();
-			if(subDirectory != null) {
-				for(String dir : subDirectory){
-					listar(new File(directory + File.separator  + dir));
+			if (subDirectory != null) {
+				for (String dir : subDirectory) {
+					listar(new File(directory + File.separator + dir));
 				}
 			}
 		}
@@ -588,11 +587,11 @@ public class AddAPI extends JInternalFrame {
 
 	public void setText(String text) {
 		txtEntity.setText(text + ".entity");
-		txtFilter.setText(text  + ".filter");
+		txtFilter.setText(text + ".filter");
 		txtResource.setText(text + ".resource");
 		txtRepository.setText(text + ".repository");
 		txtServices.setText(text + ".service");
-		txtRepository.setText(text  + ".repository");
-		txtRepositoryImpl.setText(text  + ".repository.{{EntityFolder}}");
+		txtRepository.setText(text + ".repository");
+		txtRepositoryImpl.setText(text + ".repository.{{EntityFolder}}");
 	}
 }

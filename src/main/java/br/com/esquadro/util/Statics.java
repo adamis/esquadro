@@ -18,20 +18,19 @@ public class Statics {
 
 		try {
 			MavenXpp3Reader reader = new MavenXpp3Reader();
-			
+
 			String fileT = "";
-			
-			if(new File("META-INF/maven/Esquadro/Esquadro/pom.xml").exists()) {
+
+			if (new File("META-INF/maven/Esquadro/Esquadro/pom.xml").exists()) {
 				fileT = "META-INF/maven/Esquadro/Esquadro/pom.xml";
-			}else if (new File("pom.xml").exists()) {
+			} else if (new File("pom.xml").exists()) {
 				fileT = "pom.xml";
 			}
-			
-			
-	        Model model = reader.read(new FileReader(fileT));
-	        version = model.getVersion();
-	        
-		} catch (Exception e) {		
+
+			Model model = reader.read(new FileReader(fileT));
+			version = model.getVersion();
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 

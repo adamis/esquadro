@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import br.com.esquadro.model.BancoDados;
+import br.com.esquadro.sqlite.entity.BancoDadosEntity;
 import br.com.esquadro.util.DatabaseUtils;
 import br.com.esquadro.view.ConsoleLog;
 
@@ -20,13 +20,14 @@ import br.com.esquadro.view.ConsoleLog;
  */
 public class ListTableController extends Thread {
 
-	private BancoDados bancoDados;
+	private BancoDadosEntity bancoDados;
 	private JTable table;
 	private Boolean commomCase;
 	private String filterTableName;
 	// private ConsoleLog consoleLog;
 
-	public ListTableController(BancoDados bancoDados, JTable table, Boolean commomCase, ConsoleLog consoleLog, String filterTableName) {
+	public ListTableController(BancoDadosEntity bancoDados, JTable table, Boolean commomCase, ConsoleLog consoleLog,
+			String filterTableName) {
 		this.bancoDados = bancoDados;
 		this.table = table;
 		this.commomCase = commomCase;
@@ -42,15 +43,13 @@ public class ListTableController extends Thread {
 		try {
 
 			List<HashMap<String, String>> tables;
-			
-			if(this.filterTableName != null && this.filterTableName.length() > 0 ) {
-				tables = databaseUtils.getTables(this.bancoDados,this.filterTableName);
-			}else {
+
+			if (this.filterTableName != null && this.filterTableName.length() > 0) {
+				tables = databaseUtils.getTables(this.bancoDados, this.filterTableName);
+			} else {
 				tables = databaseUtils.getTables(this.bancoDados);
 			}
-			
-			
-			
+
 			String[] columnNames = { "ck", "Tabelas", "Tipo" };
 
 			DefaultTableModel dtm = new DefaultTableModel() {

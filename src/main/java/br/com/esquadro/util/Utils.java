@@ -26,12 +26,12 @@ public class Utils {
 	}
 
 	public static void main(String[] args) {
-		//String table = "alunos-cursos";
-		//System.err.println("1 "+normalizerStringCapHifen(table));		
-		//		System.err.println("1 "+normalizerString(table));
-		//		System.err.println("2 "+normalizerStringCaps(table));
-		//		System.err.println("3 "+normalizerStringCommom(table));
-		//		System.err.println("4 "+normalizerStringCommomNotCap(table));		
+		// String table = "alunos-cursos";
+		// System.err.println("1 "+normalizerStringCapHifen(table));
+		// System.err.println("1 "+normalizerString(table));
+		// System.err.println("2 "+normalizerStringCaps(table));
+		// System.err.println("3 "+normalizerStringCommom(table));
+		// System.err.println("4 "+normalizerStringCommomNotCap(table));
 	}
 
 	/**
@@ -86,28 +86,25 @@ public class Utils {
 		return text;
 	}
 
-
-
 	public static String normalizerStringCapHifen(String text, DATABASETYPE databaseType) {
 
-
-		if(databaseType != DATABASETYPE.ORACLE) {
+		if (databaseType != DATABASETYPE.ORACLE) {
 
 			String temp = "";
 
 			char[] palavraArray = text.toCharArray();
 
-			for(char c : palavraArray){
-				if(Character.isUpperCase(c)){
-					temp += "_"+c;
-				}else {
+			for (char c : palavraArray) {
+				if (Character.isUpperCase(c)) {
+					temp += "_" + c;
+				} else {
 					temp += c;
 				}
 			}
 
 			return temp;
 
-		}else {
+		} else {
 			return text;
 		}
 	}
@@ -197,9 +194,9 @@ public class Utils {
 		// FileWriter arq = new FileWriter(file);
 		PrintWriter gravarArq = new PrintWriter(new File(file), "UTF-8");
 
-		//System.err.println(""+text);
+		// System.err.println(""+text);
 
-		//gravarArq.printf(text);
+		// gravarArq.printf(text);
 		gravarArq.write(text);
 		gravarArq.close();
 	}
@@ -242,16 +239,14 @@ public class Utils {
 
 			@Override
 			public boolean accept(File pathname) {
-				String[] ignoreList= new String[]{
-						".gitignore"								
-				};
+				String[] ignoreList = new String[] { ".gitignore" };
 
 				return !(ignoreFile(pathname, ignoreList) && pathname.isFile());
 			}
-			
+
 		};
 
-		FileUtils.copyDirectory(source, new File(destination),fileFilter);
+		FileUtils.copyDirectory(source, new File(destination), fileFilter);
 
 	}
 
