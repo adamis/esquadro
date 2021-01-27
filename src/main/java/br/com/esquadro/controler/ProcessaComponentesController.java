@@ -5,7 +5,7 @@ package br.com.esquadro.controler;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -122,10 +122,10 @@ public class ProcessaComponentesController implements Runnable {
 	 * Criar componentes com CLI
 	 * 
 	 * @param table
-	 * @throws IOException
+	 * @throws Exception
 	 * @throws InterruptedException
 	 */
-	private void execBat(String table) throws IOException, InterruptedException {
+	private void execBat(String table) throws Exception, InterruptedException {
 
 		table = Utils.normalizerString(table.trim());
 
@@ -196,7 +196,7 @@ public class ProcessaComponentesController implements Runnable {
 	 * Preeche componentes com conteudo
 	 * 
 	 * @param table
-	 * @throws IOException
+	 * @throws Exception
 	 */
 	private void generateComponent(String table) throws Exception {
 
@@ -538,9 +538,9 @@ public class ProcessaComponentesController implements Runnable {
 	 * Preeche Services com conteudo
 	 * 
 	 * @param table
-	 * @throws IOException
+	 * @throws Exception
 	 */
-	private void generateServices(String table) throws IOException {
+	private void generateServices(String table) throws Exception {
 
 		String tableLow = Utils.normalizerString(table.trim());
 		String tableLowCommom = Utils.normalizerStringCommomNotCap(table.trim());
@@ -636,7 +636,7 @@ public class ProcessaComponentesController implements Runnable {
 		Utils.writeTxt(url, tsImp + "\n" + ts, true);
 	}
 
-	private void updateRouting(String table) throws IOException {
+	private void updateRouting(String table) throws Exception {
 
 		String tableLow = Utils.normalizerString(table.trim());
 		String tableCap = Utils.normalizerStringCaps(table.trim());
@@ -715,7 +715,7 @@ public class ProcessaComponentesController implements Runnable {
 		Utils.writeTxtList(file, readTxtList, true);
 	}
 
-	private void updateAppRoutes(String table) throws IOException {
+	private void updateAppRoutes(String table) throws Exception {
 		String tableLow = Utils.normalizerString(table.trim());
 		String tableCap = Utils.normalizerStringCaps(table.trim());
 
@@ -735,7 +735,7 @@ public class ProcessaComponentesController implements Runnable {
 		Utils.writeTxtList(file, readTxtList, true);
 	}
 
-	private void updateNavBar(String table) throws IOException {
+	private void updateNavBar(String table) throws Exception {
 		String tableLow = Utils.normalizerString(table.trim());
 		String tableCap = Utils.normalizerStringCaps(table.trim());
 

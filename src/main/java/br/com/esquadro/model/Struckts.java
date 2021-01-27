@@ -545,7 +545,7 @@ public class Struckts {
 
 				String type = coluns.get(i).get("type").toLowerCase();
 
-				System.err.println("COLUM: " + coluns.get(i).get("colum"));
+				//System.err.println("COLUM: " + coluns.get(i).get("colum"));
 
 				if (type.contains("char")) {
 					// STRING
@@ -576,7 +576,7 @@ public class Struckts {
 					// INTEGER
 					if (!coluns.get(i).get("fk").isEmpty()) {
 
-						System.err.println(Utils.normalizerStringCaps(this.entity) + " = " + entidade);
+						//System.err.println(Utils.normalizerStringCaps(this.entity) + " = " + entidade);
 
 						if (!imports.toString()
 								.contains(Utils.normalizerStringCaps(coluns.get(i).get("fk").replace("-", "_")) + "_; ")
@@ -725,17 +725,25 @@ public class Struckts {
 	private String processClean(StringBuilder sb) {
 
 		try {
-			String replace = sb.toString().replace("{{packBase}}", packBase).replace("{{packEntity}}", packEntity)
-					.replace("{{packResource}}", packResource).replace("{{packFilter}}", packFilter)
-					.replace("{{packRepository}}", packRepository).replace("{{packServices}}", packServices)
-					.replace("{{packRepositoryImpl}}", packRepositoryImpl)
+			String replace = sb.toString()
+					.replace("{{packBase}}", packBase.replace("/", "."))
+					.replace("{{packEntity}}", packEntity.replace("/", "."))
+					.replace("{{packResource}}", packResource.replace("/", "."))
+					.replace("{{packFilter}}", packFilter.replace("/", "."))
+					.replace("{{packRepository}}", packRepository.replace("/", "."))
+					.replace("{{packServices}}", packServices.replace("/", "."))
+					.replace("{{packRepositoryImpl}}", packRepositoryImpl.replace("/", "."))
 					.replace("{{entity}}", Utils.normalizerStringCaps(this.entity))
 					.replace("{{EntityFolder}}", Utils.normalizerStringCommomNotCap(this.entity))
 					.replace("{{entityL}}", Utils.normalizerStringCommomNotCap(this.entity));
-
-			return new Formatter().formatSource(replace);
+			System.err.println(""+replace);
+			return new Formatter().formatSourceAndFixImports(replace);
+			
 		} catch (Exception e) {
+			e.printStackTrace();
 			this.console.setText("" + e.getMessage());
+			this.console.setText("" + e.getLocalizedMessage());
+			this.console.setText("" + e.getCause());
 			return "";
 		}
 

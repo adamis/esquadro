@@ -4,7 +4,6 @@
 package br.com.esquadro.controler;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -160,7 +159,7 @@ public class AddEsquadroSBController implements Runnable {
 
 	}
 
-	private void configurarConexao(BancoDadosEntity bancoDados) throws IOException {
+	private void configurarConexao(BancoDadosEntity bancoDados) throws Exception {
 		List<String> readApplication = Utils
 				.readTxtList(this.urlProject + "/src/main/resources/application.properties");
 
@@ -251,7 +250,7 @@ public class AddEsquadroSBController implements Runnable {
 	}
 
 	// TODO
-	private void configurarHibernate(File file, BancoDadosEntity bancoDados) throws IOException {
+	private void configurarHibernate(File file, BancoDadosEntity bancoDados) throws Exception {
 		List<String> readFile = Utils.readTxtList(file.getAbsolutePath());
 
 		for (int i = 0; i < readFile.size(); i++) {
@@ -289,7 +288,7 @@ public class AddEsquadroSBController implements Runnable {
 
 	}
 
-	private void processandoPOM(String urlProject, List<DEPEND> list) throws IOException {
+	private void processandoPOM(String urlProject, List<DEPEND> list) throws Exception {
 		List<Dependencia> listDependencia = DependenciasPOM.listPom;
 
 		List<Dependencia> instalar = new ArrayList<Dependencia>();
@@ -377,7 +376,7 @@ public class AddEsquadroSBController implements Runnable {
 		Utils.writeTxtList(urlProject + "/pom.xml", readPOM, true);
 	}
 
-	public void replacePackage(File classFile, String packBase, String packages) throws IOException {
+	public void replacePackage(File classFile, String packBase, String packages) throws Exception {
 		List<String> readTxtList = Utils.readTxtList(classFile.getAbsolutePath());
 
 		for (int i = 0; i < readTxtList.size(); i++) {

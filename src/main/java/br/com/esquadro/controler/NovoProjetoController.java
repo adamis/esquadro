@@ -8,7 +8,6 @@ import java.awt.Container;
 import java.awt.TextField;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -211,7 +210,7 @@ public class NovoProjetoController implements Runnable {
 		btnGerarProjeto.setText("Gerar Projeto");
 	}
 
-	private void configurePackageJson() throws IOException {
+	private void configurePackageJson() throws Exception {
 
 		List<String> readTxtList = Utils
 				.readTxtList(inputWorkspace.getText() + "/" + textField.getText() + "/package.json");
@@ -236,7 +235,7 @@ public class NovoProjetoController implements Runnable {
 
 	}
 
-	private void ajustaAppModule() throws IOException {
+	private void ajustaAppModule() throws Exception {
 		String urlFile = inputWorkspace.getText() + "/" + textField.getText() + "/src/app/app.module.ts";
 		List<String> readTxtList = Utils.readTxtList(urlFile);
 
@@ -364,7 +363,7 @@ public class NovoProjetoController implements Runnable {
 
 	}
 
-	private void ajustaEnviroment() throws IOException {
+	private void ajustaEnviroment() throws Exception {
 
 		// ENVIRONMENTS
 		String urlFile = inputWorkspace.getText() + "/" + textField.getText() + "/src/environments/environment.ts";
@@ -396,7 +395,7 @@ public class NovoProjetoController implements Runnable {
 
 	}
 
-	private void ajustStyle() throws IOException {
+	private void ajustStyle() throws Exception {
 
 		// ANGULAR CLI >=6
 		String urlFile = inputWorkspace.getText() + "/" + textField.getText() + "/angular.json";

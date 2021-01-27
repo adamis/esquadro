@@ -183,8 +183,12 @@ public class Utils {
 		return lista;
 	}
 
-	public static void writeTxt(String file, String text, boolean replaceFile) throws IOException {
+	public static void writeTxt(String file, String text, boolean replaceFile) throws Exception {
 
+		System.err.println("File: "+file);
+		System.err.println("text: "+text);
+		System.err.println("Replace: "+replaceFile);
+		
 		new File(file).mkdirs();
 
 		if (replaceFile && new File(file).exists()) {
@@ -201,7 +205,7 @@ public class Utils {
 		gravarArq.close();
 	}
 
-	public static void writeTxtList(String file, List<String> textList, boolean replaceFile) throws IOException {
+	public static void writeTxtList(String file, List<String> textList, boolean replaceFile) throws Exception {
 		if (replaceFile && new File(file).exists()) {
 			new File(file).delete();
 		}
@@ -214,7 +218,7 @@ public class Utils {
 		arq.close();
 	}
 
-	public static void doCopyFile(File source, String destination) throws IOException {
+	public static void doCopyFile(File source, String destination) throws Exception {
 		if (new File(destination).exists()) {
 			delete(new File(destination));
 		}
@@ -222,7 +226,7 @@ public class Utils {
 
 	}
 
-	public static void doCopyDirectory(File source, String destination) throws IOException {
+	public static void doCopyDirectory(File source, String destination) throws Exception {
 		if (new File(destination).exists()) {
 			delete(new File(destination));
 		}
@@ -230,7 +234,7 @@ public class Utils {
 
 	}
 
-	public static void doCopyDirectory(File source, String destination, boolean replace) throws IOException {
+	public static void doCopyDirectory(File source, String destination, boolean replace) throws Exception {
 		if (replace && new File(destination).exists()) {
 			delete(new File(destination));
 		}
@@ -257,7 +261,7 @@ public class Utils {
 		return false;
 	}
 
-	public static void delete(File file) throws IOException {
+	public static void delete(File file) throws Exception {
 
 		if (file.isDirectory()) {
 			File[] entries = file.listFiles();
@@ -268,7 +272,7 @@ public class Utils {
 			}
 		}
 		if (!file.delete()) {
-			throw new IOException("Failed to delete " + file);
+			throw new Exception("Failed to delete " + file);
 		}
 	}
 

@@ -560,11 +560,15 @@ public class AddAPI extends JInternalFrame {
 			File directory = new File(url);
 			listar(directory);
 
-			String replace = temp.replace(directory.getAbsolutePath(), "").replace("\\", ".");
+			String replace = temp.replace(directory.getAbsolutePath(), "").replace("/", ".");
 			replace = replace.substring(1, replace.length());
 
 			if (replace.contains(".utils")) {
-				replace = replace.replace(".utils", "");
+				if(System.getProperty("os.name").equals("Linux")) {
+					replace = replace.replace(".utils", "");
+				}else {
+					replace = replace.replace(".cors", "");
+				}
 			}
 
 			txtPackage.setText(replace);

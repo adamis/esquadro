@@ -80,7 +80,7 @@ public class Menu extends JFrame {
 	 */
 	public Menu() {
 
-		setTitle("" + Statics.NAME_SYS + " v" + Statics.VERSION);
+		setTitle("" + Statics.NAME_SYS + " v" + Statics.VERSION+" - "+System.getProperty("os.name"));
 
 		try {
 			setDefaultLookAndFeelDecorated(true);
