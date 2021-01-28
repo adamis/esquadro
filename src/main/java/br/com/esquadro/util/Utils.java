@@ -142,6 +142,8 @@ public class Utils {
 	 * @return
 	 */
 	public static String normalizerStringCaps(String text) {
+		System.err.println("TEXT: "+text);
+		
 		text = text.replace("_", "-");
 		String[] split = text.toLowerCase().split("-");
 
@@ -184,6 +186,8 @@ public class Utils {
 	}
 
 	public static void writeTxt(String file, String text, boolean replaceFile) throws Exception {
+
+		file = file.trim();		
 
 		System.err.println("File: "+file);
 		System.err.println("text: "+text);

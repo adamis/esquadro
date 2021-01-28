@@ -35,14 +35,14 @@ public class Struckts {
 			String packRepository, String packServices, String packRepositoryImpl, DatabaseUtils databaseUtils,
 			ConsoleLog console) {
 
-		this.entity = entity;
-		this.packBase = packBase;
-		this.packEntity = packEntity;
-		this.packResource = packResource;
-		this.packFilter = packFilter;
-		this.packRepository = packRepository;
-		this.packServices = packServices;
-		this.packRepositoryImpl = packRepositoryImpl;
+		this.entity = entity.trim();
+		this.packBase = packBase.trim();
+		this.packEntity = packEntity.trim();
+		this.packResource = packResource.trim();
+		this.packFilter = packFilter.trim();
+		this.packRepository = packRepository.trim();
+		this.packServices = packServices.trim();
+		this.packRepositoryImpl = packRepositoryImpl.trim();
 		this.databaseUtils = databaseUtils;
 		this.console = console;
 	}
@@ -266,7 +266,7 @@ public class Struckts {
 		sb.append("\n");
 		sb.append("} ");
 
-		sbImport.append(sb.toString());
+		sbImport.append(sb.toString().replace("BigDecimal", "Long").replace("Bigdecimal", "Long"));
 
 		return processClean(sbImport);
 	}
@@ -556,10 +556,6 @@ public class Struckts {
 					sb.append(" 	predicates.add(builder.like( ");
 					sb.append("\n");
 
-					// System.err.println("COLUM: "+coluns.get(i).get("colum"));
-					// System.err.println("COLUM-UP:
-					// "+Utils.normalizerString(coluns.get(i).get("colum")).replace("-","_").toUpperCase());
-
 					sb.append(" 		builder.lower(root." + fkCriteria + "get("
 							+ Utils.normalizerStringCaps(entidade) + "_."
 							+ Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-", "_"),
@@ -601,7 +597,7 @@ public class Struckts {
 									last + "get" + Utils.normalizerStringCaps(coluns.get(i).get("fk")) + "Filter().",
 									fkCriteria + "get(" + Utils.normalizerStringCaps(entidade) + "_."
 											+ Utils.normalizerStringCapHifen(
-													coluns.get(i).get("colum").replace("-", "_"),
+													coluns.get(i).get("fk"),
 													databaseUtils.getTipo()).toUpperCase()
 											+ ").");
 							sb.append(montaPredicados);
