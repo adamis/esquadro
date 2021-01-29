@@ -605,7 +605,6 @@ public class AddEsquadroSB extends JInternalFrame {
 			String replace = temp.replace(directory.getAbsolutePath(), "").replace("\\", ".");
 			replace = replace.substring(1, replace.length());
 
-			System.err.println("" + replace);
 			txtPackages.setText(replace);
 
 		}
@@ -613,7 +612,6 @@ public class AddEsquadroSB extends JInternalFrame {
 
 	public void listar(File directory) {
 		if (directory.isDirectory()) {
-			// System.out.println(directory.getPath());
 			temp = directory.getPath();
 			String[] subDirectory = directory.list();
 			if (subDirectory != null) {

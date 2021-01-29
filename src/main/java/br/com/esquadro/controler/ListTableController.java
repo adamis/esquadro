@@ -102,7 +102,7 @@ public class ListTableController extends Thread {
 			this.table.setRowHeight(20);
 
 		} catch (Exception e) {
-			System.err.println("ERRO AKI>>" + e.getMessage());
+			System.err.println("ListaTableController Erro 105>" + e.getMessage());
 			JOptionPane.showMessageDialog(null, "" + e.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}

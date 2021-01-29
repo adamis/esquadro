@@ -16,19 +16,6 @@ public class OracleHelper implements GenericHelperInterface {
 	}
 
 	@Override
-	public void open() {
-		Base.open(
-				"oracle.jdbc.OracleDriver", "jdbc:oracle:thin:@" + bancoDados.getIp() + ":" + bancoDados.getPorta()
-				+ "/" + bancoDados.getNameBd() ,//+ "?oracle.jdbc.timezoneAsRegion=false",
-				bancoDados.getUsuario(), bancoDados.getSenha());
-	}
-	
-	@Override
-	public void close() {
-		Base.close();
-	}
-
-	@Override
 	public List<Map> executeSQL(String query) {
 		open();
 		List<Map> findAll = Base.findAll(query);
@@ -36,6 +23,16 @@ public class OracleHelper implements GenericHelperInterface {
 		return findAll;
 	}
 
-
+	private void open() {
+		Base.open(
+				"oracle.jdbc.OracleDriver", "jdbc:oracle:thin:@" + bancoDados.getIp() + ":" + bancoDados.getPorta()
+				+ "/" + bancoDados.getNameBd() ,//+ "?oracle.jdbc.timezoneAsRegion=false",
+				bancoDados.getUsuario(), bancoDados.getSenha());
+	}
+	
+	
+	private void close() {
+		Base.close();
+	}
 
 }

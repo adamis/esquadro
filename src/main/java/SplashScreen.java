@@ -88,8 +88,8 @@ public class SplashScreen extends JFrame {
 					Thread.sleep(600);
 					lbText.setText("Iniciando Menu...");
 
-					System.err.println("" + progressBar.getValue());
-					System.err.println("" + (100 - progressBar.getValue()));
+//					System.err.println("" + progressBar.getValue());
+//					System.err.println("" + (100 - progressBar.getValue()));
 
 					int rangeLimbo = (100 - progressBar.getValue());
 					for (int i = 0; i < rangeLimbo; i++) {

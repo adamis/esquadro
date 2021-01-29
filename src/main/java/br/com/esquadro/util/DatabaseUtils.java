@@ -22,14 +22,13 @@ public class DatabaseUtils {
 	private GenericHelperInterface genericHelperInterface;
 	private BancoDadosEntity bancoDados;
 	private StringBuilder sql = null;
-	// private ResultSet executeQuery;
+	private HashMap<String, String> hm;
 	private List<HashMap<String, String>> listTable;
 	private List<HashMap<String, String>> listTableHash;
-	private HashMap<String, String> hm;
-
+	
+	
 	public DatabaseUtils(BancoDadosEntity bancoDados) {
 		this.bancoDados = bancoDados;
-		System.err.println("banco: "+bancoDados.getTipo().toString());
 		
 		if (bancoDados.getTipo() == DATABASETYPE.MYSQL) {
 

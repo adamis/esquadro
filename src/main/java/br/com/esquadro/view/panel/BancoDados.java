@@ -522,7 +522,6 @@ public class BancoDados extends JInternalFrame {
 
 						cbTipo.setSelectedIndex(i);
 
-						System.err.println("i: " + i);
 
 					}
 

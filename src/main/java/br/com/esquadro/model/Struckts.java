@@ -731,7 +731,7 @@ public class Struckts {
 					.replace("{{entity}}", Utils.normalizerStringCaps(this.entity))
 					.replace("{{EntityFolder}}", Utils.normalizerStringCommomNotCap(this.entity))
 					.replace("{{entityL}}", Utils.normalizerStringCommomNotCap(this.entity));
-			System.err.println("" + replace);
+			
 			return new Formatter().formatSourceAndFixImports(replace);
 
 		} catch (Exception e) {

@@ -142,7 +142,7 @@ public class Utils {
 	 * @return
 	 */
 	public static String normalizerStringCaps(String text) {
-		System.err.println("TEXT: " + text);
+		//System.err.println("TEXT: " + text);
 
 		text = text.replace("_", "-");
 		String[] split = text.toLowerCase().split("-");
@@ -189,9 +189,9 @@ public class Utils {
 
 		file = file.trim();
 
-		System.err.println("File: " + file);
-		System.err.println("text: " + text);
-		System.err.println("Replace: " + replaceFile);
+//		System.err.println("File: " + file);
+//		System.err.println("text: " + text);
+//		System.err.println("Replace: " + replaceFile);
 
 		new File(file).mkdirs();
 

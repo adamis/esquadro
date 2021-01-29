@@ -119,8 +119,7 @@ public class AddAPI extends JInternalFrame {
 			for (int i = 0; i < listBancoDados.size(); i++) {
 
 				item = new PersonalItem();
-				item.setName(listBancoDados.get(i).getNome() + " (" + listBancoDados.get(i).getNameBd() + ")");
-				System.err.println("BD NAME>> "+listBancoDados.get(i).getNome());
+				item.setName(listBancoDados.get(i).getNome() + " (" + listBancoDados.get(i).getNameBd() + ")");				
 				item.setValue(listBancoDados.get(i));
 
 				comboBox.addItem(item);
@@ -139,8 +138,7 @@ public class AddAPI extends JInternalFrame {
 				BancoDadosEntity bancoDados = (BancoDadosEntity) personalItem.getValue();
 				
 				if (bancoDados != null) {					
-					System.err.println("BANCO >>>"+bancoDados.getNome());
-					
+										
 					if (bancoDados != null) {
 						updateGrid(bancoDados);
 					}
@@ -528,8 +526,7 @@ public class AddAPI extends JInternalFrame {
 		textField_1.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				System.err.println("RELEASED");
-
+				
 				JTextField textField = (JTextField) e.getSource();
 				String text = textField.getText();
 
@@ -546,8 +543,7 @@ public class AddAPI extends JInternalFrame {
 	}
 
 	private void updateGrid(BancoDadosEntity bancoDadosEntity) {
-		System.err.println("Banco: " + bancoDadosEntity.getNome());
-		System.err.println("Banco: " + bancoDadosEntity.getSenha());
+		
 		ListTableController controller = new ListTableController(bancoDadosEntity, table, true, consoleLog, "");
 		controller.run();
 	}

@@ -434,7 +434,7 @@ public class NovoProjetoController implements Runnable {
 		JSONArray scripts = (JSONArray) jsonOptions.get("scripts");
 		scripts.put("./node_modules/chart.js/dist/Chart.js");
 
-		System.err.println("" + jsonObject.toString());
+		//System.err.println("" + jsonObject.toString());
 
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		Object json = gson.fromJson(jsonObject.toString(), Object.class);

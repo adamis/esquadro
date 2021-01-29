@@ -23,7 +23,6 @@ public class SqliteHelper {
 
 		String databaseUrl = "jdbc:sqlite:" + file.getAbsolutePath();
 
-		System.err.println("" + databaseUrl);
 		// create a connection source to our database
 		connectionSource = new JdbcConnectionSource(databaseUrl);
 
