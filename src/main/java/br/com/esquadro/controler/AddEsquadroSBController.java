@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.esquadro.enums.DATABASETYPE;
 import br.com.esquadro.model.Dependencia;
 import br.com.esquadro.model.DependenciasPOM;
 import br.com.esquadro.model.DependenciasPOM.DEPEND;
@@ -31,8 +32,8 @@ public class AddEsquadroSBController implements Runnable {
 	private boolean configConexao;
 	private String BARRA = System.getProperty("file.separator");
 
-	public AddEsquadroSBController(BancoDadosEntity bancoDados, ConsoleLog consoleLog, String urlProject, String packages,
-			Boolean changePOM, List<DEPEND> listDepend, Boolean configConexao) {
+	public AddEsquadroSBController(BancoDadosEntity bancoDados, ConsoleLog consoleLog, String urlProject,
+			String packages, Boolean changePOM, List<DEPEND> listDepend, Boolean configConexao) {
 		this.bancoDados = bancoDados;
 		this.consoleLog = consoleLog;
 		this.urlProject = urlProject;
@@ -184,7 +185,7 @@ public class AddEsquadroSBController implements Runnable {
 
 		List<String> listProd = new ArrayList<>();
 
-		if (bancoDados.getTipo().equalsIgnoreCase("MYSQL")) {
+		if (bancoDados.getTipo() == DATABASETYPE.MYSQL) {
 
 			listProd.add("spring.datasource.url= jdbc:mysql://" + bancoDados.getIp() + ":" + bancoDados.getPorta() + "/"
 					+ bancoDados.getNameBd() + "?createDatabaseIfNotExist=true&serverTimezone=UTC");
@@ -218,7 +219,7 @@ public class AddEsquadroSBController implements Runnable {
 
 		List<String> listDev = new ArrayList<>();
 
-		if (bancoDados.getTipo().equalsIgnoreCase("MYSQL")) {
+		if (bancoDados.getTipo() == DATABASETYPE.MYSQL) {
 
 			listDev.add("spring.datasource.url= jdbc:mysql://" + bancoDados.getIp() + ":" + bancoDados.getPorta() + "/"
 					+ bancoDados.getNameBd() + "?createDatabaseIfNotExist=true&serverTimezone=UTC");
@@ -257,7 +258,7 @@ public class AddEsquadroSBController implements Runnable {
 
 			String line = readFile.get(i);
 
-			if (bancoDados.getTipo().equalsIgnoreCase("MYSQL")) {// MYSQL
+			if (bancoDados.getTipo() == DATABASETYPE.MYSQL) {// MYSQL
 
 				line = line.replace("{DRIVERCLASS}", "org.gjt.mm.mysql.Driver");
 				line = line.replace("{URL}", "jdbc:mysql://" + bancoDados.getIp() + ":" + bancoDados.getPorta() + "/"

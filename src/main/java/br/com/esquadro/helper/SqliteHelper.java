@@ -1,4 +1,4 @@
-package br.com.esquadro.sqlite.helper;
+package br.com.esquadro.helper;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,23 +15,20 @@ public class SqliteHelper {
 	public static ConnectionSource connectionSource;
 
 	public static void init() throws SQLException, IOException {
-		
+
 		File file = new File("bd/esquadro.db");
-		if(!file.exists()) {
+		if (!file.exists()) {
 			file.createNewFile();
 		}
-		
-		String databaseUrl = "jdbc:sqlite:"+file.getAbsolutePath();
-		
-		System.err.println(""+databaseUrl);
+
+		String databaseUrl = "jdbc:sqlite:" + file.getAbsolutePath();
+
+		System.err.println("" + databaseUrl);
 		// create a connection source to our database
-		connectionSource = new JdbcConnectionSource(databaseUrl);		
-		
+		connectionSource = new JdbcConnectionSource(databaseUrl);
+
 		TableUtils.createTableIfNotExists(connectionSource, BancoDadosEntity.class);
-		
+
 	}
-	
-	
-	
 
 }

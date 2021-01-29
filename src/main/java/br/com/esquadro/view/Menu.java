@@ -34,6 +34,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -80,7 +81,7 @@ public class Menu extends JFrame {
 	 */
 	public Menu() {
 
-		setTitle("" + Statics.NAME_SYS + " v" + Statics.VERSION+" - "+System.getProperty("os.name"));
+		setTitle("" + Statics.NAME_SYS + " v" + Statics.VERSION + " - " + System.getProperty("os.name"));
 
 		try {
 			setDefaultLookAndFeelDecorated(true);
@@ -90,7 +91,7 @@ public class Menu extends JFrame {
 		}
 
 		setExtendedState(Frame.MAXIMIZED_BOTH);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		addComponentListener(new ComponentListener() {
 

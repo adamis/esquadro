@@ -13,7 +13,7 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
-import br.com.esquadro.util.Conexao.DATABASETYPE;
+import br.com.esquadro.enums.DATABASETYPE;
 
 public class Utils {
 
@@ -142,8 +142,8 @@ public class Utils {
 	 * @return
 	 */
 	public static String normalizerStringCaps(String text) {
-		System.err.println("TEXT: "+text);
-		
+		System.err.println("TEXT: " + text);
+
 		text = text.replace("_", "-");
 		String[] split = text.toLowerCase().split("-");
 
@@ -187,12 +187,12 @@ public class Utils {
 
 	public static void writeTxt(String file, String text, boolean replaceFile) throws Exception {
 
-		file = file.trim();		
+		file = file.trim();
 
-		System.err.println("File: "+file);
-		System.err.println("text: "+text);
-		System.err.println("Replace: "+replaceFile);
-		
+		System.err.println("File: " + file);
+		System.err.println("text: " + text);
+		System.err.println("Replace: " + replaceFile);
+
 		new File(file).mkdirs();
 
 		if (replaceFile && new File(file).exists()) {

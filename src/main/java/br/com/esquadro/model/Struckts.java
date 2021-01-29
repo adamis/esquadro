@@ -539,13 +539,12 @@ public class Struckts {
 			for (int i = 0; i < coluns.size(); i++) {
 
 				sb.append("\n");
-				sb.append("//" + Utils
-						.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-", "_"), databaseUtils.getTipo())
-						.toUpperCase());
+				sb.append("//" + Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-", "_"),
+						databaseUtils.getBancoDados().getTipo()).toUpperCase());
 
 				String type = coluns.get(i).get("type").toLowerCase();
 
-				//System.err.println("COLUM: " + coluns.get(i).get("colum"));
+				// System.err.println("COLUM: " + coluns.get(i).get("colum"));
 
 				if (type.contains("char")) {
 					// STRING
@@ -559,7 +558,7 @@ public class Struckts {
 					sb.append(" 		builder.lower(root." + fkCriteria + "get("
 							+ Utils.normalizerStringCaps(entidade) + "_."
 							+ Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-", "_"),
-									databaseUtils.getTipo()).toUpperCase()
+									databaseUtils.getBancoDados().getTipo()).toUpperCase()
 							+ ")), \"%\" + {{entityL}}Filter." + last + "get"
 							+ Utils.normalizerStringCaps(coluns.get(i).get("colum")) + "().toLowerCase() + \"%\")); ");
 					sb.append("\n");
@@ -572,7 +571,8 @@ public class Struckts {
 					// INTEGER
 					if (!coluns.get(i).get("fk").isEmpty()) {
 
-						//System.err.println(Utils.normalizerStringCaps(this.entity) + " = " + entidade);
+						// System.err.println(Utils.normalizerStringCaps(this.entity) + " = " +
+						// entidade);
 
 						if (!imports.toString()
 								.contains(Utils.normalizerStringCaps(coluns.get(i).get("fk").replace("-", "_")) + "_; ")
@@ -594,11 +594,11 @@ public class Struckts {
 									+ Utils.normalizerStringCaps(coluns.get(i).get("fk")) + "Filter() != null) { ");
 
 							String montaPredicados = montaPredicados(coluns.get(i).get("fk"),
-									last + "get" + Utils.normalizerStringCaps(coluns.get(i).get("fk")) + "Filter().",
+									last + "get" + Utils
+											.normalizerStringCaps(coluns.get(i).get("fk")) + "Filter().",
 									fkCriteria + "get(" + Utils.normalizerStringCaps(entidade) + "_."
-											+ Utils.normalizerStringCapHifen(
-													coluns.get(i).get("fk"),
-													databaseUtils.getTipo()).toUpperCase()
+											+ Utils.normalizerStringCapHifen(coluns.get(i).get("fk"),
+													databaseUtils.getBancoDados().getTipo()).toUpperCase()
 											+ ").");
 							sb.append(montaPredicados);
 
@@ -619,7 +619,7 @@ public class Struckts {
 							sb.append(" 		root." + fkCriteria + "get(" + Utils.normalizerStringCaps(entidade)
 									+ "_."
 									+ Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-", "_"),
-											databaseUtils.getTipo()).toUpperCase()
+											databaseUtils.getBancoDados().getTipo()).toUpperCase()
 									+ "), {{entityL}}Filter." + last + "get"
 									+ Utils.normalizerStringCaps(coluns.get(i).get("colum")) + "())); ");
 							sb.append("\n");
@@ -636,7 +636,7 @@ public class Struckts {
 						sb.append("\n");
 						sb.append(" 		root." + fkCriteria + "get(" + Utils.normalizerStringCaps(entidade) + "_."
 								+ Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-", "_"),
-										databaseUtils.getTipo()).toUpperCase()
+										databaseUtils.getBancoDados().getTipo()).toUpperCase()
 								+ "), {{entityL}}Filter." + last + "get"
 								+ Utils.normalizerStringCaps(coluns.get(i).get("colum")) + "())); ");
 						sb.append("\n");
@@ -652,7 +652,7 @@ public class Struckts {
 					sb.append("\n");
 					sb.append(" 		root." + fkCriteria + "get(" + Utils.normalizerStringCaps(entidade) + "_."
 							+ Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-", "_"),
-									databaseUtils.getTipo()).toUpperCase()
+									databaseUtils.getBancoDados().getTipo()).toUpperCase()
 							+ "), {{entityL}}Filter." + last + "get"
 							+ Utils.normalizerStringCaps(coluns.get(i).get("colum")) + "())); ");
 					sb.append("\n");
@@ -668,7 +668,7 @@ public class Struckts {
 					sb.append("\n");
 					sb.append(" 		root." + fkCriteria + "get(" + Utils.normalizerStringCaps(entidade) + "_."
 							+ Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-", "_"),
-									databaseUtils.getTipo()).toUpperCase()
+									databaseUtils.getBancoDados().getTipo()).toUpperCase()
 							+ "), {{entityL}}Filter." + last + "get"
 							+ Utils.normalizerStringCaps(coluns.get(i).get("colum")) + "())); ");
 					sb.append("\n");
@@ -721,8 +721,7 @@ public class Struckts {
 	private String processClean(StringBuilder sb) {
 
 		try {
-			String replace = sb.toString()
-					.replace("{{packBase}}", packBase.replace("/", "."))
+			String replace = sb.toString().replace("{{packBase}}", packBase.replace("/", "."))
 					.replace("{{packEntity}}", packEntity.replace("/", "."))
 					.replace("{{packResource}}", packResource.replace("/", "."))
 					.replace("{{packFilter}}", packFilter.replace("/", "."))
@@ -732,9 +731,9 @@ public class Struckts {
 					.replace("{{entity}}", Utils.normalizerStringCaps(this.entity))
 					.replace("{{EntityFolder}}", Utils.normalizerStringCommomNotCap(this.entity))
 					.replace("{{entityL}}", Utils.normalizerStringCommomNotCap(this.entity));
-			System.err.println(""+replace);
+			System.err.println("" + replace);
 			return new Formatter().formatSourceAndFixImports(replace);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			this.console.setText("" + e.getMessage());

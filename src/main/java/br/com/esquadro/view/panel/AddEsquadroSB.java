@@ -13,7 +13,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -32,11 +31,11 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 
 import br.com.esquadro.controler.AddEsquadroSBController;
+import br.com.esquadro.enums.DATABASETYPE;
+import br.com.esquadro.helper.SqliteHelper;
 import br.com.esquadro.model.DependenciasPOM.DEPEND;
 import br.com.esquadro.resources.ResourcesImages;
 import br.com.esquadro.sqlite.entity.BancoDadosEntity;
-import br.com.esquadro.sqlite.helper.SqliteHelper;
-import br.com.esquadro.util.Conexao;
 import br.com.esquadro.util.PersonalItem;
 import br.com.esquadro.view.ConsoleLog;
 
@@ -114,15 +113,11 @@ public class AddEsquadroSB extends JInternalFrame {
 		JComboBox<PersonalItem> comboBox = new JComboBox<PersonalItem>();
 		comboBox.setEnabled(false);
 
-
-		
 		try {
-			Dao<BancoDadosEntity, Integer> bancoDadosDao= DaoManager.createDao(SqliteHelper.connectionSource, BancoDadosEntity.class);
-			
-			List<BancoDadosEntity> listBancoDados = bancoDadosDao.queryBuilder()
-                    .orderBy("nome", true)
-                    .query();
-			
+			Dao<BancoDadosEntity, Integer> bancoDadosDao = DaoManager.createDao(SqliteHelper.connectionSource,
+					BancoDadosEntity.class);
+
+			List<BancoDadosEntity> listBancoDados = bancoDadosDao.queryBuilder().orderBy("nome", true).query();
 
 			PersonalItem item = new PersonalItem();
 			item.setName("Selecione...");
@@ -130,16 +125,14 @@ public class AddEsquadroSB extends JInternalFrame {
 
 			comboBox.addItem(item);
 
-			
-			
 			for (Iterator iterator = listBancoDados.iterator(); iterator.hasNext();) {
 				BancoDadosEntity bancoDados = (BancoDadosEntity) iterator.next();
 				item = new PersonalItem();
-				item.setName(bancoDados.getNome() + " (" + bancoDados.getNameBd() + ")");		
+				item.setName(bancoDados.getNome() + " (" + bancoDados.getNameBd() + ")");
 				item.setValue(bancoDados);
 				comboBox.addItem(item);
 			}
-			
+
 		} catch (SQLException e) {
 			this.consoleLog.setText("Erro: " + e.getMessage());
 			e.printStackTrace();
@@ -154,7 +147,7 @@ public class AddEsquadroSB extends JInternalFrame {
 				if (personalItem.getValue() != null) {
 					bancoDados = (BancoDadosEntity) personalItem.getValue();
 
-					if (bancoDados.getTipo().equalsIgnoreCase("mysql")) {
+					if (bancoDados.getTipo() == DATABASETYPE.MYSQL) {
 						chkMysql.setSelected(true);
 						chkOracle.setSelected(false);
 						mysql = true;

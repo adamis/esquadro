@@ -32,6 +32,7 @@ import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
+import br.com.esquadro.enums.DATABASETYPE;
 import br.com.esquadro.resources.ResourcesImages;
 import br.com.esquadro.sqlite.controler.DeleteDatabasesController;
 import br.com.esquadro.sqlite.controler.InsertDatabasesController;
@@ -55,7 +56,7 @@ public class BancoDados extends JInternalFrame {
 	private Integer bdSendoAlterado;
 	private JPasswordField txtSenha;
 	private JTextField txtCharset;
-	private JTextField txtIp;	
+	private JTextField txtIp;
 	private JCheckBox ckboxPsw;
 	private JButton btnAlterar;
 	private JButton btnCadastrarBd;
@@ -183,10 +184,10 @@ public class BancoDados extends JInternalFrame {
 
 				if (valid) {
 
-					
 					BancoDadosEntity bancoDadosEntity = getFormData();
-					
-					UpdateDatabasesController controller = new UpdateDatabasesController(BancoDados.this, bdSendoAlterado, bancoDadosEntity);
+
+					UpdateDatabasesController controller = new UpdateDatabasesController(BancoDados.this,
+							bdSendoAlterado, bancoDadosEntity);
 					controller.run();
 
 				} else {
@@ -201,7 +202,7 @@ public class BancoDados extends JInternalFrame {
 			/**
 			 * @return
 			 */
-			
+
 		});
 
 		btnAlterar.setBounds(65, 421, 240, 37);
@@ -327,7 +328,8 @@ public class BancoDados extends JInternalFrame {
 
 					BancoDadosEntity bancoDadosEntity = getFormData();
 
-					InsertDatabasesController controller = new InsertDatabasesController(BancoDados.this,bancoDadosEntity);
+					InsertDatabasesController controller = new InsertDatabasesController(BancoDados.this,
+							bancoDadosEntity);
 					controller.run();
 
 				} else {
@@ -384,8 +386,8 @@ public class BancoDados extends JInternalFrame {
 			@Override
 			public void mousePressed(MouseEvent mouseEvent) {
 				JTable table = (JTable) mouseEvent.getSource();
-				//Point point = mouseEvent.getPoint();
-				//int row = table.rowAtPoint(point);
+				// Point point = mouseEvent.getPoint();
+				// int row = table.rowAtPoint(point);
 				if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
 					callEdit();
 				}
@@ -441,7 +443,7 @@ public class BancoDados extends JInternalFrame {
 							"Excluir as configurações de banco de dados é um caminho sem volta. \n Deseja prosseguir?",
 							null, JOptionPane.YES_NO_OPTION);
 					if (dialogResult == JOptionPane.YES_OPTION) {
-						DeleteDatabasesController controller = new DeleteDatabasesController(BancoDados.this, 
+						DeleteDatabasesController controller = new DeleteDatabasesController(BancoDados.this,
 								Integer.valueOf(tblTabelas.getValueAt(tblTabelas.getSelectedRow(), 0).toString()),
 								tblTabelas.getValueAt(tblTabelas.getSelectedRow(), 0).toString());
 						controller.run();
@@ -452,7 +454,6 @@ public class BancoDados extends JInternalFrame {
 			}
 		});
 
-		
 		loadTable();
 	}
 
@@ -474,7 +475,7 @@ public class BancoDados extends JInternalFrame {
 		ckboxPsw.setSelected(false);
 
 	}
-	
+
 	private BancoDadosEntity getFormData() {
 		BancoDadosEntity bancoDadosEntity = new BancoDadosEntity();
 		bancoDadosEntity.setNome(txtNome.getText());
@@ -485,7 +486,7 @@ public class BancoDados extends JInternalFrame {
 		bancoDadosEntity.setCharset(txtCharset.getText());
 		bancoDadosEntity.setNameBd(txtNomeBD.getText());
 		bancoDadosEntity.setSchema(txtSchema.getText());
-		bancoDadosEntity.setTipo(String.valueOf(cbTipo.getSelectedItem()));
+		bancoDadosEntity.setTipo(DATABASETYPE.valueOf(cbTipo.getSelectedItem().toString().toUpperCase()));
 		return bancoDadosEntity;
 	}
 
@@ -502,7 +503,8 @@ public class BancoDados extends JInternalFrame {
 				btnAlterar.setVisible(true);
 				btnCadastrarBd.setVisible(false);
 				UpdateDatabasesController controller = new UpdateDatabasesController();
-				BancoDadosEntity dados = controller.findById(Integer.valueOf(tblTabelas.getValueAt(tblTabelas.getSelectedRow(), 0).toString()));
+				BancoDadosEntity dados = controller
+						.findById(Integer.valueOf(tblTabelas.getValueAt(tblTabelas.getSelectedRow(), 0).toString()));
 				panel.setVisible(true);
 				scrollPane.setVisible(false);
 				txtNome.setText(dados.getNome());
@@ -516,9 +518,7 @@ public class BancoDados extends JInternalFrame {
 
 				for (int i = 0; i < cbTipo.getItemCount(); i++) {
 
-					
-
-					if (dados.getTipo().toUpperCase().equals(cbTipo.getItemAt(i).toUpperCase())) {
+					if (dados.getTipo().toString().toUpperCase().equals(cbTipo.getItemAt(i).toUpperCase())) {
 
 						cbTipo.setSelectedIndex(i);
 

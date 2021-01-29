@@ -15,10 +15,8 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -40,10 +38,9 @@ import com.j256.ormlite.dao.DaoManager;
 
 import br.com.esquadro.controler.AddAPIController;
 import br.com.esquadro.controler.ListTableController;
+import br.com.esquadro.helper.SqliteHelper;
 import br.com.esquadro.resources.ResourcesImages;
 import br.com.esquadro.sqlite.entity.BancoDadosEntity;
-import br.com.esquadro.sqlite.helper.SqliteHelper;
-import br.com.esquadro.util.Conexao;
 import br.com.esquadro.util.DatabaseUtils;
 import br.com.esquadro.util.PersonalItem;
 import br.com.esquadro.view.ConsoleLog;
@@ -73,7 +70,7 @@ public class AddAPI extends JInternalFrame {
 	private String temp;
 	private JTextField textField_1;
 
-	//	private String filterTableName;
+	// private String filterTableName;
 
 	public void setUrl(TextField inputProject) {
 		this.inputProject = inputProject;
@@ -107,11 +104,9 @@ public class AddAPI extends JInternalFrame {
 
 		JComboBox<PersonalItem> comboBox = new JComboBox<PersonalItem>();
 
-
-
-
 		try {
-			Dao<BancoDadosEntity, Integer> bancoDadosDao= DaoManager.createDao(SqliteHelper.connectionSource, BancoDadosEntity.class);
+			Dao<BancoDadosEntity, Integer> bancoDadosDao = DaoManager.createDao(SqliteHelper.connectionSource,
+					BancoDadosEntity.class);
 
 			List<BancoDadosEntity> listBancoDados = bancoDadosDao.queryForAll();
 
@@ -124,12 +119,12 @@ public class AddAPI extends JInternalFrame {
 			for (int i = 0; i < listBancoDados.size(); i++) {
 
 				item = new PersonalItem();
-				item.setName(listBancoDados.get(i).getNome() + " (" + listBancoDados.get(i).getNameBd() + ")");				
+				item.setName(listBancoDados.get(i).getNome() + " (" + listBancoDados.get(i).getNameBd() + ")");
+				System.err.println("BD NAME>> "+listBancoDados.get(i).getNome());
 				item.setValue(listBancoDados.get(i));
 
 				comboBox.addItem(item);
 			}
-
 
 		} catch (SQLException e) {
 			this.consoleLog.setText("Erro: " + e.getMessage());
@@ -141,15 +136,19 @@ public class AddAPI extends JInternalFrame {
 			@Override
 			public void itemStateChanged(ItemEvent item) {
 				PersonalItem personalItem = (PersonalItem) item.getItem();
-				if (personalItem.getValue() != null) {
-					bancoDados = (BancoDadosEntity) personalItem.getValue();
-					if(bancoDados != null){
+				BancoDadosEntity bancoDados = (BancoDadosEntity) personalItem.getValue();
+				
+				if (bancoDados != null) {					
+					System.err.println("BANCO >>>"+bancoDados.getNome());
+					
+					if (bancoDados != null) {
 						updateGrid(bancoDados);
 					}
 				} else {
 					DefaultTableModel dtm = new DefaultTableModel();
 					table.setModel(dtm);
 				}
+				
 			}
 
 		});
@@ -547,8 +546,8 @@ public class AddAPI extends JInternalFrame {
 	}
 
 	private void updateGrid(BancoDadosEntity bancoDadosEntity) {
-		System.err.println("Banco: "+bancoDadosEntity.getNome());
-		System.err.println("Banco: "+bancoDadosEntity.getSenha());
+		System.err.println("Banco: " + bancoDadosEntity.getNome());
+		System.err.println("Banco: " + bancoDadosEntity.getSenha());
 		ListTableController controller = new ListTableController(bancoDadosEntity, table, true, consoleLog, "");
 		controller.run();
 	}
@@ -564,9 +563,9 @@ public class AddAPI extends JInternalFrame {
 			replace = replace.substring(1, replace.length());
 
 			if (replace.contains(".utils")) {
-				if(System.getProperty("os.name").equals("Linux")) {
+				if (System.getProperty("os.name").equals("Linux")) {
 					replace = replace.replace(".utils", "");
-				}else {
+				} else {
 					replace = replace.replace(".cors", "");
 				}
 			}

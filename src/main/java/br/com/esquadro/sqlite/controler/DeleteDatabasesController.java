@@ -10,8 +10,8 @@ import javax.swing.JOptionPane;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 
+import br.com.esquadro.helper.SqliteHelper;
 import br.com.esquadro.sqlite.entity.BancoDadosEntity;
-import br.com.esquadro.sqlite.helper.SqliteHelper;
 import br.com.esquadro.view.panel.BancoDados;
 
 /**
@@ -20,13 +20,12 @@ import br.com.esquadro.view.panel.BancoDados;
  */
 public class DeleteDatabasesController extends Thread {
 
-	
 	private Integer id;
 	// private String nomeBD;
 	private BancoDados bancoDados;
 
 	public DeleteDatabasesController(BancoDados bancoDados, Integer id, String nomeBD) {
-		this.bancoDados = bancoDados;		
+		this.bancoDados = bancoDados;
 		this.id = id;
 		// this.nomeBD = nomeBD;
 	}
@@ -57,9 +56,10 @@ public class DeleteDatabasesController extends Thread {
 	 */
 
 	public void deleteDatabase(Integer id) throws Exception {
-		Dao<BancoDadosEntity, Integer> bancoDadosDao = DaoManager.createDao(SqliteHelper.connectionSource, BancoDadosEntity.class);		
+		Dao<BancoDadosEntity, Integer> bancoDadosDao = DaoManager.createDao(SqliteHelper.connectionSource,
+				BancoDadosEntity.class);
 		bancoDadosDao.deleteById(id);
-		
+
 	}
 
 }

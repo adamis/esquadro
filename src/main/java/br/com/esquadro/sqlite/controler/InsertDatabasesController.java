@@ -10,8 +10,8 @@ import javax.swing.JOptionPane;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 
+import br.com.esquadro.helper.SqliteHelper;
 import br.com.esquadro.sqlite.entity.BancoDadosEntity;
-import br.com.esquadro.sqlite.helper.SqliteHelper;
 import br.com.esquadro.view.panel.BancoDados;
 
 /**
@@ -20,12 +20,11 @@ import br.com.esquadro.view.panel.BancoDados;
  */
 public class InsertDatabasesController extends Thread {
 
-	
 	private BancoDadosEntity dados;
 	private BancoDados bancoDados;
 
 	public InsertDatabasesController(BancoDados bancoDados, BancoDadosEntity dados) {
-		this.bancoDados = bancoDados;		
+		this.bancoDados = bancoDados;
 		this.dados = dados;
 	}
 
@@ -58,7 +57,8 @@ public class InsertDatabasesController extends Thread {
 	 */
 
 	public void insertDatabase(BancoDadosEntity dados) throws Exception {
-		Dao<BancoDadosEntity, Integer> bancoDadosDao = DaoManager.createDao(SqliteHelper.connectionSource, BancoDadosEntity.class);
+		Dao<BancoDadosEntity, Integer> bancoDadosDao = DaoManager.createDao(SqliteHelper.connectionSource,
+				BancoDadosEntity.class);
 		bancoDadosDao.create(dados);
 	}
 

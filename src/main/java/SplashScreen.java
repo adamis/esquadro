@@ -11,10 +11,11 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
+import br.com.esquadro.helper.SqliteHelper;
 import br.com.esquadro.resources.ResourcesImages;
-import br.com.esquadro.sqlite.helper.SqliteHelper;
 import br.com.esquadro.util.Styles;
 import br.com.esquadro.view.Menu;
 
@@ -32,7 +33,7 @@ public class SplashScreen extends JFrame {
 		this.setIconImage(ResourcesImages.icon2());
 		getContentPane().setBackground(Color.WHITE);
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setUndecorated(true);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel() {

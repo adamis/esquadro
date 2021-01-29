@@ -12,7 +12,6 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -34,10 +33,9 @@ import com.j256.ormlite.dao.DaoManager;
 
 import br.com.esquadro.controler.ListTableController;
 import br.com.esquadro.controler.ProcessaComponentesController;
+import br.com.esquadro.helper.SqliteHelper;
 import br.com.esquadro.resources.ResourcesImages;
 import br.com.esquadro.sqlite.entity.BancoDadosEntity;
-import br.com.esquadro.sqlite.helper.SqliteHelper;
-import br.com.esquadro.util.Conexao;
 import br.com.esquadro.util.PersonalItem;
 import br.com.esquadro.view.ConsoleLog;
 
@@ -81,9 +79,9 @@ public class AutomaticDB extends JInternalFrame {
 
 		JComboBox<PersonalItem> comboBox = new JComboBox<PersonalItem>();
 
-
 		try {
-			Dao<BancoDadosEntity, Integer> bancoDadosDao= DaoManager.createDao(SqliteHelper.connectionSource, BancoDadosEntity.class);
+			Dao<BancoDadosEntity, Integer> bancoDadosDao = DaoManager.createDao(SqliteHelper.connectionSource,
+					BancoDadosEntity.class);
 
 			List<BancoDadosEntity> listBancoDados = bancoDadosDao.queryForAll();
 
@@ -97,7 +95,7 @@ public class AutomaticDB extends JInternalFrame {
 				BancoDadosEntity bancoDados = (BancoDadosEntity) iterator.next();
 
 				item = new PersonalItem();
-				item.setName(bancoDados.getNome() + " (" + bancoDados.getNameBd() + ")");				
+				item.setName(bancoDados.getNome() + " (" + bancoDados.getNameBd() + ")");
 				item.setValue(bancoDados);
 
 				comboBox.addItem(item);

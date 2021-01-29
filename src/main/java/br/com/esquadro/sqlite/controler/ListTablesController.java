@@ -12,9 +12,8 @@ import javax.swing.table.DefaultTableModel;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 
+import br.com.esquadro.helper.SqliteHelper;
 import br.com.esquadro.sqlite.entity.BancoDadosEntity;
-import br.com.esquadro.sqlite.helper.SqliteHelper;
-import br.com.esquadro.util.Conexao;
 import br.com.esquadro.view.ConsoleLog;
 
 /**
@@ -23,19 +22,19 @@ import br.com.esquadro.view.ConsoleLog;
  */
 public class ListTablesController extends Thread {
 
-	private Conexao conexao;
 	private JTable table;
-	// private ConsoleLog consoleLog;
+	private ConsoleLog consoleLog;
 
-	public ListTablesController(JTable table, ConsoleLog consoleLog) {		
-		this.table = table;		
+	public ListTablesController(JTable table, ConsoleLog consoleLog) {
+		this.table = table;
+		this.consoleLog = consoleLog;
 	}
 
 	@Override
 	public void run() {
 
 		try {
-			List<BancoDadosEntity> databases = getDatabases(conexao);
+			List<BancoDadosEntity> databases = getDatabases();
 
 			String[] columnNames = { "id", "Nome", "Banco de Dados", "tipo", "usuario" };
 
@@ -80,6 +79,9 @@ public class ListTablesController extends Thread {
 			// this.table.setRowHeight(20);
 
 		} catch (Exception e) {
+			this.consoleLog.setText(e.getMessage());
+			this.consoleLog.setVisible(true);
+			this.consoleLog.moveToFront();
 			e.printStackTrace();
 		}
 
@@ -93,8 +95,9 @@ public class ListTablesController extends Thread {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<BancoDadosEntity> getDatabases(Conexao conexao) throws Exception {
-		Dao<BancoDadosEntity, Integer> bancoDadosDao = DaoManager.createDao(SqliteHelper.connectionSource, BancoDadosEntity.class);
+	public List<BancoDadosEntity> getDatabases() throws Exception {
+		Dao<BancoDadosEntity, Integer> bancoDadosDao = DaoManager.createDao(SqliteHelper.connectionSource,
+				BancoDadosEntity.class);
 		return bancoDadosDao.queryForAll();
 	}
 }

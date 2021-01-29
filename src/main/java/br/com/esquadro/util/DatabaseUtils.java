@@ -1,10 +1,9 @@
 package br.com.esquadro.util;
 
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -12,26 +11,36 @@ import java.util.Map.Entry;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import br.com.esquadro.enums.DATABASETYPE;
+import br.com.esquadro.helper.GenericHelperInterface;
+import br.com.esquadro.helper.MysqlHelper;
+import br.com.esquadro.helper.OracleHelper;
 import br.com.esquadro.sqlite.entity.BancoDadosEntity;
-import br.com.esquadro.util.Conexao.DATABASETYPE;
 
 public class DatabaseUtils {
 
-	private Conexao conexao;
+	private GenericHelperInterface genericHelperInterface;
+	private BancoDadosEntity bancoDados;
 	private StringBuilder sql = null;
-	private ResultSet executeQuery;
+	// private ResultSet executeQuery;
 	private List<HashMap<String, String>> listTable;
 	private List<HashMap<String, String>> listTableHash;
 	private HashMap<String, String> hm;
 
-	private DATABASETYPE tipo;
-	String owner;
-
 	public DatabaseUtils(BancoDadosEntity bancoDados) {
-		this.tipo = Conexao.getDatabaseType(bancoDados.getTipo());
-		this.owner = bancoDados.getSchema();
-		conexao = new Conexao(tipo, bancoDados.getUsuario(), bancoDados.getSenha(), bancoDados.getIp(),
-				bancoDados.getPorta(), bancoDados.getNameBd(), bancoDados.getCharset());
+		this.bancoDados = bancoDados;
+		System.err.println("banco: "+bancoDados.getTipo().toString());
+		
+		if (bancoDados.getTipo() == DATABASETYPE.MYSQL) {
+
+			genericHelperInterface = new MysqlHelper(bancoDados);
+
+		} else if (bancoDados.getTipo() == DATABASETYPE.ORACLE) {
+
+			genericHelperInterface = new OracleHelper(bancoDados);
+
+		}
+
 	}
 
 	/**
@@ -42,57 +51,61 @@ public class DatabaseUtils {
 	 * @throws SQLException
 	 */
 	public List<HashMap<String, String>> getTables(BancoDadosEntity bancoDados) throws Exception {
-		conexao.conect();
+
 		sql = new StringBuilder();
-
 		listTable = new ArrayList<>();
+		List<Map> executeSQL;
 
-		if (tipo.toString().equals("ORACLE")) {
+		if (bancoDados.getTipo() == DATABASETYPE.ORACLE) {
 
+			// LISTANDO TODAS TABLE
 			sql.append("SELECT owner as schematic, table_name as tableName FROM dba_tables WHERE dba_tables.owner =");
 			sql.append("'");
 			sql.append(bancoDados.getSchema().toUpperCase());
 			sql.append("'");
 			sql.append("order by tableName");
+			executeSQL = this.genericHelperInterface.executeSQL(sql.toString());
 
-			executeQuery = conexao.executeQuery(sql.toString());
+			for (Iterator iterator = executeSQL.iterator(); iterator.hasNext();) {
+				Map map = (Map) iterator.next();
 
-			while (executeQuery.next()) {
 				HashMap<String, String> hm = new HashMap<String, String>();
-				hm.put("tableName", executeQuery.getString("tableName"));
+				hm.put("tableName", map.get("tableName").toString());
 				hm.put("tableType", "BASE TABLE");
 				listTable.add(hm);
 			}
 
+			// LISTANDO TODAS VIEW
 			sql = new StringBuilder();
 			sql.append("SELECT view_name,owner as schematic FROM all_views WHERE all_views.owner = '"
 					+ bancoDados.getSchema().toUpperCase() + "'");
-			executeQuery = conexao.executeQuery(sql.toString());
+			executeSQL = this.genericHelperInterface.executeSQL(sql.toString());
 
-			while (executeQuery.next()) {
+			for (Iterator iterator = executeSQL.iterator(); iterator.hasNext();) {
+				Map map = (Map) iterator.next();
+
 				HashMap<String, String> hm = new HashMap<String, String>();
-				hm.put("tableName", executeQuery.getString("view_name"));
+				hm.put("tableName", map.get("view_name").toString());
 				hm.put("tableType", "VIEW");
 				listTable.add(hm);
 			}
 
-		} else if (tipo.toString().equals("MYSQL")) {
+		} else if (bancoDados.getTipo() == DATABASETYPE.MYSQL) {
 
 			sql.append("SHOW FULL TABLES IN " + bancoDados.getNameBd());
 
-			executeQuery = conexao.executeQuery(sql.toString());
+			executeSQL = this.genericHelperInterface.executeSQL(sql.toString());
 
-			while (executeQuery.next()) {
+			for (Iterator iterator = executeSQL.iterator(); iterator.hasNext();) {
+				Map map = (Map) iterator.next();
+				
 				HashMap<String, String> hm = new HashMap<String, String>();
-				hm.put("tableName", executeQuery.getString(1));
-				hm.put("tableType", executeQuery.getString(2));
+				hm.put("tableName", map.get("Tables_in_checkTest").toString());
+				hm.put("tableType", map.get("Table_type").toString());
 				listTable.add(hm);
-
 			}
 
 		}
-
-		conexao.commit();
 		return listTable;
 	}
 
@@ -104,12 +117,12 @@ public class DatabaseUtils {
 	 * @throws SQLException
 	 */
 	public List<HashMap<String, String>> getTables(BancoDadosEntity bancoDados, String findTableName) throws Exception {
-		conexao.conect();
+
 		sql = new StringBuilder();
-
 		listTable = new ArrayList<>();
+		List<Map> executeSQL;
 
-		if (tipo.toString().equals("ORACLE")) {
+		if (bancoDados.getTipo() == DATABASETYPE.ORACLE) {
 			findTableName = findTableName.replace("-", "_");
 
 			sql.append("SELECT owner as schematic, table_name as tableName FROM dba_tables WHERE dba_tables.owner = ");
@@ -118,19 +131,15 @@ public class DatabaseUtils {
 			sql.append("'");
 			sql.append("order by table_name");
 
-			executeQuery = conexao.executeQuery(sql.toString());
+			executeSQL = this.genericHelperInterface.executeSQL(sql.toString());
 
-			while (executeQuery.next()) {
+			for (Iterator iterator = executeSQL.iterator(); iterator.hasNext();) {
+				Map map = (Map) iterator.next();
 
-				// System.err.println("TABLE: "+executeQuery.getString("tableName")+" FILTER> "
-				// +findTableName.toUpperCase());
-
-				if (executeQuery.getString("tableName").contains(findTableName.toUpperCase())) {
-					HashMap<String, String> hm = new HashMap<String, String>();
-					hm.put("tableName", executeQuery.getString("tableName"));
-					hm.put("tableType", "BASE TABLE");
-					listTable.add(hm);
-				}
+				HashMap<String, String> hm = new HashMap<String, String>();
+				hm.put("tableName", map.get("tableName").toString());
+				hm.put("tableType", "BASE TABLE");
+				listTable.add(hm);
 			}
 
 			sql = new StringBuilder();
@@ -140,36 +149,40 @@ public class DatabaseUtils {
 			sql.append("'");
 			sql.append("order by view_name");
 
-			executeQuery = conexao.executeQuery(sql.toString());
+			executeSQL = this.genericHelperInterface.executeSQL(sql.toString());
 
-			while (executeQuery.next()) {
-				if (executeQuery.getString("view_name").contains(findTableName.toUpperCase())) {
+			for (Iterator iterator = executeSQL.iterator(); iterator.hasNext();) {
+				Map map = (Map) iterator.next();
+
+				if (map.get("view_name").toString().contains(findTableName.toUpperCase())) {
 					HashMap<String, String> hm = new HashMap<String, String>();
-					hm.put("tableName", executeQuery.getString("view_name"));
+					hm.put("tableName", map.get("view_name").toString());
 					hm.put("tableType", "VIEW");
 					listTable.add(hm);
 				}
 			}
 
-		} else if (tipo.toString().equals("MYSQL")) {
+		} else if (bancoDados.getTipo() == DATABASETYPE.MYSQL) {
 
 			String filter = findTableName.equals("") ? "" : " LIKE '%" + findTableName + "%'";
 
 			sql.append("SHOW FULL TABLES IN " + bancoDados.getNameBd() + filter);
 
-			executeQuery = conexao.executeQuery(sql.toString());
+			executeSQL = this.genericHelperInterface.executeSQL(sql.toString());
 
-			while (executeQuery.next()) {
-				HashMap<String, String> hm = new HashMap<String, String>();
-				hm.put("tableName", executeQuery.getString(1));
-				hm.put("tableType", executeQuery.getString(2));
-				listTable.add(hm);
+			for (Iterator iterator = executeSQL.iterator(); iterator.hasNext();) {
+				Map map = (Map) iterator.next();
 
+				if (map.get("view_name").toString().contains(findTableName.toUpperCase())) {
+					HashMap<String, String> hm = new HashMap<String, String>();
+					hm.put("tableName", map.get("tableName").toString());
+					hm.put("tableType", map.get("tableType").toString());
+					listTable.add(hm);
+				}
 			}
 
 		}
 
-		conexao.commit();
 		return listTable;
 	}
 
@@ -206,40 +219,21 @@ public class DatabaseUtils {
 
 			// System.err.println("select: " + select);
 			String sql;
+			List<Map> executeSQL;
+			List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 
-			if (this.tipo.toString().equals("ORACLE")) {
+			if (bancoDados.getTipo() == DATABASETYPE.ORACLE) {
 				sql = "select " + select.toLowerCase() + " from " + table + " where ROWNUM <= 5";
 			} else {
 				sql = "select " + select.toLowerCase() + " from " + table + " limit 5";
 			}
 
-			conexao.conect();
-			executeQuery = conexao.executeQuery(sql.toString());
+			executeSQL = this.genericHelperInterface.executeSQL(sql.toString());
 
-			// System.err.println("passou>>: " + sql);
-
-			List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-
-			ResultSetMetaData rsMetaData = executeQuery.getMetaData();
-
-			while (executeQuery.next()) { // convert each object to an human readable JSON object
-
-				Map<String, String> map = new HashMap<String, String>();
-				for (int i = 1; i <= rsMetaData.getColumnCount(); i++) {
-
-					String key = rsMetaData.getColumnName(i);
-					// System.err.println("key: " + key);
-
-					// int columnType = rsMetaData.getColumnType(i);
-					// System.err.println("ColumnType: "+columnType);
-
-					map.put(key, executeQuery.getString(key));
-
-				}
+			for (Iterator iterator = executeSQL.iterator(); iterator.hasNext();) {
+				Map map = (Map) iterator.next();
 				list.add(map);
 			}
-
-			conexao.commit();
 
 			Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
 			// System.err.println("" + gson.toJson(list));
@@ -262,32 +256,32 @@ public class DatabaseUtils {
 	 * @throws SQLException
 	 */
 	public List<HashMap<String, String>> getColuns(String table) throws Exception {
-		table = table.replace("-", "_");
 
+		listTableHash = new ArrayList<>();
+		sql = new StringBuilder();
+		List<Map> executeSQL;
+
+		table = table.replace("-", "_");
 		List<HashMap<String, String>> fks = getFks(table);
 
-		conexao.conect();
-		sql = new StringBuilder();
-
-		if (tipo.toString().equals("ORACLE")) {
-			sql.append("SELECT column_name,	data_type FROM	user_tab_cols WHERE	table_name = '" + table.toUpperCase()
-					+ "' order by column_name");
-		} else if (tipo.toString().equals("MYSQL")) {
+		if (bancoDados.getTipo() == DATABASETYPE.ORACLE) {
+			sql.append("SELECT column_name as colum, data_type as type FROM	user_tab_cols WHERE	table_name = '"
+					+ table.toUpperCase() + "' order by column_name");
+		} else if (bancoDados.getTipo() == DATABASETYPE.MYSQL) {
 			sql.append("SHOW COLUMNS FROM " + table.toUpperCase());
 		}
 
-		executeQuery = conexao.executeQuery(sql.toString());
+		executeSQL = this.genericHelperInterface.executeSQL(sql.toString());
 
-		listTableHash = new ArrayList<>();
-
-		while (executeQuery.next()) {
+		for (Iterator iterator = executeSQL.iterator(); iterator.hasNext();) {
+			Map map = (Map) iterator.next();
 			hm = new HashMap<>();
-			hm.put("colum", executeQuery.getString(1));
-			hm.put("type", executeQuery.getString(2));
+			hm.put("colum", map.get("colum").toString());
+			hm.put("type", map.get("type").toString());
 			boolean control = false;
 			String tableNome = "";
 			for (int i = 0; i < fks.size(); i++) {
-				if (fks.get(i).get("column").equals(executeQuery.getString(1))) {
+				if (fks.get(i).get("column").equals(map.get("colum").toString())) {
 					control = true;
 					tableNome = fks.get(i).get("tableRef");
 					break;
@@ -301,9 +295,8 @@ public class DatabaseUtils {
 			}
 			// System.err.println("HM>> "+hm.toString());
 			listTableHash.add(hm);
-		}
 
-		conexao.commit();
+		}
 
 		return listTableHash;
 	}
@@ -311,14 +304,15 @@ public class DatabaseUtils {
 	public List<HashMap<String, String>> getFks(String table) throws Exception {
 		table = table.replace("-", "_");
 
-		conexao.conect();
 		sql = new StringBuilder();
+		listTableHash = new ArrayList<>();
+		List<Map> executeSQL;
 
-		if (tipo.toString().equals("ORACLE")) {
+		if (bancoDados.getTipo() == DATABASETYPE.ORACLE) {
 
 			sql.append(" SELECT ");
-			sql.append("   A.COLUMN_NAME, ");
-			sql.append("   c_pk.table_name ");
+			sql.append("   A.COLUMN_NAME as column, ");
+			sql.append("   c_pk.table_name as tableRef");
 			sql.append(" FROM ");
 			sql.append("   all_cons_columns A, ");
 			sql.append("   all_constraints c, ");
@@ -330,46 +324,43 @@ public class DatabaseUtils {
 			sql.append("   c.r_constraint_name = c_pk.constraint_name AND ");
 			sql.append("   c.constraint_type = 'R' AND ");
 			sql.append("   A.table_name = '" + table.toUpperCase() + "' AND ");
-			sql.append("   A.OWNER = '" + owner.toUpperCase() + "'");
+			sql.append("   A.OWNER = '" + bancoDados.getSchema().toUpperCase() + "'");
 
-		} else if (tipo.toString().equals("MYSQL")) {
+		} else if (bancoDados.getTipo() == DATABASETYPE.MYSQL) {
 
 			sql.append(" SELECT DISTINCT ");
-			sql.append("   (k.COLUMN_NAME), ");
-			sql.append("   k.REFERENCED_TABLE_NAME ");
+			sql.append("   (k.COLUMN_NAME) as column, ");
+			sql.append("   k.REFERENCED_TABLE_NAME as tableRef");
 			sql.append(" FROM ");
 			sql.append("   information_schema.TABLE_CONSTRAINTS i, ");
 			sql.append("   information_schema.KEY_COLUMN_USAGE k ");
 			sql.append(" WHERE ");
 			sql.append("   i.CONSTRAINT_NAME = k.CONSTRAINT_NAME AND ");
 			sql.append("   i.CONSTRAINT_TYPE = 'FOREIGN KEY' AND ");
-			sql.append("   k.TABLE_SCHEMA = '" + owner.toUpperCase() + "' AND ");
+			sql.append("   k.TABLE_SCHEMA = '" + bancoDados.getSchema().toUpperCase() + "' AND ");
 			sql.append("   i.TABLE_NAME = '" + table.toUpperCase() + "'");
 
 		}
 
-		executeQuery = conexao.executeQuery(sql.toString());
+		executeSQL = this.genericHelperInterface.executeSQL(sql.toString());
 
-		listTableHash = new ArrayList<>();
-
-		while (executeQuery.next()) {
+		for (Iterator iterator = executeSQL.iterator(); iterator.hasNext();) {
+			Map map = (Map) iterator.next();
 			hm = new HashMap<>();
-			hm.put("column", executeQuery.getString(1));
-			hm.put("tableRef", executeQuery.getString(2));
+			hm.put("column", map.get("column").toString());
+			hm.put("tableRef", map.get("tableRef").toString());
 			listTableHash.add(hm);
 		}
-
-		conexao.commit();
 
 		return listTableHash;
 	}
 
-	public DATABASETYPE getTipo() {
-		return tipo;
+	public BancoDadosEntity getBancoDados() {
+		return bancoDados;
 	}
 
-	public void setTipo(DATABASETYPE tipo) {
-		this.tipo = tipo;
+	public void setBancoDados(BancoDadosEntity bancoDados) {
+		this.bancoDados = bancoDados;
 	}
 
 }
