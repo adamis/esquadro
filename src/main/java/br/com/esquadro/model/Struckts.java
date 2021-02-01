@@ -3,7 +3,6 @@
  */
 package br.com.esquadro.model;
 
-import java.util.HashMap;
 import java.util.List;
 
 import com.google.googlejavaformat.java.Formatter;
@@ -222,7 +221,7 @@ public class Struckts {
 
 	public String getFilter() throws Exception {
 
-		List<HashMap<String, String>> coluns = databaseUtils.getColuns(entity);
+		List<TransferDTO> coluns = databaseUtils.getColuns(entity);
 		StringBuilder sbImport = new StringBuilder();
 		sbImport.append("package {{packFilter}}; ");
 		sbImport.append("\n");
@@ -241,22 +240,22 @@ public class Struckts {
 			sb.append("\n");
 
 			String colum = "";
-			if (coluns.get(i).get("fk") != null && coluns.get(i).get("fk").length() != 0) {
+			if (coluns.get(i).getFk() != null && coluns.get(i).getFk().length() != 0) {
 				colum = "Filter";
 
 				sb.append("	private "
-						+ processTypeDatabase(coluns.get(i).get("type"), coluns.get(i).get("fk"), sbImport) + " "
-						+ Utils.normalizerStringCommomNotCap(coluns.get(i).get("fk"))
-						+ (Utils.normalizerStringCommomNotCap(coluns.get(i).get("colum")).equalsIgnoreCase("id") ? ""
+						+ processTypeDatabase(coluns.get(i).getType(), coluns.get(i).getFk(), sbImport) + " "
+						+ Utils.normalizerStringCommomNotCap(coluns.get(i).getFk())
+						+ (Utils.normalizerStringCommomNotCap(coluns.get(i).getColumn()).equalsIgnoreCase("id") ? ""
 								: colum)
 						+ ";");
 
 			} else {
 
 				sb.append("	private "
-						+ processTypeDatabase(coluns.get(i).get("type"), coluns.get(i).get("fk"), sbImport) + " "
-						+ Utils.normalizerStringCommomNotCap(coluns.get(i).get("colum"))
-						+ (Utils.normalizerStringCommomNotCap(coluns.get(i).get("colum")).equalsIgnoreCase("id") ? ""
+						+ processTypeDatabase(coluns.get(i).getType(), coluns.get(i).getFk(), sbImport) + " "
+						+ Utils.normalizerStringCommomNotCap(coluns.get(i).getColumn())
+						+ (Utils.normalizerStringCommomNotCap(coluns.get(i).getColumn()).equalsIgnoreCase("id") ? ""
 								: colum)
 						+ ";");
 
@@ -534,33 +533,33 @@ public class Struckts {
 		StringBuilder sb = new StringBuilder();
 
 		try {
-			List<HashMap<String, String>> coluns = this.databaseUtils.getColuns(entidade);
+			List<TransferDTO> coluns = this.databaseUtils.getColuns(entidade);
 
 			for (int i = 0; i < coluns.size(); i++) {
 
 				sb.append("\n");
-				sb.append("//" + Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-", "_"),
+				sb.append("//" + Utils.normalizerStringCapHifen(coluns.get(i).getColumn().replace("-", "_"),
 						databaseUtils.getBancoDados().getTipo()).toUpperCase());
 
-				String type = coluns.get(i).get("type").toLowerCase();
+				String type = coluns.get(i).getType().toLowerCase();
 
-				// System.err.println("COLUM: " + coluns.get(i).get("colum"));
+				// System.err.println("COLUM: " + coluns.get(i).getColumn());
 
 				if (type.contains("char")) {
 					// STRING
 					sb.append("\n");
 					sb.append(" if (StringUtils.hasLength({{entityL}}Filter." + last + "get"
-							+ Utils.normalizerStringCaps(coluns.get(i).get("colum")) + "())) { ");
+							+ Utils.normalizerStringCaps(coluns.get(i).getColumn()) + "())) { ");
 					sb.append("\n");
 					sb.append(" 	predicates.add(builder.like( ");
 					sb.append("\n");
 
 					sb.append(" 		builder.lower(root." + fkCriteria + "get("
 							+ Utils.normalizerStringCaps(entidade) + "_."
-							+ Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-", "_"),
+							+ Utils.normalizerStringCapHifen(coluns.get(i).getColumn().replace("-", "_"),
 									databaseUtils.getBancoDados().getTipo()).toUpperCase()
 							+ ")), \"%\" + {{entityL}}Filter." + last + "get"
-							+ Utils.normalizerStringCaps(coluns.get(i).get("colum")) + "().toLowerCase() + \"%\")); ");
+							+ Utils.normalizerStringCaps(coluns.get(i).getColumn()) + "().toLowerCase() + \"%\")); ");
 					sb.append("\n");
 					sb.append(" } ");
 					sb.append("\n");
@@ -569,35 +568,35 @@ public class Struckts {
 						|| type.contains("double") || type.contains("int") || type.contains("long")) {
 
 					// INTEGER
-					if (!coluns.get(i).get("fk").isEmpty()) {
+					if (!coluns.get(i).getFk().isEmpty()) {
 
 						// System.err.println(Utils.normalizerStringCaps(this.entity) + " = " +
 						// entidade);
 
 						if (!imports.toString()
-								.contains(Utils.normalizerStringCaps(coluns.get(i).get("fk").replace("-", "_")) + "_; ")
-								&& !coluns.get(i).get("fk").equals(entidade)
+								.contains(Utils.normalizerStringCaps(coluns.get(i).getFk().replace("-", "_")) + "_; ")
+								&& !coluns.get(i).getFk().equals(entidade)
 								&& !Utils.normalizerStringCaps(this.entity).equalsIgnoreCase(entidade)) {
 
 							imports.append("\n");
 							imports.append("import {{packEntity}}."
-									+ Utils.normalizerStringCaps(coluns.get(i).get("fk").replace("-", "_")) + "_; ");
+									+ Utils.normalizerStringCaps(coluns.get(i).getFk().replace("-", "_")) + "_; ");
 							imports.append("\n");
 
 						}
 
-						if (!coluns.get(i).get("fk").equals(entidade)) {
+						if (!coluns.get(i).getFk().equals(entidade)) {
 
 							// FK
 							sb.append("\n");
 							sb.append("	if ({{entityL}}Filter." + last + "get"
-									+ Utils.normalizerStringCaps(coluns.get(i).get("fk")) + "Filter() != null) { ");
+									+ Utils.normalizerStringCaps(coluns.get(i).getFk()) + "Filter() != null) { ");
 
-							String montaPredicados = montaPredicados(coluns.get(i).get("fk"),
+							String montaPredicados = montaPredicados(coluns.get(i).getFk(),
 									last + "get" + Utils
-											.normalizerStringCaps(coluns.get(i).get("fk")) + "Filter().",
+											.normalizerStringCaps(coluns.get(i).getFk()) + "Filter().",
 									fkCriteria + "get(" + Utils.normalizerStringCaps(entidade) + "_."
-											+ Utils.normalizerStringCapHifen(coluns.get(i).get("fk"),
+											+ Utils.normalizerStringCapHifen(coluns.get(i).getFk(),
 													databaseUtils.getBancoDados().getTipo()).toUpperCase()
 											+ ").");
 							sb.append(montaPredicados);
@@ -612,16 +611,16 @@ public class Struckts {
 							sb.append("/*");
 							sb.append("\n");
 							sb.append(" if ({{entityL}}Filter." + last + "get"
-									+ Utils.normalizerStringCaps(coluns.get(i).get("colum")) + "() != null) { ");
+									+ Utils.normalizerStringCaps(coluns.get(i).getColumn()) + "() != null) { ");
 							sb.append("\n");
 							sb.append(" 	predicates.add(builder.equal( ");
 							sb.append("\n");
 							sb.append(" 		root." + fkCriteria + "get(" + Utils.normalizerStringCaps(entidade)
 									+ "_."
-									+ Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-", "_"),
+									+ Utils.normalizerStringCapHifen(coluns.get(i).getColumn().replace("-", "_"),
 											databaseUtils.getBancoDados().getTipo()).toUpperCase()
 									+ "), {{entityL}}Filter." + last + "get"
-									+ Utils.normalizerStringCaps(coluns.get(i).get("colum")) + "())); ");
+									+ Utils.normalizerStringCaps(coluns.get(i).getColumn()) + "())); ");
 							sb.append("\n");
 							sb.append(" } ");
 							sb.append("\n");
@@ -630,15 +629,15 @@ public class Struckts {
 					} else {
 						sb.append("\n");
 						sb.append(" if ({{entityL}}Filter." + last + "get"
-								+ Utils.normalizerStringCaps(coluns.get(i).get("colum")) + "() != null) { ");
+								+ Utils.normalizerStringCaps(coluns.get(i).getColumn()) + "() != null) { ");
 						sb.append("\n");
 						sb.append(" 	predicates.add(builder.equal( ");
 						sb.append("\n");
 						sb.append(" 		root." + fkCriteria + "get(" + Utils.normalizerStringCaps(entidade) + "_."
-								+ Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-", "_"),
+								+ Utils.normalizerStringCapHifen(coluns.get(i).getColumn().replace("-", "_"),
 										databaseUtils.getBancoDados().getTipo()).toUpperCase()
 								+ "), {{entityL}}Filter." + last + "get"
-								+ Utils.normalizerStringCaps(coluns.get(i).get("colum")) + "())); ");
+								+ Utils.normalizerStringCaps(coluns.get(i).getColumn()) + "())); ");
 						sb.append("\n");
 						sb.append(" } ");
 					}
@@ -646,15 +645,15 @@ public class Struckts {
 					// DATE
 					sb.append("\n");
 					sb.append(" if ({{entityL}}Filter." + last + "get"
-							+ Utils.normalizerStringCaps(coluns.get(i).get("colum")) + "() != null) { ");
+							+ Utils.normalizerStringCaps(coluns.get(i).getColumn()) + "() != null) { ");
 					sb.append("\n");
 					sb.append(" 	predicates.add(builder.equal( ");
 					sb.append("\n");
 					sb.append(" 		root." + fkCriteria + "get(" + Utils.normalizerStringCaps(entidade) + "_."
-							+ Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-", "_"),
+							+ Utils.normalizerStringCapHifen(coluns.get(i).getColumn().replace("-", "_"),
 									databaseUtils.getBancoDados().getTipo()).toUpperCase()
 							+ "), {{entityL}}Filter." + last + "get"
-							+ Utils.normalizerStringCaps(coluns.get(i).get("colum")) + "())); ");
+							+ Utils.normalizerStringCaps(coluns.get(i).getColumn()) + "())); ");
 					sb.append("\n");
 					sb.append(" } ");
 					sb.append("\n");
@@ -662,15 +661,15 @@ public class Struckts {
 					// OTHER
 					sb.append("\n");
 					sb.append(" if (StringUtils.hasLength({{entityL}}Filter." + last + "get"
-							+ Utils.normalizerStringCaps(coluns.get(i).get("colum")) + "())) { ");
+							+ Utils.normalizerStringCaps(coluns.get(i).getColumn()) + "())) { ");
 					sb.append("\n");
 					sb.append(" 	predicates.add(builder.equal( ");
 					sb.append("\n");
 					sb.append(" 		root." + fkCriteria + "get(" + Utils.normalizerStringCaps(entidade) + "_."
-							+ Utils.normalizerStringCapHifen(coluns.get(i).get("colum").replace("-", "_"),
+							+ Utils.normalizerStringCapHifen(coluns.get(i).getColumn().replace("-", "_"),
 									databaseUtils.getBancoDados().getTipo()).toUpperCase()
 							+ "), {{entityL}}Filter." + last + "get"
-							+ Utils.normalizerStringCaps(coluns.get(i).get("colum")) + "())); ");
+							+ Utils.normalizerStringCaps(coluns.get(i).getColumn()) + "())); ");
 					sb.append("\n");
 					sb.append(" } ");
 					sb.append("\n");

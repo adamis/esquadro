@@ -5,11 +5,11 @@ package br.com.esquadro.controler;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import br.com.esquadro.model.TransferDTO;
 import br.com.esquadro.sqlite.entity.BancoDadosEntity;
 import br.com.esquadro.util.DatabaseUtils;
 import br.com.esquadro.util.Statics;
@@ -204,8 +204,8 @@ public class ProcessaComponentesController implements Runnable {
 		String tableCap = Utils.normalizerStringCaps(table.trim());
 
 		DatabaseUtils databaseUtils = new DatabaseUtils(this.bancoDados);
-		List<HashMap<String, String>> coluns = databaseUtils.getColuns(table);
-		List<HashMap<String, String>> fks = databaseUtils.getFks(table);
+		List<TransferDTO> coluns = databaseUtils.getColuns(table);
+		List<TransferDTO> fks = databaseUtils.getFks(table);
 
 		// HTML-pesquisa
 		String html = "<!-- CTRL + SHIFT + F for pretty -->\n" + "<app-bread-crumb [items]=\"[{label: '" + tableCap
@@ -221,8 +221,10 @@ public class ProcessaComponentesController implements Runnable {
 				+ "\n" + "        (onLazyLoad)=\"aoMudarPagina($event)\" [autoLayout]=\"true\">" + "\n" + " " + "\n"
 				+ "        <ng-template pTemplate=\"header\">" + "\n" + " " + "\n" + "          <tr>" + "\n" + " ";
 
-		for (int i = 0; i < coluns.size(); i++) {
-			html += "\n" + "            <th class=\"blue-bg\">" + coluns.get(i).get("colum").toLowerCase() + "</th>";
+		System.err.println("coluns.size(): "+coluns.size());
+		
+		for (int i = 0; i < coluns.size(); i++) {			
+			html += "\n" + "            <th class=\"blue-bg\">" + coluns.get(i).getColumn().toLowerCase() + "</th>";
 		}
 
 		html += "\n" + "            <th rowspan=\"2\" style=\"text-align: center;\" class=\"blue-bg\">Ações</th>" + "\n"
@@ -231,8 +233,8 @@ public class ProcessaComponentesController implements Runnable {
 		for (int i = 0; i < coluns.size(); i++) {
 			html += "\n" + "            <th class=\"ui-fluid\">" + "\n"
 					+ "                <input pInputText type=\"text\" name=\""
-					+ coluns.get(i).get("colum").toLowerCase() + "\" (input)=\"tabela.filter($event.target.value, '"
-					+ coluns.get(i).get("colum").toLowerCase() + "', 'equals')\" >" + "\n" + "            </th>";
+					+ coluns.get(i).getColumn().toLowerCase() + "\" (input)=\"tabela.filter($event.target.value, '"
+					+ coluns.get(i).getColumn().toLowerCase() + "', 'equals')\" >" + "\n" + "            </th>";
 		}
 
 		html += "\n" + " " + "\n" + "          </tr>" + "\n" + " " + "\n" + "        </ng-template>" + "\n" + " " + "\n"
@@ -241,7 +243,7 @@ public class ProcessaComponentesController implements Runnable {
 
 		for (int i = 0; i < coluns.size(); i++) {
 			html += "\n" + "            <td>" + "\n" + "                {{" + tableLowCammom + "."
-					+ coluns.get(i).get("colum").toLowerCase() + "}}" + "\n" + "            </td>";
+					+ coluns.get(i).getColumn().toLowerCase() + "}}" + "\n" + "            </td>";
 		}
 
 		html += "\n" + " " + "\n" + "            <td style=\"text-align: center;\" class=\"p-col-2\">" + "\n" + " "
@@ -297,10 +299,10 @@ public class ProcessaComponentesController implements Runnable {
 				+ "\n" + "    this.filtro.params = new HttpParams();";
 
 		for (int i = 0; i < coluns.size(); i++) {
-			ts += "\n" + "    if (event.filters." + coluns.get(i).get("colum").toLowerCase() + ") {" + "\n"
+			ts += "\n" + "    if (event.filters." + coluns.get(i).getColumn().toLowerCase() + ") {" + "\n"
 					+ "      this.filtro.params = this.filtro.params.append('"
-					+ coluns.get(i).get("colum").toLowerCase() + "', event.filters."
-					+ coluns.get(i).get("colum").toLowerCase() + ".value);" + "\n" + "    }";
+					+ coluns.get(i).getColumn().toLowerCase() + "', event.filters."
+					+ coluns.get(i).getColumn().toLowerCase() + ".value);" + "\n" + "    }";
 		}
 
 		ts += "\n" + "    this.pesquisar(pagina);" + "\n" + "  }";
@@ -331,17 +333,17 @@ public class ProcessaComponentesController implements Runnable {
 
 		for (int i = 0; i < coluns.size(); i++) {
 
-			String type = coluns.get(i).get("type");
-			String colum = Utils.normalizerStringCommomNotCap(coluns.get(i).get("colum"));
+			String type = coluns.get(i).getType();
+			String colum = Utils.normalizerStringCommomNotCap(coluns.get(i).getColumn());
 
 			// String columTracinho =
 			// Utils.normalizerStringCommomNotCap(coluns.get(i).get("colum"));
-			String columCammonNotCapInit = Utils.normalizerStringCommomNotCap(coluns.get(i).get("colum"));
+			String columCammonNotCapInit = Utils.normalizerStringCommomNotCap(coluns.get(i).getColumn());
 			String columCap = (Character.toUpperCase(colum.charAt(0)) + colum.substring(1)).trim().replace("-", "");
 
 			boolean controlFk = false;
 			for (int j = 0; j < fks.size(); j++) {
-				if (colum.equals(fks.get(j).get("column").toLowerCase())) {
+				if (colum.equals(fks.get(j).getColumn().toLowerCase())) {
 					controlFk = true;
 				}
 			}
@@ -411,10 +413,10 @@ public class ProcessaComponentesController implements Runnable {
 				+ "import { Validators } from '@angular/forms';";
 
 		for (int i = 0; i < fks.size(); i++) {
-			if (!tsImport.contains(Utils.normalizerStringCaps(fks.get(i).get("tableRef")) + "Service")) {
-				tsImport += "\n" + "import { " + Utils.normalizerStringCaps(fks.get(i).get("tableRef"))
-						+ "Service } from './../../" + Utils.normalizerString(fks.get(i).get("tableRef")).toLowerCase()
-						+ "/" + Utils.normalizerString(fks.get(i).get("tableRef")) + ".service';";
+			if (!tsImport.contains(Utils.normalizerStringCaps(fks.get(i).getType()) + "Service")) {
+				tsImport += "\n" + "import { " + Utils.normalizerStringCaps(fks.get(i).getType())
+						+ "Service } from './../../" + Utils.normalizerString(fks.get(i).getType()).toLowerCase()
+						+ "/" + Utils.normalizerString(fks.get(i).getType()) + ".service';";
 			}
 		}
 		ts = "\n";
@@ -427,7 +429,7 @@ public class ProcessaComponentesController implements Runnable {
 		ts += "\n";
 
 		for (int i = 0; i < fks.size(); i++) {
-			ts += "\n" + Utils.normalizerStringCommomNotCap(fks.get(i).get("column")) + "List = [];";
+			ts += "\n" + Utils.normalizerStringCommomNotCap(fks.get(i).getColumn()) + "List = [];";
 		}
 
 		ts += "\n";
@@ -436,9 +438,9 @@ public class ProcessaComponentesController implements Runnable {
 
 		for (int i = 0; i < fks.size(); i++) {
 			if (!ts.contains(
-					"protected " + Utils.normalizerStringCommomNotCap(fks.get(i).get("tableRef")) + "Service")) {
-				ts += "\n" + "  , protected " + Utils.normalizerStringCommomNotCap(fks.get(i).get("tableRef"))
-						+ "Service: " + Utils.normalizerStringCaps(fks.get(i).get("tableRef")) + "Service";
+					"protected " + Utils.normalizerStringCommomNotCap(fks.get(i).getType()) + "Service")) {
+				ts += "\n" + "  , protected " + Utils.normalizerStringCommomNotCap(fks.get(i).getType())
+						+ "Service: " + Utils.normalizerStringCaps(fks.get(i).getType()) + "Service";
 			}
 		}
 
@@ -446,7 +448,7 @@ public class ProcessaComponentesController implements Runnable {
 				+ "(), " + tableLowCammom + "Service, " + tableCap + ".fromJson, new MessageService());";
 
 		for (int i = 0; i < fks.size(); i++) {
-			ts += "\n" + "	this.load" + Utils.normalizerStringCaps(fks.get(i).get("column")) + "();";
+			ts += "\n" + "	this.load" + Utils.normalizerStringCaps(fks.get(i).getColumn()) + "();";
 		}
 
 		ts += "\n" + "\n" + "  }" + "\n" + " " + "\n" + "  protected buildResourceForm() {" + "\n"
@@ -456,15 +458,15 @@ public class ProcessaComponentesController implements Runnable {
 
 			boolean control = false;
 			for (int j = 0; j < fks.size(); j++) {
-				if (coluns.get(i).get("colum").toLowerCase().equals(fks.get(j).get("column").toLowerCase())) {
+				if (coluns.get(i).getColumn().toLowerCase().equals(fks.get(j).getColumn().toLowerCase())) {
 					control = true;
 				}
 			}
 			if (control) {// FK
-				ts += "\n" + "		" + Utils.normalizerStringCommomNotCap(coluns.get(i).get("colum")) + ": " + "\n"
+				ts += "\n" + "		" + Utils.normalizerStringCommomNotCap(coluns.get(i).getColumn()) + ": " + "\n"
 						+ "this.formBuilder.group({" + "\n" + "id: [null]" + "\n" + "}),";
 			} else {
-				ts += "\n" + "		" + Utils.normalizerStringCommomNotCap(coluns.get(i).get("colum"))
+				ts += "\n" + "		" + Utils.normalizerStringCommomNotCap(coluns.get(i).getColumn())
 						+ ": [null, [Validators.required, Validators.minLength(5)]],";
 			}
 		}
@@ -475,7 +477,7 @@ public class ProcessaComponentesController implements Runnable {
 		boolean controlDate = false;
 
 		for (int i = 0; i < coluns.size(); i++) {
-			if (coluns.get(i).get("type").contains("datetime") || coluns.get(i).get("type").contains("date")) {
+			if (coluns.get(i).getType().contains("datetime") || coluns.get(i).getType().contains("date")) {
 				controlDate = true;
 			}
 		}
@@ -492,10 +494,10 @@ public class ProcessaComponentesController implements Runnable {
 					+ "                        this.resource = resource;";
 
 			for (int i = 0; i < coluns.size(); i++) {
-				if (coluns.get(i).get("type").contains("datetime") || coluns.get(i).get("type").contains("date")) {
+				if (coluns.get(i).getType().contains("datetime") || coluns.get(i).getType().contains("date")) {
 					ts += "\n" + "                        this.resource."
-							+ Utils.normalizerStringCommomNotCap(coluns.get(i).get("colum")) + " = new Date(resource."
-							+ Utils.normalizerStringCommomNotCap(coluns.get(i).get("colum")) + ");";
+							+ Utils.normalizerStringCommomNotCap(coluns.get(i).getColumn()) + " = new Date(resource."
+							+ Utils.normalizerStringCommomNotCap(coluns.get(i).getColumn()) + ");";
 				}
 			}
 
@@ -508,18 +510,18 @@ public class ProcessaComponentesController implements Runnable {
 
 		ts += "\n" + "  protected creationPageTitle(): string {" + "\n" + "    return 'Cadastro de Novo " + tableCap
 				+ "';" + "\n" + "  }" + "\n" + " " + "\n" + "  protected editionPageTitle(): string {" + "\n"
-				+ "    const " + tableLowCammom + "Name = this.resource." + coluns.get(0).get("colum").toLowerCase()
+				+ "    const " + tableLowCammom + "Name = this.resource." + coluns.get(0).getColumn().toLowerCase()
 				+ " || '';" + "\n" + "    return 'Editando " + tableCap + ": ' + " + tableLowCammom + "Name;" + "\n"
 				+ "  }" + "\n";
 
 		for (int i = 0; i < fks.size(); i++) {
 			// String columnNormCaps =
 			// Utils.normalizerStringCaps(fks.get(i).get("tableRef"));
-			String columnNormNonCaps = Utils.normalizerStringCommomNotCap(fks.get(i).get("tableRef"));
+			String columnNormNonCaps = Utils.normalizerStringCommomNotCap(fks.get(i).getType());
 
-			ts += "\n" + " load" + Utils.normalizerStringCaps(fks.get(i).get("column")) + "() { " + "\n" + "     this."
+			ts += "\n" + " load" + Utils.normalizerStringCaps(fks.get(i).getColumn()) + "() { " + "\n" + "     this."
 					+ columnNormNonCaps + "Service.listAll() " + "\n" + "       .then(" + columnNormNonCaps + " => { "
-					+ "\n" + "         this." + Utils.normalizerStringCommomNotCap(fks.get(i).get("column")) + "List = "
+					+ "\n" + "         this." + Utils.normalizerStringCommomNotCap(fks.get(i).getColumn()) + "List = "
 					+ columnNormNonCaps + ".map(c => " + "\n" + "                 ({ label: c.nome, value: c.id }) "
 					+ "\n" + "           ); " + "\n" + "       }) " + "\n" + "       .catch(erro => erro); " + "\n"
 					+ "   } ";
@@ -583,41 +585,43 @@ public class ProcessaComponentesController implements Runnable {
 		String ts = "export class " + tableCap + " extends BaseResourceModel {" + "\n" + "constructor(\n";
 
 		DatabaseUtils databaseUtils = new DatabaseUtils(this.bancoDados);
-		List<HashMap<String, String>> coluns = databaseUtils.getColuns(table);
+		List<TransferDTO> coluns = databaseUtils.getColuns(table);
 
-		for (HashMap<String, String> hashMap : coluns) {
-
-			if (hashMap.get("type").toLowerCase().contains("int")
-					|| hashMap.get("type").toLowerCase().contains("double")
-					|| hashMap.get("type").toLowerCase().contains("long")
-					|| hashMap.get("type").toLowerCase().contains("number")) {
+		for (int i = 0; i < coluns.size(); i++) {
+			
+			TransferDTO transferDTO = coluns.get(i);
+			
+			if (transferDTO.getType().toLowerCase().contains("int")
+					|| transferDTO.getType().toLowerCase().contains("double")
+					|| transferDTO.getType().toLowerCase().contains("long")
+					|| transferDTO.getType().toLowerCase().contains("number")) {
 
 				// FKS
-				if (hashMap.get("fk").equals("")) {
-					ts += "public " + hashMap.get("colum").toLowerCase() + "?: number,\n";
+				if (transferDTO.getFk().equals("")) {
+					ts += "public " + transferDTO.getColumn().toLowerCase() + "?: number,\n";
 				} else {
-					if (!tsImp.contains(Utils.normalizerStringCaps(hashMap.get("fk").trim()).replace("-", ""))) {
-						tsImp += "import { " + Utils.normalizerStringCaps(hashMap.get("fk").trim()).replace("-", "")
-								+ " } from './" + Utils.normalizerString(hashMap.get("fk").trim()) + "';" + "\n";
+					if (!tsImp.contains(Utils.normalizerStringCaps(transferDTO.getFk().trim()).replace("-", ""))) {
+						tsImp += "import { " + Utils.normalizerStringCaps(transferDTO.getFk().trim()).replace("-", "")
+								+ " } from './" + Utils.normalizerString(transferDTO.getFk().trim()) + "';" + "\n";
 					}
-					ts += "public " + Utils.normalizerStringCommomNotCap(hashMap.get("colum")).replace("-", "") + "?: "
-							+ Utils.normalizerStringCaps(hashMap.get("fk").trim()).replace("-", "") + ",\n";
+					ts += "public " + Utils.normalizerStringCommomNotCap(transferDTO.getColumn()).replace("-", "") + "?: "
+							+ Utils.normalizerStringCaps(transferDTO.getFk().trim()).replace("-", "") + ",\n";
 				}
 
-			} else if (hashMap.get("type").toLowerCase().contains("date")
-					|| hashMap.get("type").toLowerCase().contains("timestamp")) {
+			} else if (transferDTO.getType().toLowerCase().contains("date")
+					|| transferDTO.getType().toLowerCase().contains("timestamp")) {
 
-				ts += "public " + Utils.normalizerStringCommomNotCap(hashMap.get("colum")) + "?: Date,\n";
+				ts += "public " + Utils.normalizerStringCommomNotCap(transferDTO.getColumn()) + "?: Date,\n";
 
-			} else if (hashMap.get("type").toLowerCase().contains("char")
-					|| hashMap.get("type").toLowerCase().contains("clob")
-					|| hashMap.get("type").toLowerCase().contains("long")) {
+			} else if (transferDTO.getType().toLowerCase().contains("char")
+					|| transferDTO.getType().toLowerCase().contains("clob")
+					|| transferDTO.getType().toLowerCase().contains("long")) {
 
-				ts += "public " + Utils.normalizerStringCommomNotCap(hashMap.get("colum")) + "?: string,\n";
+				ts += "public " + Utils.normalizerStringCommomNotCap(transferDTO.getColumn()) + "?: string,\n";
 
 			} else {
 
-				ts += "public " + Utils.normalizerStringCommomNotCap(hashMap.get("colum")) + "?: any,\n";
+				ts += "public " + Utils.normalizerStringCommomNotCap(transferDTO.getColumn()) + "?: any,\n";
 
 			}
 
@@ -667,7 +671,7 @@ public class ProcessaComponentesController implements Runnable {
 		String tableCap = Utils.normalizerStringCaps(table.trim());
 
 		DatabaseUtils databaseUtils = new DatabaseUtils(this.bancoDados);
-		List<HashMap<String, String>> fks = databaseUtils.getFks(table);
+		List<TransferDTO> fks = databaseUtils.getFks(table);
 
 		String file = this.urlProject + "/src/app/" + Statics.MODULE_NAME + "/" + tableLow + "/" + tableLow
 				+ ".module.ts";

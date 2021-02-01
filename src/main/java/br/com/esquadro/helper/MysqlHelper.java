@@ -17,6 +17,7 @@ public class MysqlHelper implements GenericHelperInterface {
 
 	@Override
 	public List<Map> executeSQL(String query) {
+		//System.err.println("Query>> "+query);
 		open();
 		List<Map> findAll = Base.findAll(query);
 		close();
@@ -27,7 +28,7 @@ public class MysqlHelper implements GenericHelperInterface {
 	private void open() {
 		Base.open(
 				"com.mysql.cj.jdbc.Driver", "jdbc:mysql://" + bancoDados.getIp() + ":" + bancoDados.getPorta()
-						+ "/" + bancoDados.getNameBd()+ "?autoReconnect=true&relaxAutoCommit=true",
+						+ "/" + bancoDados.getNameBd()+ "?autoReconnect=true&relaxAutoCommit=true&useTimezone=true&serverTimezone=UTC",
 				bancoDados.getUsuario(), bancoDados.getSenha());		
 	}
 
