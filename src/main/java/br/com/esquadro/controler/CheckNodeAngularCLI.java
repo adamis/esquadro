@@ -137,7 +137,10 @@ public class CheckNodeAngularCLI {
 		while ((ligne = output.readLine()) != null) {
 			if (ligne.contains("cli") || ligne.contains("CLI")) {
 				this.consoleLog.setText("Angular CLI: " + ligne);
-				version = ligne;
+				if(ligne.contains("CLI")) {
+					version = ligne;	
+				}
+				
 			}
 		}
 
@@ -150,7 +153,7 @@ public class CheckNodeAngularCLI {
 		if (version.equals("")) {
 			this.consoleLog.setText("Versão do Angular: 0");
 			return 0;
-		} else {
+		} else {			
 			this.consoleLog.setText("Versão do Angular: " + (version.split(":")[1]).trim());
 			return Integer.valueOf((version.split(":")[1]).trim().replace(".", ""));
 		}
