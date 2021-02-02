@@ -256,12 +256,16 @@ public class DatabaseUtils {
 
 		if (bancoDados.getTipo().toString().equals(DATABASETYPE.ORACLE+"") ) {
 			sql = new StringBuilder();
-			sql.append("SELECT column_name as column, data_type as type FROM	user_tab_cols WHERE	table_name = '"
+			sql.append("SELECT column_name as column, data_type as type FROM user_tab_cols WHERE table_name = '"
 					+ table.toUpperCase() + "' order by column_name");
 
 		} else if (bancoDados.getTipo().toString().equals(DATABASETYPE.MYSQL+"")) {
 			sql = new StringBuilder();
-			sql.append("SHOW COLUMNS FROM " + table.toUpperCase());
+			//sql.append("SHOW COLUMNS FROM " + table.toUpperCase());
+			sql.append("SELECT column_name as column, data_type as type ");
+			sql.append("FROM INFORMATION_SCHEMA.COLUMNS ");
+			sql.append("WHERE table_name = '"+table.toUpperCase()+"'");
+			;
 
 		}
 
@@ -276,7 +280,7 @@ public class DatabaseUtils {
 
 			if (bancoDados.getTipo().toString().equals(DATABASETYPE.ORACLE+"") ) {
 				System.err.println("ORACLE");
-				transferDTO.setColumn(map.get("colum").toString());
+				transferDTO.setColumn(map.get("column").toString());
 				transferDTO.setType(map.get("type").toString());
 
 				boolean control = false;
@@ -284,7 +288,7 @@ public class DatabaseUtils {
 
 				for (int i = 0; i < fks.size(); i++) {					
 					TransferDTO transferDTOFk = fks.get(i);
-					if (transferDTOFk.getColumn().equals(map.get("colum").toString())) {
+					if (transferDTOFk.getColumn().equals(map.get("column").toString())) {
 						control = true;
 						tableNome = transferDTOFk.getType();
 						break;
@@ -299,7 +303,7 @@ public class DatabaseUtils {
 			} else if (bancoDados.getTipo().toString().equals(DATABASETYPE.MYSQL+"")) {
 				//System.err.println("MYSQL");
 
-				transferDTO.setColumn(map.get("field").toString());
+				transferDTO.setColumn(map.get("column").toString());
 				transferDTO.setType(map.get("type").toString());
 
 				boolean control = false;
@@ -312,7 +316,7 @@ public class DatabaseUtils {
 						//System.err.println(fk.get("column"));					
 						//System.err.println(map.get("field").toString());
 						TransferDTO fk = fks.get(i);
-							if ( fk.getColumn().equals(map.get("field").toString())) {
+							if ( fk.getColumn().equals(map.get("column").toString())) {
 								control = true;
 								tableNome = fk.getType();
 								break;
