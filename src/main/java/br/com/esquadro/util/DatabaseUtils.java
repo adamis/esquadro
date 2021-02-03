@@ -24,17 +24,17 @@ public class DatabaseUtils {
 	private StringBuilder sql = null;
 	private HashMap<String, String> hm;
 	private List<HashMap<String, String>> listTable;
-	private List<TransferDTO> listTableHash;
+
 
 
 	public DatabaseUtils(BancoDadosEntity bancoDados) {
 		this.bancoDados = bancoDados;
-
-		if (bancoDados.getTipo() == DATABASETYPE.MYSQL) {
+		System.err.println(bancoDados.getTipo()+"");
+		if (bancoDados.getTipo().toString().equals(DATABASETYPE.MYSQL.toString())) {
 
 			genericHelperInterface = new MysqlHelper(bancoDados);
 
-		} else if (bancoDados.getTipo() == DATABASETYPE.ORACLE) {
+		} else if (bancoDados.getTipo().toString().equals(DATABASETYPE.ORACLE.toString())) {
 
 			genericHelperInterface = new OracleHelper(bancoDados);
 
@@ -55,7 +55,7 @@ public class DatabaseUtils {
 		listTable = new ArrayList<>();
 		List<Map> executeSQL;
 
-		if (bancoDados.getTipo() == DATABASETYPE.ORACLE) {
+		if (bancoDados.getTipo().toString().equals(DATABASETYPE.ORACLE.toString())) {
 
 			// LISTANDO TODAS TABLE
 			sql.append("SELECT owner as schematic, table_name as tableName FROM dba_tables WHERE dba_tables.owner =");
@@ -89,7 +89,7 @@ public class DatabaseUtils {
 				listTable.add(hm);
 			}
 
-		} else if (bancoDados.getTipo() == DATABASETYPE.MYSQL) {
+		} else if (bancoDados.getTipo().toString().equals(DATABASETYPE.MYSQL.toString())) {
 
 			sql.append("SHOW FULL TABLES IN " + bancoDados.getNameBd());
 
@@ -121,7 +121,7 @@ public class DatabaseUtils {
 		listTable = new ArrayList<>();
 		List<Map> executeSQL;
 
-		if (bancoDados.getTipo() == DATABASETYPE.ORACLE) {
+		if (bancoDados.getTipo().toString().equals(DATABASETYPE.ORACLE.toString())) {
 			findTableName = findTableName.replace("-", "_");
 
 			sql.append("SELECT owner as schematic, table_name as tableName FROM dba_tables WHERE dba_tables.owner = ");
@@ -161,7 +161,7 @@ public class DatabaseUtils {
 				}
 			}
 
-		} else if (bancoDados.getTipo() == DATABASETYPE.MYSQL) {
+		} else if (bancoDados.getTipo().toString().equals(DATABASETYPE.MYSQL.toString())) {
 
 			String filter = findTableName.equals("") ? "" : " LIKE '%" + findTableName + "%'";
 
@@ -210,7 +210,7 @@ public class DatabaseUtils {
 			List<Map> executeSQL;
 			List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 
-			if (bancoDados.getTipo() == DATABASETYPE.ORACLE) {
+			if (bancoDados.getTipo().toString().equals(DATABASETYPE.ORACLE.toString())) {
 				sql = "select " + select.toLowerCase() + " from " + table + " where ROWNUM <= 5";
 			} else {
 				sql = "select " + select.toLowerCase() + " from " + table + " limit 5";
@@ -247,7 +247,7 @@ public class DatabaseUtils {
 
 		System.err.println("TABLE:: >>"+table);
 
-		listTableHash = new ArrayList<>();
+		List<TransferDTO> listTableHashColum = new ArrayList<>();
 		sql = new StringBuilder();
 		List<Map> executeSQL;
 
@@ -256,13 +256,13 @@ public class DatabaseUtils {
 
 		if (bancoDados.getTipo().toString().equals(DATABASETYPE.ORACLE+"") ) {
 			sql = new StringBuilder();
-			sql.append("SELECT column_name as column, data_type as type FROM user_tab_cols WHERE table_name = '"
+			sql.append("SELECT column_name as coluna, data_type as tipo FROM user_tab_cols WHERE table_name = '"
 					+ table.toUpperCase() + "' order by column_name");
 
 		} else if (bancoDados.getTipo().toString().equals(DATABASETYPE.MYSQL+"")) {
 			sql = new StringBuilder();
 			//sql.append("SHOW COLUMNS FROM " + table.toUpperCase());
-			sql.append("SELECT column_name as column, data_type as type ");
+			sql.append("SELECT column_name as coluna, data_type as tipo ");
 			sql.append("FROM INFORMATION_SCHEMA.COLUMNS ");
 			sql.append("WHERE table_name = '"+table.toUpperCase()+"'");
 			;
@@ -273,41 +273,34 @@ public class DatabaseUtils {
 
 		for (Iterator iterator = executeSQL.iterator(); iterator.hasNext();) {
 
-			fks = getFks(table);
+			//fks = getFks(table);
 			Map map = (Map) iterator.next();
 
+			System.err.println("COLUNA>> "+map.get("coluna").toString().toUpperCase());
+			
 			TransferDTO transferDTO = new TransferDTO();
 
 			if (bancoDados.getTipo().toString().equals(DATABASETYPE.ORACLE+"") ) {
-				System.err.println("ORACLE");
-				transferDTO.setColumn(map.get("column").toString());
-				transferDTO.setType(map.get("type").toString());
+				
+				transferDTO.setColumn(map.get("coluna").toString());
+				transferDTO.setType(map.get("tipo").toString());
 
-				boolean control = false;
-				String tableNome = "";
-
-				for (int i = 0; i < fks.size(); i++) {					
-					TransferDTO transferDTOFk = fks.get(i);
-					if (transferDTOFk.getColumn().equals(map.get("column").toString())) {
-						control = true;
-						tableNome = transferDTOFk.getType();
+				for (int i = 0; i < fks.size(); i++) {		
+					
+					TransferDTO transferDTOFk = fks.get(i);					
+					
+					if (transferDTOFk.getColumn().toUpperCase().equals(map.get("coluna").toString().toUpperCase())) {
+						System.err.println("FK ENCOTRADA>> "+transferDTOFk.getColumn().toUpperCase());
+						transferDTO.setFk(transferDTOFk.getType());						
 						break;
-					}
+					}					
 				}
-
-
-				if (control) {
-					transferDTO.setFk(tableNome);
-				} 
-
+				
 			} else if (bancoDados.getTipo().toString().equals(DATABASETYPE.MYSQL+"")) {
 				//System.err.println("MYSQL");
 
-				transferDTO.setColumn(map.get("column").toString());
-				transferDTO.setType(map.get("type").toString());
-
-				boolean control = false;
-				String tableNome = "";
+				transferDTO.setColumn(map.get("coluna").toString());
+				transferDTO.setType(map.get("tipo").toString());
 
 				if(fks.size() > 0) {					
 
@@ -316,37 +309,34 @@ public class DatabaseUtils {
 						//System.err.println(fk.get("column"));					
 						//System.err.println(map.get("field").toString());
 						TransferDTO fk = fks.get(i);
-							if ( fk.getColumn().equals(map.get("column").toString())) {
-								control = true;
-								tableNome = fk.getType();
+							if ( fk.getColumn().equals(map.get("coluna").toString())) {								
+								transferDTO.setFk(fk.getType());
 								break;
 							}						
 					}
 
 				}
 
-				if (control) {
-					transferDTO.setFk(tableNome);
-				} 
+				
 			}
 
 
 
-			listTableHash.add(transferDTO);			
+			listTableHashColum.add(transferDTO);			
 
 		}
 
-		return listTableHash;
+		return listTableHashColum;
 	}
 
 	public List<TransferDTO> getFks(String table) throws Exception {
 		table = table.replace("-", "_");
 
 		sql = new StringBuilder();
-		listTableHash = new ArrayList<TransferDTO>();
+		List<TransferDTO> listTableHashFKs = new ArrayList<TransferDTO>();
 		List<Map> executeSQL;
 
-		if (bancoDados.getTipo() == DATABASETYPE.ORACLE) {
+		if (bancoDados.getTipo().toString().equals(DATABASETYPE.ORACLE.toString())) {
 			sql = new StringBuilder();
 			sql.append(" SELECT ");
 			sql.append("   A.COLUMN_NAME coluna, ");
@@ -364,7 +354,7 @@ public class DatabaseUtils {
 			sql.append("   A.table_name = '" + table.toUpperCase() + "' AND ");
 			sql.append("   A.OWNER = '" + bancoDados.getSchema().toUpperCase() + "'");
 
-		} else if (bancoDados.getTipo() == DATABASETYPE.MYSQL) {
+		} else if (bancoDados.getTipo().toString().equals(DATABASETYPE.MYSQL.toString())) {
 			sql = new StringBuilder();
 			sql.append(" SELECT DISTINCT ");
 			sql.append("   (k.COLUMN_NAME) coluna, ");
@@ -387,10 +377,10 @@ public class DatabaseUtils {
 			TransferDTO transferDTO = new TransferDTO();
 			transferDTO.setColumn(map.get("coluna").toString());
 			transferDTO.setType(map.get("tableRef").toString());			
-			listTableHash.add(transferDTO);
+			listTableHashFKs.add(transferDTO);
 		}
 
-		return listTableHash;
+		return listTableHashFKs;
 	}
 
 	public BancoDadosEntity getBancoDados() {

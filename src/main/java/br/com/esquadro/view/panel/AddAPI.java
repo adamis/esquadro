@@ -24,8 +24,10 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -135,7 +137,7 @@ public class AddAPI extends JInternalFrame {
 			@Override
 			public void itemStateChanged(ItemEvent item) {
 				PersonalItem personalItem = (PersonalItem) item.getItem();
-				BancoDadosEntity bancoDados = (BancoDadosEntity) personalItem.getValue();
+				bancoDados = (BancoDadosEntity) personalItem.getValue();
 				
 				if (bancoDados != null) {					
 										
@@ -143,6 +145,7 @@ public class AddAPI extends JInternalFrame {
 						updateGrid(bancoDados);
 					}
 				} else {
+					bancoDados = null;
 					DefaultTableModel dtm = new DefaultTableModel();
 					table.setModel(dtm);
 				}
@@ -170,6 +173,12 @@ public class AddAPI extends JInternalFrame {
 		btnGerar.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				
+				if(bancoDados == null) {
+					JOptionPane.showMessageDialog(new JFrame(), "Informe uma conexao", "Atenção",  JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
 				consoleLog.setVisible(true);
 				consoleLog.moveToFront();
 
@@ -555,7 +564,7 @@ public class AddAPI extends JInternalFrame {
 			File directory = new File(url);
 			listar(directory);
 
-			String replace = temp.replace(directory.getAbsolutePath(), "").replace("/", ".");
+			String replace = temp.replace(directory.getAbsolutePath(), "").replace("/", ".").replace("\\", ".");
 			replace = replace.substring(1, replace.length());
 
 			if (replace.contains(".utils")) {

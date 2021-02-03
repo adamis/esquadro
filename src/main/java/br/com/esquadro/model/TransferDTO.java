@@ -7,5 +7,5 @@ public class TransferDTO {
 
 	private String column;
 	private String type;
-	private String fk;	
+	private String fk = "";	
 }

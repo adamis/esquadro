@@ -17,6 +17,7 @@ public class OracleHelper implements GenericHelperInterface {
 
 	@Override
 	public List<Map> executeSQL(String query) {
+		//System.err.println("SQL> "+query);
 		open();
 		List<Map> findAll = Base.findAll(query);
 		close();

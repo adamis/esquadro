@@ -8,6 +8,7 @@ import java.util.List;
 import com.google.googlejavaformat.java.Formatter;
 
 import br.com.esquadro.util.DatabaseUtils;
+import br.com.esquadro.util.IgnoreCaseStr;
 import br.com.esquadro.util.Utils;
 import br.com.esquadro.view.ConsoleLog;
 
@@ -240,7 +241,7 @@ public class Struckts {
 			sb.append("\n");
 
 			String colum = "";
-			if (coluns.get(i).getFk() != null && coluns.get(i).getFk().length() != 0) {
+			if (!coluns.get(i).getFk().isEmpty()) {
 				colum = "Filter";
 
 				sb.append("	private "
@@ -545,7 +546,9 @@ public class Struckts {
 
 				// System.err.println("COLUM: " + coluns.get(i).getColumn());
 
-				if (type.contains("char")) {
+				IgnoreCaseStr ignoreCaseStr = new IgnoreCaseStr(type);
+				
+				if (ignoreCaseStr.contains("char")) {
 					// STRING
 					sb.append("\n");
 					sb.append(" if (StringUtils.hasLength({{entityL}}Filter." + last + "get"
@@ -564,14 +567,14 @@ public class Struckts {
 					sb.append(" } ");
 					sb.append("\n");
 
-				} else if (type.contains("real") || type.contains("dec") || type.contains("num")
-						|| type.contains("double") || type.contains("int") || type.contains("long")) {
+				} else if (
+						ignoreCaseStr.contains("real") || ignoreCaseStr.contains("dec") || ignoreCaseStr.contains("num") || 
+						ignoreCaseStr.contains("number")	|| ignoreCaseStr.contains("double") || ignoreCaseStr.contains("int") || 
+						ignoreCaseStr.contains("long") 
+				) {
 
 					// INTEGER
 					if (!coluns.get(i).getFk().isEmpty()) {
-
-						// System.err.println(Utils.normalizerStringCaps(this.entity) + " = " +
-						// entidade);
 
 						if (!imports.toString()
 								.contains(Utils.normalizerStringCaps(coluns.get(i).getFk().replace("-", "_")) + "_; ")
@@ -594,7 +597,7 @@ public class Struckts {
 
 							String montaPredicados = montaPredicados(coluns.get(i).getFk(),
 									last + "get" + Utils
-											.normalizerStringCaps(coluns.get(i).getFk()) + "Filter().",
+									.normalizerStringCaps(coluns.get(i).getFk()) + "Filter().",
 									fkCriteria + "get(" + Utils.normalizerStringCaps(entidade) + "_."
 											+ Utils.normalizerStringCapHifen(coluns.get(i).getFk(),
 													databaseUtils.getBancoDados().getTipo()).toUpperCase()
@@ -616,11 +619,11 @@ public class Struckts {
 							sb.append(" 	predicates.add(builder.equal( ");
 							sb.append("\n");
 							sb.append(" 		root." + fkCriteria + "get(" + Utils.normalizerStringCaps(entidade)
-									+ "_."
-									+ Utils.normalizerStringCapHifen(coluns.get(i).getColumn().replace("-", "_"),
-											databaseUtils.getBancoDados().getTipo()).toUpperCase()
-									+ "), {{entityL}}Filter." + last + "get"
-									+ Utils.normalizerStringCaps(coluns.get(i).getColumn()) + "())); ");
+							+ "_."
+							+ Utils.normalizerStringCapHifen(coluns.get(i).getColumn().replace("-", "_"),
+									databaseUtils.getBancoDados().getTipo()).toUpperCase()
+							+ "), {{entityL}}Filter." + last + "get"
+							+ Utils.normalizerStringCaps(coluns.get(i).getColumn()) + "())); ");
 							sb.append("\n");
 							sb.append(" } ");
 							sb.append("\n");
@@ -641,7 +644,7 @@ public class Struckts {
 						sb.append("\n");
 						sb.append(" } ");
 					}
-				} else if (type.contains("date") || type.contains("time")) {
+				} else if (ignoreCaseStr.contains("date") || ignoreCaseStr.contains("time")) {
 					// DATE
 					sb.append("\n");
 					sb.append(" if ({{entityL}}Filter." + last + "get"
@@ -730,7 +733,7 @@ public class Struckts {
 					.replace("{{entity}}", Utils.normalizerStringCaps(this.entity))
 					.replace("{{EntityFolder}}", Utils.normalizerStringCommomNotCap(this.entity))
 					.replace("{{entityL}}", Utils.normalizerStringCommomNotCap(this.entity));
-			
+
 			return new Formatter().formatSourceAndFixImports(replace);
 
 		} catch (Exception e) {
@@ -745,8 +748,8 @@ public class Struckts {
 
 	private String processTypeDatabase(String type, String fk, StringBuilder sbImport) {
 		type = type.toLowerCase();
-
-		if (fk == null || fk.length() == 0) {
+		System.err.println("type>> "+ type);
+		if (fk.isEmpty()) {
 
 			if (type.contains("char")) {
 				type = "String";
@@ -768,12 +771,8 @@ public class Struckts {
 					sbImport.append("import java.math.BigDecimal;");
 				}
 				type = "BigDecimal";
-			} else if (type.contains("num")) {
-				if (!sbImport.toString().contains("java.math.BigDecimal")) {
-					sbImport.append("\n");
-					sbImport.append("import java.math.BigDecimal;");
-				}
-				type = "BigDecimal";
+			} else if (type.contains("num")) {				
+				type = "Long";
 			} else if (type.contains("long")) {
 				type = "Long";
 			} else {
