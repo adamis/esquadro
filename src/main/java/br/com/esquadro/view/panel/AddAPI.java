@@ -571,6 +571,7 @@ public class AddAPI extends JInternalFrame {
 				if (System.getProperty("os.name").equals("Linux")) {
 					replace = replace.replace(".utils", "");
 				} else {
+					replace = replace.replace(".utils", "");
 					replace = replace.replace(".cors", "");
 				}
 			}

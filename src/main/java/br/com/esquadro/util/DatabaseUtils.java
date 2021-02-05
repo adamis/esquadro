@@ -128,6 +128,9 @@ public class DatabaseUtils {
 			sql.append("'");
 			sql.append(bancoDados.getSchema().toUpperCase());
 			sql.append("'");
+			if(!findTableName.isEmpty()) {
+				sql.append(" AND table_name like '%"+findTableName.toUpperCase()+"%' ");
+			}
 			sql.append("order by table_name");
 
 			executeSQL = this.genericHelperInterface.executeSQL(sql.toString());
@@ -144,21 +147,23 @@ public class DatabaseUtils {
 			sql = new StringBuilder();
 			sql.append("SELECT view_name,owner as schematic FROM all_views WHERE owner = ");
 			sql.append("'");
-			sql.append(bancoDados.getSchema().toUpperCase());
+			sql.append(bancoDados.getSchema().toUpperCase());			
 			sql.append("'");
+			if(!findTableName.isEmpty()) {
+				sql.append(" AND view_name like '%"+findTableName.toUpperCase()+"%' ");
+			}
 			sql.append("order by view_name");
 
 			executeSQL = this.genericHelperInterface.executeSQL(sql.toString());
 
 			for (Iterator iterator = executeSQL.iterator(); iterator.hasNext();) {
 				Map map = (Map) iterator.next();
-
-				if (map.get("view_name").toString().contains(findTableName.toUpperCase())) {
+				
 					HashMap<String, String> hm = new HashMap<String, String>();
 					hm.put("tableName", map.get("view_name").toString());
 					hm.put("tableType", "VIEW");
 					listTable.add(hm);
-				}
+				
 			}
 
 		} else if (bancoDados.getTipo().toString().equals(DATABASETYPE.MYSQL.toString())) {
