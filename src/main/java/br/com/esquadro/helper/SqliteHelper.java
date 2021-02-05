@@ -16,8 +16,12 @@ public class SqliteHelper {
 
 	public static void init() throws SQLException, IOException {
 
+
+		File dir = new File("bd");
 		File file = new File("bd/esquadro.db");
+		
 		if (!file.exists()) {
+			dir.mkdirs();
 			file.createNewFile();
 		}
 

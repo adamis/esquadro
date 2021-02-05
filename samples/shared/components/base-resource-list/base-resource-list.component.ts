@@ -5,6 +5,7 @@ import { BaseResourceModel } from '../../models/base-resource.model';
 import { BaseResourceService } from '../../services/base-resource.service';
 import { LazyLoadEvent, MessageService } from 'primeng/api';
 
+
 export abstract class BaseResourceListComponent<T extends BaseResourceModel> implements OnInit {
 
   resources: T[] = [];
