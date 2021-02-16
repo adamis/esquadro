@@ -44,5 +44,10 @@ public class OracleHelper implements GenericHelperInterface {
 	private void close() {
 		open.close();
 	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		close();
+	}
 
 }

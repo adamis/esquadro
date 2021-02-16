@@ -115,26 +115,31 @@ public class NovoProjetoController implements Runnable {
 						+ " & " + " ng g c core/navbar --export " // + spec
 						+ " & " + " ng g s core/error-handler " // + spec
 						+ " & " + " ng g m shared " // + spec
-				// + " & " + " ng g c shared/message --export "+ spec
-				;
+						// + " & " + " ng g c shared/message --export "+ spec
+						;
 
 				// INSTALAÇÃO DOS RECURSOS(NPM)
-				bat += " & " + " npm cache verify" + " & " + " npm i primeng@~9 --save " + " & "
-						+ " npm i --save quill " + " & " + " npm i --save @fullcalendar/core " + " & "
-						+ " npm i @angular/animations --save " + " & " + " npm i primeicons --save " + " & "
-						+ " npm i primeflex --save " + " & " + " npm i @angular/cdk --save " + " & "
-						+ " npm i moment  --save " + " & " + " npm install ngx-currency --save" // MASK MONEY
-																								// https://www.npmjs.com/package/ngx-currency
-						+ " & " + " npm i angular-imask --save" + " & " + " npm i chart.js --save" + " & "
-						+ " npm i ngx-show-hide-password --save" + " & "
-						+ " npm i @fortawesome/angular-fontawesome --save" + " & "
-						+ " npm i @fortawesome/fontawesome-svg-core --save" + " & "
-						+ " npm i @fortawesome/free-solid-svg-icons --save"
-				// +" & "//ADD JQUERY
-				// +" npm install jquery --save"//ADD JQUERY
-				;
+				bat += " & " + " npm cache verify" + " & " 
+						+ " npm i primeng@~9 --save --force" + " & "
+						+ " npm i --save quill  --force" + " & " 
+						+ " npm i --save @fullcalendar/core  --force" + " & "
+						+ " npm i @angular/animations --save --force" + " & " 
+						+ " npm i primeicons --save  --force" + " & "
+						+ " npm i primeflex --save  --force" + " & " 
+						+ " npm i @angular/cdk --save --force" + " & "
+						+ " npm i moment  --save --force" + " & " 
+						+ " npm i ngx-currency --save --force"+ " & " // MASK MONEY // https://www.npmjs.com/package/ngx-currency
+						+ " npm i angular-imask --save --force " + " & " 
+						+ " npm i chart.js --save --force" + " & "
+						+ " npm i ngx-show-hide-password --save  --force" + " & "
+						+ " npm i @fortawesome/angular-fontawesome --save --force" + " & "
+						+ " npm i @fortawesome/fontawesome-svg-core --save --force" + " & "
+						+ " npm i @fortawesome/free-solid-svg-icons --save --force"
+						// +" & "//ADD JQUERY
+						// +" npm install jquery --save"//ADD JQUERY
+						;
 
-				// System.err.println(bat);
+				 System.err.println(bat);
 
 				ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", bat);
 
@@ -196,7 +201,7 @@ public class NovoProjetoController implements Runnable {
 				consoleLog.setText("FAIL");
 				consoleLog.setText("Tente novamente após ter instalado no NODE!");
 			}
-//			System.err.println("FIM");
+			//			System.err.println("FIM");
 
 		} catch (Exception e) {
 			consoleLog.setText("ERRO> " + e.getMessage());
@@ -440,9 +445,9 @@ public class NovoProjetoController implements Runnable {
 		Object json = gson.fromJson(jsonObject.toString(), Object.class);
 		String styleFormated = gson.toJson(json); // done
 
-//		ObjectMapper mapper = new ObjectMapper();
-//		Object json = mapper.readValue(jsonObject.toString(), Object.class);
-//		String styleFormated = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
+		//		ObjectMapper mapper = new ObjectMapper();
+		//		Object json = mapper.readValue(jsonObject.toString(), Object.class);
+		//		String styleFormated = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
 
 		Utils.writeTxt(urlFile, styleFormated, true);
 
@@ -464,8 +469,8 @@ public class NovoProjetoController implements Runnable {
 				try {
 
 					String bat = inputWorkspace.getText().substring(0, 2) + " & " + "cd " + inputWorkspace.getText()
-							+ " & " + "cd " + textField.getText() + " & " + " npm install " + " & "
-							+ " npm audit fix --force ";
+					+ " & " + "cd " + textField.getText() + " & " + " npm install " + " & "
+					+ " npm audit fix --force ";
 
 					ProcessBuilder pb = new ProcessBuilder("cmd.exe", " /c " + bat);
 
