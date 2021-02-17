@@ -243,7 +243,13 @@ public class Struckts {
 			String colum = "";
 			if (!coluns.get(i).getFk().isEmpty()) {
 				colum = "Filter";
-
+				
+				if (!sbImport.toString().contains("javax.validation.Valid")) {
+					sbImport.append("\n");
+					sbImport.append("import javax.validation.Valid;");
+				}
+				
+				sb.append("@Valid");				
 				sb.append("	private "
 						+ processTypeDatabase(coluns.get(i).getType(), coluns.get(i).getFk(), sbImport) + " "
 						+ Utils.normalizerStringCommomNotCap(coluns.get(i).getFk())
@@ -253,6 +259,7 @@ public class Struckts {
 
 			} else {
 
+				sb.append(checkValidate(coluns.get(i),sbImport));
 				sb.append("	private "
 						+ processTypeDatabase(coluns.get(i).getType(), coluns.get(i).getFk(), sbImport) + " "
 						+ Utils.normalizerStringCommomNotCap(coluns.get(i).getColumn())
@@ -766,11 +773,11 @@ public class Struckts {
 				}
 				type = "Date";
 			} else if (type.contains("dec")) {
-				if (!sbImport.toString().contains("java.math.BigDecimal")) {
-					sbImport.append("\n");
-					sbImport.append("import java.math.BigDecimal;");
-				}
-				type = "BigDecimal";
+//				if (!sbImport.toString().contains("java.math.BigDecimal")) {
+//					sbImport.append("\n");
+//					sbImport.append("import java.math.BigDecimal;");
+//				}
+				type = "Long";
 			} else if (type.contains("num")) {				
 				type = "Long";
 			} else if (type.contains("long")) {
@@ -784,6 +791,55 @@ public class Struckts {
 		}
 
 		return type;
+	}
+	
+	private String checkValidate(TransferDTO transferDTO, StringBuilder sbImport) {
+		String type = transferDTO.getType().toLowerCase();
+		
+		String anotation = null;
+		
+		if (!sbImport.toString().contains("javax.validation.constraints.Size")) {
+			sbImport.append("import javax.validation.constraints.Size;");
+			sbImport.append("\n");
+		}
+		
+		if(transferDTO.getNulo().equals("NAO")) {
+			if (!sbImport.toString().contains("javax.validation.constraints.NotNull")) {
+				sbImport.append("import javax.validation.constraints.NotNull;");
+				sbImport.append("\n");
+			}
+			
+			anotation = "@NotNull"+ "\n";			
+			anotation += "@Size(min=0, max="+transferDTO.getTamanho()+")"+ "\n";
+		}else {
+			anotation += "@Size(max="+transferDTO.getTamanho()+")"+ "\n";
+		}	
+		
+		
+		if (type.contains("char")) {
+			//anotation = "";
+			//type = "String";
+		} else if (type.contains("int")) {
+			//type = "Integer";
+		} else if (type.contains("double")) {
+			//type = "Double";
+		} else if (type.contains("real")) {
+			//type = "Double";
+		} else if (type.contains("date") || type.contains("time")) {			
+			anotation += "@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)"+"\n";
+		} else if (type.contains("dec")) {
+			//type = "Long";
+		} else if (type.contains("num")) {				
+			//type = "Long";
+		} else if (type.contains("long")) {
+			//type = "Long";
+		} else {
+			//type = "Object";
+		}
+		
+		
+		
+		return anotation;
 	}
 
 }

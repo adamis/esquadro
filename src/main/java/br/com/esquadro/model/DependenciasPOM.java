@@ -16,7 +16,7 @@ public class DependenciasPOM {
 
 	public enum DEPEND {
 		LOMBOK, COMMONS, SPRING_SECURITY, SPRING_SECURITY_TESTE, H2, FLYWAY, JPA, MODEL_GEN, MYSQL, ORACLE, EHCACHE,
-		SWAGGER, SWAGGER_UI, SPRING_EMAIL, MODEL_MAPPER, CONFIGURATION, METAMODEL_GEN, DEV_TOOLS
+		SWAGGER, SWAGGER_UI, SPRING_EMAIL, MODEL_MAPPER, CONFIGURATION, METAMODEL_GEN, DEV_TOOLS, BEAN_VALIDATION
 	}
 
 	private static List<Dependencia> contructPom() {
@@ -156,6 +156,13 @@ public class DependenciasPOM {
 		dependencia.setArtifactId("spring-boot-devtools");
 		response.add(dependencia);
 
+		// BEAN_VALIDATION
+		dependencia = new Dependencia();
+		dependencia.setNome(DEPEND.BEAN_VALIDATION);
+		dependencia.setGroupId("org.springframework.boot");
+		dependencia.setArtifactId("spring-boot-starter-validation");
+		response.add(dependencia);
+		
 		return response;
 	}
 

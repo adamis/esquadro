@@ -80,9 +80,11 @@ public class AddEsquadroSB extends JInternalFrame {
 	private boolean configuration = true;
 	private boolean metamodelGen = true;
 	private boolean devTools = true;
+	private boolean beanValidation = true;
 	private String temp = "";
 
 	private JCheckBox chckbxDevtools;
+	private JCheckBox chckbxBeanValidation;
 
 	public void setUrl(TextField inputProject) {
 		this.inputProject = inputProject;
@@ -246,6 +248,10 @@ public class AddEsquadroSB extends JInternalFrame {
 
 					if (devTools) {
 						listDepend.add(DEPEND.DEV_TOOLS);
+					}
+					
+					if(beanValidation) {
+						listDepend.add(DEPEND.BEAN_VALIDATION);
 					}
 				}
 
@@ -579,7 +585,25 @@ public class AddEsquadroSB extends JInternalFrame {
 		});
 		pPom.add(chckbxDevtools);
 
+		chckbxBeanValidation = new JCheckBox("Bean Validation");
+		chckbxBeanValidation.setSelected(true);
+		chckbxBeanValidation.setBounds(6, 85, 196, 23);
+		chckbxBeanValidation.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == 1) {
+					beanValidation = true;
+				} else {
+					beanValidation = false;
+				}
+			}
+		});
+		pPom.add(chckbxBeanValidation);
+		
+		
 		setPanelEnabled(pPom, false);
+		
+		
 	}
 
 	void setPanelEnabled(JPanel panel, Boolean isEnabled) {
@@ -621,5 +645,4 @@ public class AddEsquadroSB extends JInternalFrame {
 			}
 		}
 	}
-
 }
