@@ -261,8 +261,9 @@ public class DatabaseUtils {
 
 		if (bancoDados.getTipo().toString().equals(DATABASETYPE.ORACLE+"") ) {
 			sql = new StringBuilder();
-			sql.append("SELECT column_name as coluna, data_type as tipo, data_length as tamanho, data_precision as precisao , nullable as nulo WHERE table_name = '"
-					+ table.toUpperCase() + "' order by column_name");
+			sql.append("SELECT column_name as coluna, data_type as tipo, data_length as tamanho, data_precision as precisao , nullable as nulo ");
+			sql.append("FROM	user_tab_cols ");
+			sql.append("WHERE table_name = '"	+ table.toUpperCase() + "' order by column_name");
 
 		} else if (bancoDados.getTipo().toString().equals(DATABASETYPE.MYSQL+"")) {
 			sql = new StringBuilder();
@@ -274,7 +275,7 @@ public class DatabaseUtils {
 					+ "	NUMERIC_PRECISION as precisao, "
 					+ "	is_nullable as nulo");
 			
-			sql.append("FROM INFORMATION_SCHEMA.COLUMNS ");
+			sql.append(" FROM INFORMATION_SCHEMA.COLUMNS ");
 			sql.append("WHERE table_name = '"+table.toUpperCase()+"'");
 			;
 
@@ -295,8 +296,8 @@ public class DatabaseUtils {
 				
 				transferDTO.setColumn(map.get("coluna").toString());
 				transferDTO.setType(map.get("tipo").toString());
-				transferDTO.setPrecisao(Integer.valueOf(map.get("precisao").toString()));
-				transferDTO.setTamanho(Integer.valueOf(map.get("tamanho").toString()));
+				transferDTO.setPrecisao(map.get("precisao") == null?null:Integer.valueOf(map.get("precisao").toString()));
+				transferDTO.setTamanho(map.get("tamanho") == null?null:Integer.valueOf(map.get("tamanho").toString()));
 				transferDTO.setNulo(map.get("nulo").toString().toUpperCase().contains("Y")?"SIM":"NAO");
 
 				for (int i = 0; i < fks.size(); i++) {		

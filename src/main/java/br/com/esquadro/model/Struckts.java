@@ -244,12 +244,12 @@ public class Struckts {
 			if (!coluns.get(i).getFk().isEmpty()) {
 				colum = "Filter";
 				
-				if (!sbImport.toString().contains("javax.validation.Valid")) {
-					sbImport.append("\n");
+				if (!sbImport.toString().contains("javax.validation.Valid")) {					
 					sbImport.append("import javax.validation.Valid;");
+					sbImport.append("\n");
 				}
 				
-				sb.append("@Valid");				
+				sb.append("@Valid"+"\n");				
 				sb.append("	private "
 						+ processTypeDatabase(coluns.get(i).getType(), coluns.get(i).getFk(), sbImport) + " "
 						+ Utils.normalizerStringCommomNotCap(coluns.get(i).getFk())
@@ -273,7 +273,7 @@ public class Struckts {
 		sb.append("\n");
 		sb.append("} ");
 
-		sbImport.append(sb.toString().replace("BigDecimal", "Long").replace("Bigdecimal", "Long"));
+		sbImport.append(sb.toString());
 
 		return processClean(sbImport);
 	}
@@ -729,6 +729,8 @@ public class Struckts {
 
 	private String processClean(StringBuilder sb) {
 
+		
+		System.err.println(""+sb.toString());
 		try {
 			String replace = sb.toString().replace("{{packBase}}", packBase.replace("/", "."))
 					.replace("{{packEntity}}", packEntity.replace("/", "."))
@@ -741,6 +743,8 @@ public class Struckts {
 					.replace("{{EntityFolder}}", Utils.normalizerStringCommomNotCap(this.entity))
 					.replace("{{entityL}}", Utils.normalizerStringCommomNotCap(this.entity));
 
+			
+			System.err.println(""+replace);
 			return new Formatter().formatSourceAndFixImports(replace);
 
 		} catch (Exception e) {
@@ -796,7 +800,7 @@ public class Struckts {
 	private String checkValidate(TransferDTO transferDTO, StringBuilder sbImport) {
 		String type = transferDTO.getType().toLowerCase();
 		
-		String anotation = null;
+		String anotation = "";
 		
 		if (!sbImport.toString().contains("javax.validation.constraints.Size")) {
 			sbImport.append("import javax.validation.constraints.Size;");
@@ -825,7 +829,13 @@ public class Struckts {
 			//type = "Double";
 		} else if (type.contains("real")) {
 			//type = "Double";
-		} else if (type.contains("date") || type.contains("time")) {			
+		} else if (type.contains("date") || type.contains("time")) {
+			
+			if (!sbImport.toString().contains("org.springframework.format.annotation.DateTimeFormat")) {
+				sbImport.append("import org.springframework.format.annotation.DateTimeFormat;");
+				sbImport.append("\n");
+			}
+			
 			anotation += "@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)"+"\n";
 		} else if (type.contains("dec")) {
 			//type = "Long";
