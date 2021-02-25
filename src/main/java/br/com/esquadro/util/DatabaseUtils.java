@@ -22,7 +22,7 @@ public class DatabaseUtils {
 	private GenericHelperInterface genericHelperInterface;
 	private BancoDadosEntity bancoDados;
 	private StringBuilder sql = null;
-	private HashMap<String, String> hm;
+	//private HashMap<String, String> hm;
 	private List<HashMap<String, String>> listTable;
 
 
