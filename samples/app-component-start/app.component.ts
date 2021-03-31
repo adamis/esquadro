@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router,NavigationEnd  } from '@angular/router';
+import { environment } from './../environments/environment';
+
+// declare ga as a function to access the JS code in TS
+declare var gtag: Function;
 
 @Component({
   selector: 'app-root',
@@ -9,7 +13,12 @@ import { Router } from '@angular/router';
 
 export class AppComponent implements OnInit {
 
-	constructor(private router: Router) { }
+	constructor(private router: Router) {
+		
+		gtag('js', new Date());
+		gtag('config', environment.analitycs);
+		
+	 }
     ngOnInit() {
     }
 

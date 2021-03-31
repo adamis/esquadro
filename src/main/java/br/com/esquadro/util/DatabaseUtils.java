@@ -316,7 +316,10 @@ public class DatabaseUtils {
 
 				transferDTO.setColumn(map.get("coluna").toString());
 				transferDTO.setType(map.get("tipo").toString());
-
+				transferDTO.setPrecisao(map.get("precisao") == null?null:Integer.valueOf(map.get("precisao").toString()));
+				transferDTO.setTamanho(map.get("tamanho").equals("")?null:Integer.valueOf(map.get("tamanho").toString()));
+				transferDTO.setNulo(map.get("nulo").toString().toUpperCase().contains("N")?"SIM":"NAO");
+				
 				if(fks.size() > 0) {					
 
 					

@@ -26,30 +26,42 @@ public class MysqlHelper implements GenericHelperInterface {
 	}
 
 	@Override
-	public List<Map> executeSQL(String query) {
-		System.err.println("Query>> "+query);		
-		List<Map> findAll = Base.findAll(query);		
-		return findAll;
+	public List<Map> executeSQL(String query) throws Exception {
+		System.err.println("Query: "+query);				
+		//List<Map> findAll = open.findAll(query);		
+		return open.findAll(query);
 	}
 
-	
-	private DB open() {
-		DB temp = new DB("mysql");
-		temp.open(
-				"com.mysql.cj.jdbc.Driver", "jdbc:mysql://" + bancoDados.getIp() + ":" + bancoDados.getPorta()
-						+ "/" + bancoDados.getNameBd()+ "?autoReconnect=true&relaxAutoCommit=true&useTimezone=true&serverTimezone=UTC",
-				bancoDados.getUsuario(), bancoDados.getSenha());	
-		return temp;
+	private DB open() throws Exception {
+		
+		System.err.println("com.mysql.cj.jdbc.Driver" + " jdbc:mysql://" + bancoDados.getIp() + ":" + bancoDados.getPorta()
+		+ "/" + bancoDados.getNameBd()+ "?autoReconnect=true&relaxAutoCommit=true&useTimezone=true&serverTimezone=UTC"+" USUARIO/SENHA>"+
+bancoDados.getUsuario()+ bancoDados.getSenha());
+		
+				DB temp = new DB("mysql");
+				temp.open(
+						"com.mysql.cj.jdbc.Driver", "jdbc:mysql://" + bancoDados.getIp() + ":" + bancoDados.getPorta()
+								+ "/" + bancoDados.getNameBd()+ "?autoReconnect=true&relaxAutoCommit=true&useTimezone=true&serverTimezone=UTC",
+						bancoDados.getUsuario(), bancoDados.getSenha());	
+				return temp;
+				
+		
 	}
-
 	
 	private void close() {
-		open.close();		
+		open.close();
 	}
 	
 	@Override
 	protected void finalize() throws Throwable {
 		close();
 	}
+
+	
+//	private DB open() {
+//		
+//	}
+
+	
 
 }

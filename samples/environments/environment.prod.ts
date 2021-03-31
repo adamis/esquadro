@@ -3,5 +3,6 @@ export const environment = {
   production: true,
   apiUrl: '{apiBackEnd}',
   apiUrlKripton: '{apiBackEnd}',
-  sistemaId: '8'
+  sistemaId: '8',
+  analitycs: 'G-DR8H20W7WG'
 };

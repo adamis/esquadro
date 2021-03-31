@@ -6,7 +6,8 @@ export const environment = {
   version: '1.0',
   production: false,
   apiUrl: '{apiBackEnd}',  
-  sistemaId: '1'
+  sistemaId: '1',
+  analitycs: 'G-DR8H20W7WG'
 };
 
 /*
