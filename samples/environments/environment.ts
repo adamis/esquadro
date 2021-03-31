@@ -5,7 +5,8 @@
 export const environment = {
   version: '1.0',
   production: false,
-  apiUrl: '{apiBackEnd}',  
+  apiUrl: '{apiBackEnd}',
+  apiUrlLogin: 'http://0103e.mocklab.io/',  
   sistemaId: '1',
   analitycs: 'G-DR8H20W7WG'
 };

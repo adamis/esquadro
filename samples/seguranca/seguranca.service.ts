@@ -10,12 +10,12 @@ import { BaseResourceService } from '../shared/services/base-resource.service';
 export class SegurancaService extends BaseResourceService<Usuarios> {
 
   constructor(protected injector: Injector) {
-    super(environment.apiUrl + 'login', injector, Usuarios.fromJson);
+    super(environment.apiUrlLogin + 'login', injector, Usuarios.fromJson);
   }
 
  header = new HttpHeaders(
     {
-      Authorization: 'Basic ' + btoa(''),
+      //Authorization: 'Basic ' + btoa(''),
       'Content-Type': 'application/json'
     });
 
@@ -29,7 +29,7 @@ export class SegurancaService extends BaseResourceService<Usuarios> {
     const param = { usuario, senhaP, empresa, sistema };
 
     //ATE AQUI
-    return this.http.post(environment.apiUrl + 'login', JSON.stringify(param),
+    return this.http.post(environment.apiUrlLogin + 'login', JSON.stringify(param),
       { headers: this.header }
     )
       .toPromise()
@@ -49,7 +49,7 @@ export class SegurancaService extends BaseResourceService<Usuarios> {
     };
 	
 		return this.http.put(
-		  environment.apiUrl + 'troca-senha',
+		  environment.apiUrlLogin + 'troca-senha',
 		  JSON.stringify(requestJson),
 		  {
 			headers: this.header.append('Content-Type', 'application/json')
@@ -65,7 +65,7 @@ export class SegurancaService extends BaseResourceService<Usuarios> {
     const param = new HttpParams();
 
     return this.http.get<any>(
-      environment.apiUrl + 'recuperarSenha/email/' + email,
+      environment.apiUrlLogin + 'recuperarSenha/email/' + email,
       { headers: this.header, params: param }
     )
       .toPromise()
@@ -78,7 +78,7 @@ export class SegurancaService extends BaseResourceService<Usuarios> {
     const param = new HttpParams();
 
     return this.http.get<any>(
-      environment.apiUrl + 'recuperarSenha/cpfCnpj/' + cpfCnpj,
+      environment.apiUrlLogin + 'recuperarSenha/cpfCnpj/' + cpfCnpj,
       { headers: this.header, params: param }
     )
       .toPromise()
