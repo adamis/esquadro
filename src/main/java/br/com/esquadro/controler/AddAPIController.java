@@ -128,7 +128,8 @@ public class AddAPIController implements Runnable {
 						file.mkdirs();
 					}
 
-					String repositoryImpl = struckts.getRepositoryImpl();
+					String repositoryImpl = "";
+					repositoryImpl = struckts.getRepositoryImpl();					
 					String repositoryQuery = struckts.getRepositoryQuery();
 
 					Utils.writeTxt(
