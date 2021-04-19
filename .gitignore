@@ -1,2 +1,6 @@
 ### Maven ###
 target/
+
+###BANCO DE DADOS SQLITE###
+
+esquadro.db
