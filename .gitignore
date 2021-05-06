@@ -4,3 +4,4 @@ target/
 ###BANCO DE DADOS SQLITE###
 
 esquadro.db
+bd/esquadro.db
