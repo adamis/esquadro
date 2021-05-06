@@ -266,6 +266,13 @@ public class AddEsquadroSBController implements Runnable {
 
 				line = line.replace("{DIALECT}", "org.hibernate.dialect.MySQLDialect");
 
+				line = line.replace("{DATABASE}", bancoDados.getNameBd());
+				line = line.replace("{USERNAME}", bancoDados.getUsuario());
+				line = line.replace("{PASSWORD}", bancoDados.getSenha());
+				line = line.replace("{DEFAULT_CATALOG}", bancoDados.getSchema());
+				line = line.replace("{DEFAULT_SCHEMA}", bancoDados.getSchema());
+				line = line.replace("{MATCH_CATALOG}", bancoDados.getSchema());
+				
 			} else {// ORACLE
 
 				line = line.replace("{DRIVERCLASS}", "oracle.jdbc.driver.OracleDriver");
@@ -273,14 +280,16 @@ public class AddEsquadroSBController implements Runnable {
 						+ "/" + bancoDados.getNameBd());
 
 				line = line.replace("{DIALECT}", "org.hibernate.dialect.Oracle10gDialect");
+				
+				line = line.replace("{DATABASE}", bancoDados.getSchema().toUpperCase());
+				line = line.replace("{USERNAME}", bancoDados.getUsuario());
+				line = line.replace("{PASSWORD}", bancoDados.getSenha());
+				line = line.replace("{DEFAULT_CATALOG}", bancoDados.getSchema());
+				line = line.replace("{DEFAULT_SCHEMA}", bancoDados.getSchema());
+				line = line.replace("{MATCH_CATALOG}", bancoDados.getSchema());
 			}
 
-			line = line.replace("{DATABASE}", bancoDados.getNameBd());
-			line = line.replace("{USERNAME}", bancoDados.getUsuario());
-			line = line.replace("{PASSWORD}", bancoDados.getSenha());
-			line = line.replace("{DEFAULT_CATALOG}", bancoDados.getSchema());
-			line = line.replace("{DEFAULT_SCHEMA}", bancoDados.getSchema());
-			line = line.replace("{MATCH_CATALOG}", bancoDados.getSchema());
+			
 
 			readFile.set(i, line);
 		}

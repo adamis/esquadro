@@ -6,9 +6,9 @@
 	<schema-selection match-schema="{DATABASE}" />
 
 	<type-mapping>
-		<sql-type jdbc-type="NUMERIC" hibernate-type="Double" />
-		<sql-type jdbc-type="NUMERIC" length="11" scale="2" hibernate-type="Double" />
-		<sql-type jdbc-type="NUMERIC" length="15" hibernate-type="Double" />
+		<sql-type jdbc-type="NUMERIC" hibernate-type="Long" />
+		<sql-type jdbc-type="NUMERIC" length="11" scale="2" hibernate-type="Long" />
+		<sql-type jdbc-type="NUMERIC" length="15" hibernate-type="Long" />
 		<sql-type jdbc-type="DECIMAL" hibernate-type="Double" />
 		
 		<sql-type jdbc-type="OTHER" hibernate-type="timestamp" />		
