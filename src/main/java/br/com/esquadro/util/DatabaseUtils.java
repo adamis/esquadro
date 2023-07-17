@@ -58,10 +58,10 @@ public class DatabaseUtils {
 		if (bancoDados.getTipo().toString().equals(DATABASETYPE.ORACLE.toString())) {
 
 			// LISTANDO TODAS TABLE
-			sql.append("SELECT owner as schematic, table_name as tableName FROM dba_tables WHERE dba_tables.owner =");
-			sql.append("'");
+			sql.append("SELECT owner as schematic, table_name as tableName FROM dba_tables WHERE upper(dba_tables.owner) =");
+			sql.append("upper('");
 			sql.append(bancoDados.getSchema().toUpperCase());
-			sql.append("'");
+			sql.append("')");
 			sql.append("order by tableName");
 			executeSQL = this.genericHelperInterface.executeSQL(sql.toString());
 
@@ -124,10 +124,10 @@ public class DatabaseUtils {
 		if (bancoDados.getTipo().toString().equals(DATABASETYPE.ORACLE.toString())) {
 			findTableName = findTableName.replace("-", "_");
 
-			sql.append("SELECT owner as schematic, table_name as tableName FROM dba_tables WHERE dba_tables.owner = ");
-			sql.append("'");
+			sql.append("SELECT owner as schematic, table_name as tableName FROM dba_tables WHERE upper(dba_tables.owner) = ");
+			sql.append("upper('");
 			sql.append(bancoDados.getSchema().toUpperCase());
-			sql.append("'");
+			sql.append("')");
 			if(!findTableName.isEmpty()) {
 				sql.append(" AND table_name like '%"+findTableName.toUpperCase()+"%' ");
 			}

@@ -32,6 +32,10 @@ public class OracleHelper implements GenericHelperInterface {
 	}
 
 	private DB open() throws Exception {
+		System.err.println(
+				"jdbc:oracle:thin:@" + bancoDados.getIp() + ":" + bancoDados.getPorta()+ "/" + bancoDados.getNameBd() +" - "+	bancoDados.getUsuario() +"/"+ bancoDados.getSenha()
+		);
+		
 		DB temp = new DB("oracle");
 				temp.open(
 				"oracle.jdbc.OracleDriver", "jdbc:oracle:thin:@" + bancoDados.getIp() + ":" + bancoDados.getPorta()
